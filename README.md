@@ -19,3 +19,5 @@ For our upcoming Zombie Apocalypse gamemode release, there are some features we'
 None of these deadlines are super set in stone, but as a general guide, we're ready to get these things into a dev server and test 'em out! If anybody's got any questions about any of these things, don't hesitate to hit me up Butters. List may be edited to have more features in the future.
 
 Updated 05/24/2021
+
+Reference Issue: https://gitlab.edgegamers.io/minecraft/support/-/issues/51
