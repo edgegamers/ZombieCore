@@ -6,7 +6,7 @@
 
     <groupId>xyz.msws</groupId>
     <artifactId>ZombieCore</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>A.0.1</version>
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>
@@ -14,6 +14,15 @@
             <version>1.16.5-R0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+    </build>
 
     <properties>
         <maven.compiler.source>15</maven.compiler.source>

@@ -1,5 +1,5 @@
 name: ZombieCore
-version: A.0.1
+version: ${version}
 api-version: 1.16
 author: MSWS
 main: xyz.msws.zombie.ZombieCore
