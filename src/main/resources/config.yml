@@ -1,6 +1,12 @@
 ### Note: Values, Layout, Defaults, and Names are not set in stone
 # This plugin is still in ALPHA and as such many things are likely to change
 Features:
+  Breeding:
+    Entities:
+      - 'ALL'
+      - 'COW'
+    DisableClicks: true
+    DisableBreed: true
   DisableBreeding:
     - 'ALL'
     - 'COW'

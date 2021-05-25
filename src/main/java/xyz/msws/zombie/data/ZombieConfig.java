@@ -1,32 +1,29 @@
 package xyz.msws.zombie.data;
 
-import org.bukkit.entity.EntityType;
+import xyz.msws.zombie.api.ZCore;
+import xyz.msws.zombie.modules.ModuleConfig;
 
-import java.util.Collection;
-import java.util.EnumSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class ZombieConfig {
-    protected EnumSet<EntityType> blockBreeding;
+    protected ZCore plugin;
+
+    protected List<ModuleConfig<?>> configs = new ArrayList<>();
+    
+    public ZombieConfig(ZCore plugin) {
+        this.plugin = plugin;
+    }
 
     public abstract void load();
 
     public abstract void save();
 
-    public boolean blockBreeding(EntityType type) {
-        if (blockBreeding.contains(type))
-            return true;
-        return blockBreeding.contains(null);
-    }
-
-    public void addBreedType(EntityType type) {
-        blockBreeding.add(type);
-    }
-
-    public void removeBreedType(EntityType type) {
-        blockBreeding.remove(type);
-    }
-
-    public void setBreedList(Collection<EntityType> types) {
-        blockBreeding = EnumSet.copyOf(types);
+    public <T extends ModuleConfig<?>> T getConfig(Class<T> type) {
+        for (ModuleConfig<?> config : configs) {
+            if (type.isAssignableFrom(config.getClass()))
+                return (T) config;
+        }
+        return null;
     }
 }

@@ -1,4 +1,4 @@
-package xyz.msws.zombie.features;
+package xyz.msws.zombie.modules;
 
 import org.bukkit.plugin.Plugin;
 
