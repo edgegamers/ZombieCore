@@ -1,0 +1,9 @@
+### Note: Values, Layout, Defaults, and Names are not set in stone
+# This plugin is still in ALPHA and as such many things are likely to change
+Features:
+  DisableBreeding:
+    - 'ALL'
+    - 'COW'
+  AllowDaySpawns:
+    - 'ALL'
+    - 'ZOMBIE'
