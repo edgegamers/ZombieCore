@@ -10,7 +10,7 @@ public abstract class ZombieConfig {
     protected ZCore plugin;
 
     protected List<ModuleConfig<?>> configs = new ArrayList<>();
-    
+
     public ZombieConfig(ZCore plugin) {
         this.plugin = plugin;
     }

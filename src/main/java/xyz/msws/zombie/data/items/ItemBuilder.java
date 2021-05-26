@@ -46,10 +46,9 @@ public class ItemBuilder extends Module {
 
         boolean amoSpecified = args.split(" ").length >= 2 && StringUtils.isNumeric(args.split(" ")[1]);
 
-        if (amoSpecified) {
+        if (amoSpecified)
             amo = Integer.parseInt(args.split(" ")[1]);
-        }
-
+        
         StringBuilder last = new StringBuilder();
         for (String arg : (String[]) ArrayUtils.subarray(args.split(" "), amoSpecified ? 2 : 1,
                 args.split(" ").length)) {

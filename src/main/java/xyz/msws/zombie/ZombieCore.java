@@ -2,6 +2,7 @@ package xyz.msws.zombie;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.msws.zombie.api.ZCore;
+import xyz.msws.zombie.commands.ZombieCoreCommand;
 import xyz.msws.zombie.data.YMLZConfig;
 import xyz.msws.zombie.data.ZombieConfig;
 import xyz.msws.zombie.modules.ModuleManager;
@@ -20,6 +21,8 @@ public class ZombieCore extends JavaPlugin implements ZCore {
     public void onEnable() {
         loadFiles();
         loadModules();
+
+        getCommand("zombiecore").setExecutor(new ZombieCoreCommand("zombiecore", this));
     }
 
     private void loadFiles() {

@@ -1,15 +1,20 @@
 package xyz.msws.zombie.data;
 
+import com.ericdebouwer.zombieapocalypse.api.ApocalypseAPI;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
+import xyz.msws.zombie.data.items.ItemBuilder;
 import xyz.msws.zombie.utils.MSG;
 
 import java.util.*;
@@ -21,8 +26,10 @@ public class EntityBuilder<T extends Entity> {
     private final Map<EquipmentSlot, ItemStack> items = new HashMap<>();
     private final List<PotionEffect> effects = new ArrayList<>();
     private double hp;
+    private Plugin plugin;
 
-    public EntityBuilder(Class<T> type) {
+    public EntityBuilder(Plugin plugin, Class<T> type) {
+        this.plugin = plugin;
         this.type = type;
     }
 
@@ -46,56 +53,91 @@ public class EntityBuilder<T extends Entity> {
         return this;
     }
 
-    public String accept(String query) {
+    public boolean accept(Player sender, String query) {
         Attribute type = null;
         AttributeModifier modifier = new AttributeModifier("", 0, AttributeModifier.Operation.ADD_NUMBER);
-        if (!query.contains(" "))
-            return "Must specify attribute";
-        String value = String.join(" ", query.substring(query.indexOf(" ")));
-//        "maxhp", "hp", "name", "helmet", "chest", "hand", "offhand", "legs", "boots", "speed", "damage", "followRange", "kbRes")
+
+        if (query.equalsIgnoreCase("spawn")) {
+            spawn(sender.getLocation());
+            MSG.tell(sender, "Spawned entity");
+            return false;
+        }
+        if (!query.contains(" ")) {
+            MSG.tell(sender, "Must specify attribute");
+            return false;
+        }
+        String value = String.join(" ", query.substring(query.indexOf(" ") + 1));
+        MSG.log("value: %s", value);
+        ItemStack item;
         switch (query.split(" ")[0].toLowerCase()) {
             case "hp":
                 hp = Double.parseDouble(value);
-                return String.format("Successfully set hp to %.2f");
+                MSG.tell(sender, "Successfully set hp to %.2f", hp);
+                return false;
             case "maxhp":
                 type = Attribute.GENERIC_MAX_HEALTH;
                 break;
             case "name":
                 this.name = value;
-                return String.format("Successfully set name to %s", name);
-            case "helmet":
-                break;
+                MSG.tell(sender, "Successfully set name to %s", name);
+                return false;
+            case "head":
             case "chest":
-                break;
             case "hand":
-                break;
-            case "offhand":
-                break;
+            case "off_hand":
             case "legs":
-                break;
-            case "boots":
-                break;
+            case "feet":
+                ItemBuilder builder = new ItemBuilder(plugin);
+                item = builder.build(value);
+                EquipmentSlot slot = EquipmentSlot.valueOf(query.split(" ")[0].toUpperCase());
+                item(slot, item);
+                MSG.tell(sender, "Successfully set the %s to %s", slot, builder.humanReadable(item));
+                return false;
             case "speed":
+                type = Attribute.GENERIC_MOVEMENT_SPEED;
                 break;
             case "damage":
+                type = Attribute.GENERIC_ATTACK_DAMAGE;
                 break;
             case "followrange":
+                type = Attribute.GENERIC_FOLLOW_RANGE;
                 break;
             case "kbres":
+                type = Attribute.GENERIC_KNOCKBACK_RESISTANCE;
+                break;
+            case "kbstr":
+                type = Attribute.GENERIC_ATTACK_KNOCKBACK;
                 break;
             case "reinforcement":
+                type = Attribute.ZOMBIE_SPAWN_REINFORCEMENTS;
                 break;
             case "jumpstr":
+                type = Attribute.HORSE_JUMP_STRENGTH;
                 break;
+            case "atkspd":
+                type = Attribute.GENERIC_ATTACK_SPEED;
+                break;
+            case "new":
+                MSG.tell(sender, "Cleared properties");
+                return true;
+            default:
+                MSG.tell(sender, "Unknown attribute");
+                return false;
         }
 
-        return String.format("Successfully set %s to %s", type, modifier);
+        double d = Double.parseDouble(value);
+        modifier = new AttributeModifier("", d, AttributeModifier.Operation.ADD_NUMBER);
+        withAttr(type, modifier);
+        MSG.tell(sender, "Successfully set %s to %.2f", type.getKey().getKey(), d);
+        return false;
     }
 
-    public <E extends Entity> E spawn(Location loc, Class<E> clazz) {
+    public T spawn(Location loc) {
         if (loc.getWorld() == null)
             throw new NullPointerException();
-        E ent = loc.getWorld().spawn(loc, clazz);
+        ApocalypseAPI.getInstance().endApocalypse(loc.getWorld().getName(), false);
+        T ent = loc.getWorld().spawn(loc, type);
+        ApocalypseAPI.getInstance().startApocalypse(loc.getWorld().getName(), Long.MAX_VALUE, Bukkit.getMonsterSpawnLimit(), false);
 
         if (name != null) {
             ent.setCustomName(MSG.color(name));
@@ -104,17 +146,20 @@ public class EntityBuilder<T extends Entity> {
 
         if (!(ent instanceof LivingEntity))
             return ent;
+
+        MSG.log("Entity is living entity");
         LivingEntity living = (LivingEntity) ent;
+        living.setHealth(hp);
 
         for (Map.Entry<Attribute, AttributeModifier> entry : modifiers) {
             AttributeInstance attr = living.getAttribute(entry.getKey());
             if (attr == null) {
-                MSG.log("Could not apply %s attribute to %s", entry.getKey().getKey(), clazz.getName());
+                MSG.log("Could not apply %s attribute to %s", entry.getKey().getKey(), type.getName());
                 continue;
             }
+            MSG.log("Applying %s to entity", attr.getAttribute().getKey().getKey());
             attr.addModifier(entry.getValue());
         }
-
 
         EntityEquipment eq = living.getEquipment();
         if (eq != null)
