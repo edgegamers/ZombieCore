@@ -5,11 +5,43 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 
 /**
  * Helper class for sending messages
  */
 public class MSG {
+    public static ChatColor ALL = ChatColor.WHITE;
+    public static ChatColor PLAYER = ChatColor.YELLOW;
+    public static ChatColor STAFF = ChatColor.GOLD;
+
+    public static ChatColor ADMIN = ChatColor.RED;
+
+    public static final ChatColor DEFAULT = ChatColor.GRAY;
+
+    public static ChatColor FORMATTER = ChatColor.GRAY;
+    public static final ChatColor FORMAT_INFO = ChatColor.GREEN;
+    public static ChatColor FORMAT_SEPARATOR = ChatColor.YELLOW;
+
+    public static final ChatColor NUMBER = ChatColor.YELLOW;
+    public static ChatColor TIME = ChatColor.GOLD;
+    public static ChatColor DATE = ChatColor.DARK_GREEN;
+    public static ChatColor MONEY = ChatColor.GREEN;
+
+    public static final ChatColor SUBJECT = ChatColor.AQUA;
+
+    public static final ChatColor PREFIX = ChatColor.BLUE;
+
+    public static ChatColor ERROR = ChatColor.RED;
+    public static ChatColor FAIL = ChatColor.RED;
+    public static final ChatColor SUCCESS = ChatColor.GREEN;
+
+    public static final ChatColor BOLD = ChatColor.BOLD;
+    public static ChatColor ITALIC = ChatColor.ITALIC;
+    public static ChatColor MAGIC = ChatColor.MAGIC;
+    public static ChatColor UNDER = ChatColor.UNDERLINE;
+    public static ChatColor STRIKE = ChatColor.STRIKETHROUGH;
+    public static final ChatColor RESET = ChatColor.RESET;
 
     /**
      * Sends the specified string colored
@@ -101,4 +133,44 @@ public class MSG {
 
         return String.format("%.2f %s", (double) ms / unit.toMillis(1), unit.toString().toLowerCase());
     }
+
+    /**
+     * Simplify a string for easy key usage
+     *
+     * @param value
+     * @return a-zA-Z regex compatible
+     */
+    public static String normalize(String value) {
+        return value.toLowerCase().replaceAll("[^a-z]", "");
+    }
+
+    /**
+     * Returns string with camel case, and with _'s replaced with spaces
+     *
+     * @param string hello_how is everyone
+     * @return Hello How Is Everyone
+     */
+    public static String camelCase(String string) {
+        String prevChar = " ";
+        StringBuilder res = new StringBuilder();
+        for (int i = 0; i < string.length(); i++) {
+            if (i > 0)
+                prevChar = string.charAt(i - 1) + "";
+            if (prevChar.matches("[a-zA-Z]")) {
+                res.append((string.charAt(i) + "").toLowerCase());
+            } else {
+                res.append((string.charAt(i) + "").toUpperCase());
+            }
+        }
+        return res.toString().replace("_", " ");
+    }
+
+    public static void warn(String message) {
+        Bukkit.getLogger().log(Level.WARNING, message);
+    }
+
+    public static String theme() {
+        return "&e";
+    }
+
 }
