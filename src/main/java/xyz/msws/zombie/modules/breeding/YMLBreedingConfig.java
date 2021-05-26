@@ -7,26 +7,20 @@ import xyz.msws.zombie.api.ZCore;
 import xyz.msws.zombie.data.YMLZConfig;
 import xyz.msws.zombie.utils.MSG;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class YMLAnimalConfig extends BreedingConfig {
-    private File file;
-    private YamlConfiguration config;
+public class YMLBreedingConfig extends BreedingConfig {
+    private final YamlConfiguration config;
 
-    public YMLAnimalConfig(ZCore plugin, YMLZConfig config) {
+    public YMLBreedingConfig(ZCore plugin, YMLZConfig config) {
         super(plugin, config);
+        this.config = config.getYml();
     }
 
     @Override
     public void load() {
-        if (!file.exists())
-            plugin.saveResource("config.yml", true);
-        this.config = YamlConfiguration.loadConfiguration(file);
-
         ConfigurationSection features = config.getConfigurationSection("Features");
         if (features == null)
             throw new NullPointerException("No features specified");
@@ -68,11 +62,5 @@ public class YMLAnimalConfig extends BreedingConfig {
         features.set("DisableBreeding", types);
 
         config.set("Features", features);
-
-        try {
-            config.save(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

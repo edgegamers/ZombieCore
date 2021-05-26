@@ -14,7 +14,11 @@ public class AnimalBreeding extends EventModule {
 
     public AnimalBreeding(ZCore plugin) {
         super(plugin);
-        this.config = plugin.getZConfig().getConfig(BreedingConfig.class);
+        config = plugin.getZConfig().getConfig(BreedingConfig.class);
+        if (config == null) {
+            disable();
+            throw new NullPointerException("No BreedingConfig found");
+        }
     }
 
     @Override
