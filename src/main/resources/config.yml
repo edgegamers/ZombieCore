@@ -31,3 +31,13 @@ Features:
       Constant: 80  # a
       Offset: 80   # b
       Exponent: -1 # c
+  NoEnchants: # Restricts what items mobs can spawn with
+    Entities:
+      - 'ALL'
+    Slots:
+      - 'ALL'
+      - 'HEAD'
+    Items:
+      - 'DIAMOND_SWORD'
+    Enchants:
+      - 'ALL'

@@ -118,4 +118,23 @@ public class Serializer {
         constructorCache.put(clazz, result);
         return result;
     }
+
+    public static <E extends Enum<E>> EnumSet<E> getEnumSet(Collection<String> strings, Class<E> clazz) {
+        EnumSet<E> list = EnumSet.noneOf(clazz);
+        for (String s : strings) {
+            if (s.isEmpty())
+                continue;
+            if (s.equalsIgnoreCase("all")) {
+                list.addAll(Arrays.asList(clazz.getEnumConstants()));
+                break;
+            }
+            try {
+                E type = E.valueOf(clazz, s.toUpperCase());
+                list.add(type);
+            } catch (IllegalArgumentException e) {
+                MSG.log("Invalid enum value specified: %s", s);
+            }
+        }
+        return list;
+    }
 }

@@ -6,9 +6,9 @@ import org.bukkit.entity.EntityType;
 import xyz.msws.zombie.api.ZCore;
 import xyz.msws.zombie.data.YMLZConfig;
 import xyz.msws.zombie.utils.MSG;
+import xyz.msws.zombie.utils.Serializer;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class YMLBreedingConfig extends BreedingConfig {
@@ -31,27 +31,10 @@ public class YMLBreedingConfig extends BreedingConfig {
             return;
         }
 
-        List<String> breeds = features.getStringList("Breeding.Entities");
-        if (breeds.isEmpty())
-            MSG.log("No limitation to breeding was specified in the config.");
-        for (String breed : breeds) {
-            if (breed.isEmpty())
-                continue;
-            if (breed.equalsIgnoreCase("all")) {
-                blockBreeding.addAll(Arrays.asList(EntityType.values()));
-                break;
-            }
-            try {
-                EntityType type = EntityType.valueOf(breed.toUpperCase());
-                blockBreeding.add(type);
-            } catch (IllegalArgumentException e) {
-                MSG.log("Invalid entity type specified in breeding list: %s", breed);
-            }
-        }
-
-        this.clicks = breeding.getBoolean("BlockClicks", false);
-        this.breed = breeding.getBoolean("BlockBreeding", true);
-        this.resetBreeding = breeding.getBoolean("ResetBreeding", true);
+        blockBreeding = Serializer.getEnumSet(features.getStringList("Breeding.Entities"), EntityType.class);
+        clicks = breeding.getBoolean("BlockClicks", false);
+        breed = breeding.getBoolean("BlockBreeding", true);
+        resetBreeding = breeding.getBoolean("ResetBreeding", true);
     }
 
     @Override

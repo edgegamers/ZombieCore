@@ -6,6 +6,7 @@ import xyz.msws.zombie.modules.ModuleConfig;
 import xyz.msws.zombie.modules.breeding.YMLBreedingConfig;
 import xyz.msws.zombie.modules.daylight.YMLDaylightConfig;
 import xyz.msws.zombie.modules.fishing.YMLFishConfig;
+import xyz.msws.zombie.modules.noenchant.YMLEnchantConfig;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,6 +29,7 @@ public class YMLZConfig extends ZombieConfig {
         configs.add(new YMLBreedingConfig(plugin, this));
         configs.add(new YMLDaylightConfig(plugin, this));
         configs.add(new YMLFishConfig(plugin, this));
+        configs.add(new YMLEnchantConfig(plugin, this));
 
         configs.forEach(ModuleConfig::load);
     }
