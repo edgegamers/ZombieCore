@@ -4,8 +4,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import xyz.msws.zombie.api.ZCore;
 import xyz.msws.zombie.data.YMLZConfig;
 import xyz.msws.zombie.data.ZombieConfig;
-import xyz.msws.zombie.modules.breeding.AnimalBreeding;
 import xyz.msws.zombie.modules.ModuleManager;
+import xyz.msws.zombie.modules.breeding.AnimalBreeding;
+import xyz.msws.zombie.modules.daylight.DaylightSpawn;
 
 import java.io.File;
 
@@ -28,6 +29,7 @@ public class ZombieCore extends JavaPlugin implements ZCore {
         manager = new ModuleManager(this);
 
         manager.addModule(new AnimalBreeding(this));
+        manager.addModule(new DaylightSpawn(this));
 
         manager.enable();
     }

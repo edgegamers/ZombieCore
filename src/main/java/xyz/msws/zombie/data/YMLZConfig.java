@@ -4,6 +4,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import xyz.msws.zombie.api.ZCore;
 import xyz.msws.zombie.modules.ModuleConfig;
 import xyz.msws.zombie.modules.breeding.YMLBreedingConfig;
+import xyz.msws.zombie.modules.daylight.YMLDaylightConfig;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +25,7 @@ public class YMLZConfig extends ZombieConfig {
         this.config = YamlConfiguration.loadConfiguration(file);
 
         configs.add(new YMLBreedingConfig(plugin, this));
+        configs.add(new YMLDaylightConfig(plugin, this));
 
         configs.forEach(ModuleConfig::load);
     }
