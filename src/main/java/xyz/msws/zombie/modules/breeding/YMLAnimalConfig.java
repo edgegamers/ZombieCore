@@ -1,4 +1,4 @@
-package xyz.msws.zombie.modules;
+package xyz.msws.zombie.modules.breeding;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -31,6 +31,12 @@ public class YMLAnimalConfig extends BreedingConfig {
         if (features == null)
             throw new NullPointerException("No features specified");
 
+        ConfigurationSection breeding = features.getConfigurationSection("Breeding");
+        if (breeding == null) {
+            MSG.log("No breeding config was specified");
+            return;
+        }
+
         List<String> breeds = features.getStringList("Breeding.Entities");
         if (breeds.isEmpty())
             MSG.log("No limitation to breeding was specified in the config.");
@@ -48,13 +54,17 @@ public class YMLAnimalConfig extends BreedingConfig {
                 MSG.log("Invalid entity type specified in breeding list: %s", breed);
             }
         }
+
+        this.clicks = breeding.getBoolean("BlockClicks", false);
+        this.breed = breeding.getBoolean("BlockBreeding", true);
+        this.resetBreeding = breeding.getBoolean("ResetBreeding", true);
     }
 
     @Override
     public void save() {
         ConfigurationSection features = config.createSection("Features");
         List<String> types = new ArrayList<>();
-        blockBreeding.forEach(s -> types.add(s == null ? "null" : s.toString()));
+        blockBreeding.forEach(s -> types.add(s.toString()));
         features.set("DisableBreeding", types);
 
         config.set("Features", features);

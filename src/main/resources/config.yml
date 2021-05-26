@@ -5,8 +5,9 @@ Features:
     Entities:
       - 'ALL'
       - 'COW'
-    DisableClicks: true
-    DisableBreed: true
+    BlockClicks: false  # If true, players will not be able to feed breedable animals
+    BlockBreeding: true # If true, animals will not be able to breed
+    ResetBreeding: true # If true, animals will be reset to a non-breeding state after attempting to breed
   DisableBreeding:
     - 'ALL'
     - 'COW'

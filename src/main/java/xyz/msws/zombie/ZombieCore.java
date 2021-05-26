@@ -4,7 +4,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import xyz.msws.zombie.api.ZCore;
 import xyz.msws.zombie.data.YMLZConfig;
 import xyz.msws.zombie.data.ZombieConfig;
-import xyz.msws.zombie.modules.AnimalBreeding;
+import xyz.msws.zombie.modules.breeding.AnimalBreeding;
 import xyz.msws.zombie.modules.ModuleManager;
 
 import java.io.File;

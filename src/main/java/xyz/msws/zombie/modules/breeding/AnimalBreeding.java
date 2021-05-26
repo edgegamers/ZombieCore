@@ -1,4 +1,4 @@
-package xyz.msws.zombie.modules;
+package xyz.msws.zombie.modules.breeding;
 
 import org.bukkit.entity.Breedable;
 import org.bukkit.entity.Entity;
@@ -7,13 +7,14 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityBreedEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import xyz.msws.zombie.api.ZCore;
+import xyz.msws.zombie.modules.EventModule;
 
 public class AnimalBreeding extends EventModule {
-    private final ZCore plugin;
+    private final BreedingConfig config;
 
     public AnimalBreeding(ZCore plugin) {
         super(plugin);
-        this.plugin = plugin;
+        this.config = plugin.getZConfig().getConfig(BreedingConfig.class);
     }
 
     @Override
@@ -23,18 +24,33 @@ public class AnimalBreeding extends EventModule {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onBreed(EntityBreedEvent event) {
-        if (plugin.getZConfig().getConfig(BreedingConfig.class).blockBreeding(event.getEntityType()))
+        if (!config.blockBreeding())
+            return;
+        if (!config.blockBreeding(event.getEntityType()))
             return;
         event.setCancelled(true);
         event.setExperience(0);
+
+        if (!config.resetBreeding())
+            return;
+
+        if (!(event.getMother() instanceof Breedable) || !(event.getFather() instanceof Breedable))
+            return;
+        Breedable a = (Breedable) event.getMother();
+        Breedable b = (Breedable) event.getFather();
+
+        a.setBreed(false);
+        b.setBreed(false);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onFeed(PlayerInteractEntityEvent event) {
         Entity entity = event.getRightClicked();
+        if (!config.blockClicks())
+            return;
         if (!(entity instanceof Breedable))
             return;
-        if (!plugin.getZConfig().getConfig(BreedingConfig.class).blockBreeding(entity.getType()))
+        if (!config.blockBreeding(entity.getType()))
             return;
         event.setCancelled(true);
     }
