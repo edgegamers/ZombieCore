@@ -7,6 +7,7 @@ import xyz.msws.zombie.data.ZombieConfig;
 import xyz.msws.zombie.modules.ModuleManager;
 import xyz.msws.zombie.modules.breeding.AnimalBreeding;
 import xyz.msws.zombie.modules.daylight.DaylightSpawn;
+import xyz.msws.zombie.modules.fishing.FishModule;
 
 import java.io.File;
 
@@ -30,6 +31,7 @@ public class ZombieCore extends JavaPlugin implements ZCore {
 
         manager.addModule(new AnimalBreeding(this));
         manager.addModule(new DaylightSpawn(this));
+        manager.addModule(new FishModule(this));
 
         manager.enable();
     }

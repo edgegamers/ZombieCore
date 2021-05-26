@@ -2,9 +2,9 @@ package xyz.msws.zombie.modules.daylight;
 
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import xyz.msws.zombie.api.ZCore;
 import xyz.msws.zombie.modules.EventModule;
@@ -18,10 +18,10 @@ public class DaylightSpawn extends EventModule {
     }
 
     @EventHandler(priority = EventPriority.LOW) // Towny Compatability
-    public void onSpawn(EntitySpawnEvent event) {
+    public void onSpawn(CreatureSpawnEvent event) {
         if (config.getMobWeights().containsKey(event.getEntityType()))
             return;
-        if (!(event.getEntity() instanceof LivingEntity))
+        if (event.getSpawnReason() != CreatureSpawnEvent.SpawnReason.NATURAL)
             return;
         if (!config.doCorrupt())
             return;
