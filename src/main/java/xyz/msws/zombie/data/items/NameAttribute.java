@@ -6,7 +6,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.msws.zombie.utils.MSG;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 

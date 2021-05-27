@@ -13,7 +13,7 @@ public class YMLFishConfig extends FishConfig {
 
     private final YamlConfiguration config;
     private double constant, offset, exp;
-    private Random random;
+    private final Random random;
 
     public YMLFishConfig(ZCore plugin, YMLZConfig config) {
         super(plugin, config);

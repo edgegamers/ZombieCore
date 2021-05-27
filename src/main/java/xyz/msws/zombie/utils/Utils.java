@@ -41,7 +41,7 @@ public class Utils {
 
     public static PotionEffectType getPotionEffect(String type) {
         String result = getOption(type, Arrays.stream(PotionEffectType.values()).filter(Objects::nonNull)
-                .map(potion -> potion.getName()).collect(Collectors.toList()));
+                .map(PotionEffectType::getName).collect(Collectors.toList()));
         return result == null ? null : PotionEffectType.getByName(result);
     }
 
@@ -51,7 +51,7 @@ public class Utils {
     }
 
     public static String getOption(String key, List<?> options) {
-        List<String> values = options.stream().map(m -> m.toString()).collect(Collectors.toList());
+        List<String> values = options.stream().map(Object::toString).collect(Collectors.toList());
         for (String s : values) {
             if (MSG.normalize(s).equals(MSG.normalize(key)))
                 return s;

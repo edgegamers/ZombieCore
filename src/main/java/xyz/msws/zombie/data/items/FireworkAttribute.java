@@ -153,7 +153,7 @@ public class FireworkAttribute implements ItemAttribute {
         }
         for (Type type : Type.values()) {
             if (type.toString().toLowerCase().startsWith(c.toLowerCase())) {
-                result.add(prev + type.toString());
+                result.add(prev + type);
             }
         }
 

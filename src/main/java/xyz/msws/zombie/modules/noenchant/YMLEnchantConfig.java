@@ -15,7 +15,7 @@ import xyz.msws.zombie.utils.Serializer;
 import java.util.Arrays;
 
 public class YMLEnchantConfig extends EnchantConfig {
-    private YamlConfiguration config;
+    private final YamlConfiguration config;
 
     public YMLEnchantConfig(ZCore plugin, YMLZConfig config) {
         super(plugin, config);

@@ -10,7 +10,6 @@ import xyz.msws.zombie.utils.MSG;
 import xyz.msws.zombie.utils.Utils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
@@ -22,7 +21,7 @@ public class VanillaAttribute implements ItemAttribute {
         if (!line.toLowerCase().startsWith("attribute:"))
             return item;
         ItemMeta meta = item.getItemMeta();
-        Attribute att = null;
+        Attribute att;
         try {
             String res = Utils.getOption(line.split(":")[1], Attribute.values());
             if (res == null) {

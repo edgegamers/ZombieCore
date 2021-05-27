@@ -13,7 +13,7 @@ import java.util.Random;
 
 public abstract class DaylightConfig extends ModuleConfig<DaylightSpawn> {
 
-    protected EnumMap<EntityType, Double> mobWeights = new EnumMap<EntityType, Double>(EntityType.class);
+    protected EnumMap<EntityType, Double> mobWeights = new EnumMap<>(EntityType.class);
     protected double corruptChance, minRange, maxRange;
     protected Map<Integer, Double> mobAmounts = new HashMap<>();
     protected Random random;

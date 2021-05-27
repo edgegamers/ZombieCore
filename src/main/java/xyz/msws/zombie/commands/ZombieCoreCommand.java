@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class ZombieCoreCommand extends BaseCommand {
 
-    private SpawnCommand spawn;
+    private final SpawnCommand spawn;
 
     public ZombieCoreCommand(String name, ZCore plugin) {
         super(name, plugin);

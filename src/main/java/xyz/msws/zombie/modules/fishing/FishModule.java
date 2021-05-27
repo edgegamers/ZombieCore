@@ -17,7 +17,7 @@ public class FishModule extends EventModule {
         this.config = plugin.getZConfig().getConfig(FishConfig.class);
     }
 
-    private Map<UUID, Long> times = new WeakHashMap<>();
+    private final Map<UUID, Long> times = new WeakHashMap<>();
 
     @EventHandler
     public void onFish(PlayerFishEvent event) {

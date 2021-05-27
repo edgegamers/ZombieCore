@@ -7,7 +7,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,7 +24,7 @@ public class UnbreakableAttribute implements ItemAttribute {
     public ItemStack modify(String line, ItemStack item) {
         if (!line.startsWith("unbreakable:"))
             return item;
-        boolean val = Boolean.valueOf(line.substring("unbreakable:".length()));
+        boolean val = Boolean.parseBoolean(line.substring("unbreakable:".length()));
 
         ItemMeta meta = item.getItemMeta();
         try {

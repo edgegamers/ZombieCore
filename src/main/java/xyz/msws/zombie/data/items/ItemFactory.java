@@ -36,7 +36,7 @@ public class ItemFactory extends Module {
     }
 
     public ItemStack build(String args, CommandSender sender) {
-        ItemStack base = null;
+        ItemStack base;
         Material mat = null;
 
         String matName = args.split(" ")[0];
@@ -48,7 +48,7 @@ public class ItemFactory extends Module {
 
         if (amoSpecified)
             amo = Integer.parseInt(args.split(" ")[1]);
-        
+
         StringBuilder last = new StringBuilder();
         for (String arg : (String[]) ArrayUtils.subarray(args.split(" "), amoSpecified ? 2 : 1,
                 args.split(" ").length)) {
@@ -114,8 +114,8 @@ public class ItemFactory extends Module {
                 .append(MSG.FORMAT_INFO);
         result.append(MSG.camelCase(item.getType().toString()))
                 .append((item.getAmount() == 1 || item.getType().toString().toLowerCase().endsWith("s")) ? " " : "s ");
-        for (int i = 0; i < attr.size(); i++) {
-            String mod = attr.get(i).humanReadable(item);
+        for (ItemAttribute itemAttribute : attr) {
+            String mod = itemAttribute.humanReadable(item);
             if (mod == null || mod.isEmpty())
                 continue;
 

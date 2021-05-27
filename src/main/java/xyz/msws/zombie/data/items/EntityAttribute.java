@@ -8,10 +8,8 @@ import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.msws.zombie.utils.MSG;
 import xyz.msws.zombie.utils.Serializer;
-import xyz.msws.zombie.utils.Utils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 

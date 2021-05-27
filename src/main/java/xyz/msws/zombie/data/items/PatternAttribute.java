@@ -28,8 +28,8 @@ public class PatternAttribute implements ItemAttribute {
         if (!(meta instanceof BannerMeta))
             return item;
         BannerMeta banner = (BannerMeta) meta;
-        PatternType type = null;
-        DyeColor color = null;
+        PatternType type;
+        DyeColor color;
 
         if (!line.contains(":"))
             return item;
@@ -39,7 +39,7 @@ public class PatternAttribute implements ItemAttribute {
             return item;
         }
 
-		try {
+        try {
             color = DyeColor.valueOf(line.split(":")[1].toUpperCase());
         } catch (IllegalArgumentException e) {
             org.bukkit.Color c = Utils.getColor(line.split(":")[1]);

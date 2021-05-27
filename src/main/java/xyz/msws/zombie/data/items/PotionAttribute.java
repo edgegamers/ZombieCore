@@ -96,7 +96,7 @@ public class PotionAttribute implements ItemAttribute {
                 result.append(" ").append(effect.getAmplifier());
             result.append(", ");
         }
-        return result.toString().substring(0, result.length() - 2).trim();
+        return result.substring(0, result.length() - 2).trim();
     }
 
 }

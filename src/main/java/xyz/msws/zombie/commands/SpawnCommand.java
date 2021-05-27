@@ -27,7 +27,7 @@ public class SpawnCommand extends SubCommand implements Listener {
         setDescription("Starts customization of a custom mob");
     }
 
-    private Map<UUID, EntityBuilder<?>> builders = new HashMap<>();
+    private final Map<UUID, EntityBuilder<?>> builders = new HashMap<>();
 
     @Override
     protected boolean exec(CommandSender sender, String label, String[] args) {

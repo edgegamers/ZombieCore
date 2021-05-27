@@ -7,7 +7,6 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.msws.zombie.utils.MSG;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -84,7 +83,7 @@ public class DamageAttribute implements ItemAttribute {
         if (item == null || item.getType() == Material.AIR)
             return null;
         ItemMeta meta = item.getItemMeta();
-        int durability = 0;
+        int durability;
         try {
             Class.forName("org.bukkit.inventory.meta.Damageable");
             if (!(meta instanceof Damageable))
