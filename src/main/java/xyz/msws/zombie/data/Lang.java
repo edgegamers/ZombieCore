@@ -12,7 +12,7 @@ public enum Lang {
     COMMAND_PLAYER_ONLY("%prefix% You must be a player to run this command."),
     COMMAND_SPAWN_SPAWNED("%prefix% Successfully spawned a &e%s&7."),
     COMMAND_MISSING_ARGUMENT("%prefix% You must provide an argument: &e%s&7."),
-    COMMAND_INVALID_ARGUMENT("%prefix &cInvalid argument specified: &e%s &7(&8&s&7)."),
+    COMMAND_INVALID_ARGUMENT("%prefix% &cInvalid argument specified: &e%s &7(&8%s&7)."),
     COMMAND_SPAWN_SETATTRIBUTE("%prefix% Successfully set &e%s &7to &a%s&7."),
     COMMAND_SPAWN_ADDPOTION("%prefix% Successfully added &a%s %s %d&7."),
     COMMAND_SPAWN_CLEARED("%prefix% Reset custom boss. Type /zc spawn [Entity] to start."),
