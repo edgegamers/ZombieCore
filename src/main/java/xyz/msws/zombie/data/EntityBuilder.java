@@ -1,7 +1,5 @@
 package xyz.msws.zombie.data;
 
-import com.ericdebouwer.zombieapocalypse.api.ApocalypseAPI;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -12,8 +10,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
+import xyz.msws.zombie.api.ZCore;
 import xyz.msws.zombie.data.items.ItemBuilder;
 import xyz.msws.zombie.utils.MSG;
 
@@ -25,12 +24,14 @@ public class EntityBuilder<T extends Entity> {
     private String name = null;
     private final Map<EquipmentSlot, ItemStack> items = new HashMap<>();
     private final List<PotionEffect> effects = new ArrayList<>();
-    private double hp;
-    private Plugin plugin;
+    private double hp = -1;
+    private final ZCore plugin;
+    private ItemBuilder builder;
 
-    public EntityBuilder(Plugin plugin, Class<T> type) {
+    public EntityBuilder(ZCore plugin, Class<T> type) {
         this.plugin = plugin;
         this.type = type;
+        this.builder = plugin.getItemBuilder();
     }
 
     public EntityBuilder<T> withAttr(Attribute attr, AttributeModifier modifier) {
@@ -55,7 +56,7 @@ public class EntityBuilder<T extends Entity> {
 
     public boolean accept(Player sender, String query) {
         Attribute type = null;
-        AttributeModifier modifier = new AttributeModifier("", 0, AttributeModifier.Operation.ADD_NUMBER);
+        AttributeModifier modifier;
 
         if (query.equalsIgnoreCase("spawn")) {
             spawn(sender.getLocation());
@@ -87,7 +88,6 @@ public class EntityBuilder<T extends Entity> {
             case "off_hand":
             case "legs":
             case "feet":
-                ItemBuilder builder = new ItemBuilder(plugin);
                 item = builder.build(value);
                 EquipmentSlot slot = EquipmentSlot.valueOf(query.split(" ")[0].toUpperCase());
                 item(slot, item);
@@ -135,9 +135,7 @@ public class EntityBuilder<T extends Entity> {
     public T spawn(Location loc) {
         if (loc.getWorld() == null)
             throw new NullPointerException();
-        ApocalypseAPI.getInstance().endApocalypse(loc.getWorld().getName(), false);
-        T ent = loc.getWorld().spawn(loc, type);
-        ApocalypseAPI.getInstance().startApocalypse(loc.getWorld().getName(), Long.MAX_VALUE, Bukkit.getMonsterSpawnLimit(), false);
+        T ent = loc.getWorld().spawn(loc, type, t -> t.setMetadata("ignoreZombie", new FixedMetadataValue(plugin, true)));
 
         if (name != null) {
             ent.setCustomName(MSG.color(name));
@@ -147,9 +145,9 @@ public class EntityBuilder<T extends Entity> {
         if (!(ent instanceof LivingEntity))
             return ent;
 
-        MSG.log("Entity is living entity");
         LivingEntity living = (LivingEntity) ent;
-        living.setHealth(hp);
+        if (hp != -1)
+            living.setHealth(hp);
 
         for (Map.Entry<Attribute, AttributeModifier> entry : modifiers) {
             AttributeInstance attr = living.getAttribute(entry.getKey());
@@ -157,7 +155,6 @@ public class EntityBuilder<T extends Entity> {
                 MSG.log("Could not apply %s attribute to %s", entry.getKey().getKey(), type.getName());
                 continue;
             }
-            MSG.log("Applying %s to entity", attr.getAttribute().getKey().getKey());
             attr.addModifier(entry.getValue());
         }
 
@@ -172,6 +169,7 @@ public class EntityBuilder<T extends Entity> {
 
         return ent;
     }
+
 
     public Class<T> getType() {
         return type;
