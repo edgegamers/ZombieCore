@@ -39,11 +39,11 @@ public abstract class BaseCommand extends ZombieCommand implements CommandExecut
     }
 
     public void sendHelp(CommandSender sender) {
-        MSG.tell(sender, "Sub-Commands for %s:", this.getName());
+        MSG.tell(sender, "&7Sub-Commands for &e%s&7:", this.getName());
         for (Map.Entry<String, SubCommand> cmd : commands.entrySet()) {
             if (cmd.getValue().getPermission() != null && !sender.hasPermission(cmd.getValue().getPermission()))
                 continue;
-            MSG.tell(sender, cmd.getValue().getDescription().isEmpty() ? "/%s %s" : "/%s %s - %s", this.getName(), cmd.getKey(), cmd.getValue().getDescription());
+            MSG.tell(sender, cmd.getValue().getDescription().isEmpty() ? "&f/&7%s &e%s" : "&f/&7%s &e%s &7- &8%s", this.getName(), cmd.getKey(), cmd.getValue().getDescription());
         }
     }
 

@@ -17,9 +17,10 @@ public class ZombieCoreCommand extends BaseCommand {
 
     public ZombieCoreCommand(String name, ZCore plugin) {
         super(name, plugin);
-
-
+        
         commands.put("spawn", (spawn = new SpawnCommand("spawn", plugin)));
+        commands.put("reset", new ResetCommand("spawn", plugin));
+        commands.put("reload", new ReloadCommand("reload", plugin));
     }
 
     @Override

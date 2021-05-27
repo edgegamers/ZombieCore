@@ -27,7 +27,7 @@ public class YMLZConfig extends ZombieConfig {
     public void load() {
         if (!file.exists())
             plugin.saveResource("config.yml", true);
-        this.config = YamlConfiguration.loadConfiguration(file);
+        reload();
 
         configs.add(new YMLBreedingConfig(plugin, this));
         configs.add(new YMLDaylightConfig(plugin, this));
@@ -46,6 +46,17 @@ public class YMLZConfig extends ZombieConfig {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void reload() {
+        this.config = YamlConfiguration.loadConfiguration(file);
+    }
+
+    @Override
+    public void reset() {
+        plugin.saveResource("config.yml", true);
+        reload();
     }
 
     public YamlConfiguration getYml() {

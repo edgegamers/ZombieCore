@@ -17,6 +17,7 @@ public enum Lang {
     COMMAND_SPAWN_ADDPOTION("%prefix% Successfully added &a%s %s %d&7."),
     COMMAND_SPAWN_CLEARED("%prefix% Reset custom boss. Type /zc spawn [Entity] to start."),
     COMMAND_SPAWN_STARTED("%prefix% Started customization of &e%s&7. Type &f/zc [property] [value]&7 to customize."),
+    COMMAND_RELOAD("%prefix% Successfully reloaded files."),
     ;
 
     private final String[] def;

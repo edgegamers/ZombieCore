@@ -29,6 +29,16 @@ public abstract class ZombieConfig {
     public abstract void save();
 
     /**
+     * Reloads the current values
+     */
+    public abstract void reload();
+
+    /**
+     * Resets the current values to default
+     */
+    public abstract void reset();
+
+    /**
      * Returns a {@link ModuleConfig} for the given type
      *
      * @param type Module Config Class to get
