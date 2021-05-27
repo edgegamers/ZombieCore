@@ -1,11 +1,13 @@
 package xyz.msws.zombie.commands;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.*;
 import org.bukkit.event.Listener;
 import xyz.msws.zombie.api.ZCore;
 import xyz.msws.zombie.data.EntityBuilder;
+import xyz.msws.zombie.data.items.ItemAttribute;
 import xyz.msws.zombie.utils.MSG;
 
 import java.util.*;
@@ -65,8 +67,6 @@ public class SpawnCommand extends SubCommand implements Listener {
             return result;
         Player player = (Player) sender;
 
-        if (args.length > 1)
-            return result;
 
         if (!builders.containsKey(player.getUniqueId())) {
             for (EntityType type : EntityType.values()) {
@@ -77,21 +77,57 @@ public class SpawnCommand extends SubCommand implements Listener {
             }
             return result;
         }
-        List<String> attributes = new ArrayList<>(Arrays.asList("atkspd", "maxhp", "hp", "name", "head", "chest", "hand", "off_hand", "legs", "feet", "speed", "damage", "followRange", "kbRes", "kbStr", "spawn"));
 
-        Class<? extends Entity> clazz = builders.get(player.getUniqueId()).getType();
+        if (args.length == 1) {
+            List<String> attributes = new ArrayList<>(Arrays.asList("atkspd", "maxhp", "hp", "name", "head", "chest", "hand", "off_hand", "legs", "feet", "speed", "damage", "followRange", "kbRes", "kbStr", "spawn"));
 
-        if (Zombie.class.isAssignableFrom(clazz)) {
-            attributes.add("reinforcement");
-        } else if (Horse.class.isAssignableFrom(clazz)) {
-            attributes.add("jumpStr");
+            Class<? extends Entity> clazz = builders.get(player.getUniqueId()).getType();
+
+            if (Zombie.class.isAssignableFrom(clazz)) {
+                attributes.add("reinforcement");
+            } else if (Horse.class.isAssignableFrom(clazz)) {
+                attributes.add("jumpStr");
+            }
+
+            for (String attr : attributes) {
+                if (attr.toLowerCase().startsWith(args[0].toLowerCase()))
+                    result.add(attr);
+            }
+        } else if (args.length >= 2) {
+            if (args.length == 2) {
+                try {
+                    for (Material mat : Material.values())
+                        if (MSG.normalize(mat.getKey().getKey()).startsWith(args[1].toLowerCase()))
+                            result.add(MSG.normalize(mat.getKey().getKey()));
+
+
+                } catch (NoSuchMethodError e) {
+                    // 1.8 Compatibility
+                    for (Material mat : Material.values()) {
+                        if (MSG.normalize(mat.toString()).startsWith(args[1].toLowerCase())) {
+                            result.add(MSG.normalize(mat.toString()));
+                        }
+                    }
+                }
+
+                for (String s : new String[]{"@hand", "@inventory", "@block", "@enderchest"}) {
+                    if (s.toLowerCase().startsWith(args[1].toLowerCase())) {
+                        result.add(s);
+                    }
+                }
+            }
+            if (args.length > 2) {
+                for (ItemAttribute attr : plugin.getItemBuilder().getAttributes()) {
+                    if (attr.getPermission() != null && !sender.hasPermission(attr.getPermission()))
+                        continue;
+                    List<String> add = attr.tabComplete(args[args.length - 1], args, sender);
+                    if (add == null || add.isEmpty())
+                        continue;
+                    result.addAll(add);
+                }
+            }
+            return result;
         }
-
-        for (String attr : attributes) {
-            if (attr.toLowerCase().startsWith(args[0].toLowerCase()))
-                result.add(attr);
-        }
-
         return result;
     }
 

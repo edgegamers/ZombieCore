@@ -28,4 +28,12 @@ public class ModuleManager extends Module {
         modules.forEach(Module::disable);
         modules = null;
     }
+
+    public <T extends Module> T getModule(Class<T> clazz) {
+        for (Module mod : modules) {
+            if (clazz.isAssignableFrom(mod.getClass()))
+                return clazz.cast(mod);
+        }
+        return null;
+    }
 }
