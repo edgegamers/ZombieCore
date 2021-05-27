@@ -31,7 +31,7 @@ public abstract class BaseCommand extends ZombieCommand implements CommandExecut
 
         SubCommand cmd = getCommand(args[0]);
         if (cmd == null) {
-            MSG.tell(sender, Lang.COMMAND_MISSING_ARGUMENT, "Sub-Command");
+            MSG.tell(sender, Lang.COMMAND_INVALID_ARGUMENT, "Unknown sub-command", args[0]);
             return true;
         }
 
