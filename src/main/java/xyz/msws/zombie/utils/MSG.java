@@ -3,6 +3,7 @@ package xyz.msws.zombie.utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import xyz.msws.zombie.data.Lang;
 
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -53,6 +54,10 @@ public class MSG {
      */
     public static void tell(CommandSender sender, String message, Object... format) {
         sender.sendMessage(ChatColor.translateAlternateColorCodes('&', String.format(message, format)));
+    }
+
+    public static void tell(CommandSender sender, Lang message, Object... objects) {
+        tell(sender, message.format(objects));
     }
 
     /**

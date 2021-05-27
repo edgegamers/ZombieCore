@@ -129,12 +129,28 @@ public class Serializer {
                 break;
             }
             try {
-                E type = E.valueOf(clazz, s.toUpperCase());
+                E type = getEnum(s, clazz);
                 list.add(type);
             } catch (IllegalArgumentException e) {
                 MSG.log("Invalid enum value specified: %s", s);
             }
         }
         return list;
+    }
+
+    public static <E extends Enum<E>> E getEnum(String s, Class<E> clazz) {
+        for (E e : clazz.getEnumConstants()) {
+            if (MSG.normalize(s).equals(MSG.normalize(e.toString())))
+                return e;
+        }
+        for (E e : clazz.getEnumConstants()) {
+            if (MSG.normalize(s).startsWith(MSG.normalize(e.toString())))
+                return e;
+        }
+        for (E e : clazz.getEnumConstants()) {
+            if (MSG.normalize(s).contains(MSG.normalize(e.toString())))
+                return e;
+        }
+        return null;
     }
 }

@@ -5,6 +5,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EntityEquipment;
@@ -12,9 +13,12 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import xyz.msws.zombie.api.ZCore;
 import xyz.msws.zombie.data.items.ItemBuilder;
 import xyz.msws.zombie.utils.MSG;
+import xyz.msws.zombie.utils.Serializer;
+import xyz.msws.zombie.utils.Utils;
 
 import java.util.*;
 
@@ -26,7 +30,7 @@ public class EntityBuilder<T extends Entity> {
     private final List<PotionEffect> effects = new ArrayList<>();
     private double hp = -1;
     private final ZCore plugin;
-    private ItemBuilder builder;
+    private final ItemBuilder builder;
 
     public EntityBuilder(ZCore plugin, Class<T> type) {
         this.plugin = plugin;
@@ -55,16 +59,20 @@ public class EntityBuilder<T extends Entity> {
     }
 
     public boolean accept(Player sender, String query) {
-        Attribute type = null;
+        Attribute type;
         AttributeModifier modifier;
 
         if (query.equalsIgnoreCase("spawn")) {
-            spawn(sender.getLocation());
-            MSG.tell(sender, "Spawned entity");
+            EntityType entType = spawn(sender.getLocation()).getType();
+            MSG.tell(sender, Lang.COMMAND_SPAWN_SPAWNED, MSG.camelCase(entType.toString()));
             return false;
+        } else if (query.equalsIgnoreCase("new") || query.equalsIgnoreCase("reset")) {
+            MSG.tell(sender, Lang.COMMAND_SPAWN_CLEARED);
+            return true;
         }
-        if (!query.contains(" ")) {
-            MSG.tell(sender, "Must specify attribute");
+        int args = query.split(" ").length;
+        if (args < 2) {
+            MSG.tell(sender, Lang.COMMAND_MISSING_ARGUMENT, args == 0 ? "Attribute Type" : "Value");
             return false;
         }
         String value = String.join(" ", query.substring(query.indexOf(" ") + 1));
@@ -73,14 +81,14 @@ public class EntityBuilder<T extends Entity> {
         switch (query.split(" ")[0].toLowerCase()) {
             case "hp":
                 hp = Double.parseDouble(value);
-                MSG.tell(sender, "Successfully set hp to %.2f", hp);
+                MSG.tell(sender, Lang.COMMAND_SPAWN_SETATTRIBUTE, "health", hp);
                 return false;
             case "maxhp":
                 type = Attribute.GENERIC_MAX_HEALTH;
                 break;
             case "name":
                 this.name = value;
-                MSG.tell(sender, "Successfully set name to %s", name);
+                MSG.tell(sender, Lang.COMMAND_SPAWN_SETATTRIBUTE, "name", name);
                 return false;
             case "head":
             case "chest":
@@ -89,9 +97,13 @@ public class EntityBuilder<T extends Entity> {
             case "legs":
             case "feet":
                 item = builder.build(value);
-                EquipmentSlot slot = EquipmentSlot.valueOf(query.split(" ")[0].toUpperCase());
+                EquipmentSlot slot = Serializer.getEnum(query.split(" ")[0], EquipmentSlot.class);
+                if (slot == null) {
+                    MSG.tell(sender, Lang.COMMAND_INVALID_ARGUMENT, "Unknown equipment slot", value);
+                    return false;
+                }
                 item(slot, item);
-                MSG.tell(sender, "Successfully set the %s to %s", slot, builder.humanReadable(item));
+                MSG.tell(sender, Lang.COMMAND_SPAWN_SETATTRIBUTE, MSG.camelCase(slot.toString()), builder.humanReadable(item));
                 return false;
             case "speed":
                 type = Attribute.GENERIC_MOVEMENT_SPEED;
@@ -117,18 +129,30 @@ public class EntityBuilder<T extends Entity> {
             case "atkspd":
                 type = Attribute.GENERIC_ATTACK_SPEED;
                 break;
-            case "new":
-                MSG.tell(sender, "Cleared properties");
-                return true;
+            case "potion":
+                PotionEffectType pot = Utils.getPotionEffect(value.split(" ")[0]);
+                if (pot == null) {
+                    MSG.tell(sender, Lang.COMMAND_INVALID_ARGUMENT, "Unknown potion type", value.split(" ")[0]);
+                    return false;
+                }
+                int duration = Integer.MAX_VALUE;
+                int level = 1;
+                if (value.split(" ").length >= 2)
+                    level = Integer.parseInt(value.split(" ")[1]);
+                if (value.split(" ").length >= 3)
+                    duration = Integer.parseInt(value.split(" ")[2]) * 20;
+                this.effect(new PotionEffect(pot, duration, level));
+                MSG.tell(sender, Lang.COMMAND_SPAWN_ADDPOTION, duration == Integer.MAX_VALUE ? "Permanent" : MSG.getDuration(duration / 20 * 1000L) + " of", MSG.camelCase(pot.getName()), level);
+                return false;
             default:
-                MSG.tell(sender, "Unknown attribute");
+                MSG.tell(sender, Lang.COMMAND_INVALID_ARGUMENT, "Unknown attribute", query.split(" ")[0]);
                 return false;
         }
 
         double d = Double.parseDouble(value);
         modifier = new AttributeModifier("", d, AttributeModifier.Operation.ADD_NUMBER);
         withAttr(type, modifier);
-        MSG.tell(sender, "Successfully set %s to %.2f", type.getKey().getKey(), d);
+        MSG.tell(sender, Lang.COMMAND_SPAWN_SETATTRIBUTE, MSG.camelCase(type.getKey().getKey()), d);
         return false;
     }
 

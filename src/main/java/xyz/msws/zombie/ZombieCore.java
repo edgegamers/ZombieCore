@@ -1,8 +1,10 @@
 package xyz.msws.zombie;
 
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.msws.zombie.api.ZCore;
 import xyz.msws.zombie.commands.ZombieCoreCommand;
+import xyz.msws.zombie.data.Lang;
 import xyz.msws.zombie.data.YMLZConfig;
 import xyz.msws.zombie.data.ZombieConfig;
 import xyz.msws.zombie.data.items.ItemBuilder;
@@ -30,6 +32,10 @@ public class ZombieCore extends JavaPlugin implements ZCore {
     private void loadFiles() {
         config = new YMLZConfig(this, new File(getDataFolder(), "config.yml"));
         config.load();
+        File langYml = new File(getDataFolder(), "lang.yml");
+        if (!langYml.exists())
+            Lang.saveFile(langYml);
+        Lang.load(YamlConfiguration.loadConfiguration(langYml));
     }
 
     private void loadModules() {

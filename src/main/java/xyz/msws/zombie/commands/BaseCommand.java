@@ -5,6 +5,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import xyz.msws.zombie.api.ZCore;
+import xyz.msws.zombie.data.Lang;
 import xyz.msws.zombie.utils.MSG;
 
 import java.util.HashMap;
@@ -27,7 +28,7 @@ public abstract class BaseCommand extends ZombieCommand implements CommandExecut
 
         SubCommand cmd = getCommand(args[0]);
         if (cmd == null) {
-            MSG.tell(sender, "Unknown command.");
+            MSG.tell(sender, Lang.COMMAND_MISSING_ARGUMENT, "Sub-Command");
             return true;
         }
 
