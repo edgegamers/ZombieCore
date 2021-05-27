@@ -6,6 +6,9 @@ import xyz.msws.zombie.api.ZCore;
 
 import java.util.List;
 
+/**
+ * Represents a sub-command of a {@link BaseCommand}. For sanity, each sub-command shifts its given args by 1.
+ */
 public abstract class SubCommand extends ZombieCommand {
 
     protected SubCommand(String name, ZCore plugin) {

@@ -3,6 +3,11 @@ package xyz.msws.zombie.modules;
 import xyz.msws.zombie.api.ZCore;
 import xyz.msws.zombie.data.ZombieConfig;
 
+/**
+ * Represents a config for a Module, similar to ParticleData
+ *
+ * @param <T> ModuleType that is supported
+ */
 public abstract class ModuleConfig<T extends Module> {
     protected ZombieConfig config;
     protected ZCore plugin;
@@ -12,7 +17,13 @@ public abstract class ModuleConfig<T extends Module> {
         this.config = config;
     }
 
+    /**
+     * Parses a config's data
+     */
     public abstract void load();
 
+    /**
+     * Saves the current values to the config
+     */
     public abstract void save();
 }

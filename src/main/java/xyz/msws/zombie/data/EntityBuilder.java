@@ -12,16 +12,22 @@ import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import xyz.msws.zombie.api.ZCore;
-import xyz.msws.zombie.data.items.ItemBuilder;
+import xyz.msws.zombie.data.items.ItemFactory;
 import xyz.msws.zombie.utils.MSG;
 import xyz.msws.zombie.utils.Serializer;
 import xyz.msws.zombie.utils.Utils;
 
 import java.util.*;
 
+/**
+ * Helper builder for custom mobs
+ *
+ * @param <T> Entity Class
+ */
 public class EntityBuilder<T extends Entity> {
     private final Class<T> type;
     private final List<Map.Entry<Attribute, AttributeModifier>> modifiers = new ArrayList<>();
@@ -30,7 +36,7 @@ public class EntityBuilder<T extends Entity> {
     private final List<PotionEffect> effects = new ArrayList<>();
     private double hp = -1;
     private final ZCore plugin;
-    private final ItemBuilder builder;
+    private final ItemFactory builder;
 
     public EntityBuilder(ZCore plugin, Class<T> type) {
         this.plugin = plugin;
@@ -38,26 +44,59 @@ public class EntityBuilder<T extends Entity> {
         this.builder = plugin.getItemBuilder();
     }
 
+    /**
+     * Adds the specified attribute and modifiers to be assigned on spawn
+     *
+     * @param attr     {@link Attribute} type to add
+     * @param modifier {@link AttributeModifier} modifier of said attribute
+     * @return The current Builder
+     */
     public EntityBuilder<T> withAttr(Attribute attr, AttributeModifier modifier) {
         modifiers.add(new AbstractMap.SimpleEntry<>(attr, modifier));
         return this;
     }
 
+    /**
+     * Sets the mob's custom name
+     *
+     * @param name Name to set
+     * @return The current Builder
+     */
     public EntityBuilder<T> name(String name) {
         this.name = name;
         return this;
     }
 
+    /**
+     * Adds the specified potion effect
+     *
+     * @param effect {@link PotionEffect} to add
+     * @return The current Builder
+     */
     public EntityBuilder<T> effect(PotionEffect effect) {
         effects.add(effect);
         return this;
     }
 
+    /**
+     * Sets the specified {@link EquipmentSlot} to the {@link ItemStack}
+     *
+     * @param slot {@link EquipmentSlot} to set
+     * @param item {@link ItemStack} to set slot to
+     * @return The current Builder
+     */
     public EntityBuilder<T> item(EquipmentSlot slot, ItemStack item) {
         items.put(slot, item);
         return this;
     }
 
+    /**
+     * Accepts a user input in the form of [property] [value], returns true if the user requested to reset the mob.
+     *
+     * @param sender {@link Player} that queried
+     * @param query  Query String
+     * @return true if the entity should be reset, false otherwise
+     */
     public boolean accept(Player sender, String query) {
         Attribute type;
         AttributeModifier modifier;
@@ -156,6 +195,12 @@ public class EntityBuilder<T extends Entity> {
         return false;
     }
 
+    /**
+     * Spawns the given entity at the specified location
+     *
+     * @param loc {@link Location} to spawn the entity at
+     * @return The entity type specified in the original constructor ({@link EntityBuilder(Class)}
+     */
     public T spawn(Location loc) {
         if (loc.getWorld() == null)
             throw new NullPointerException();
@@ -195,6 +240,11 @@ public class EntityBuilder<T extends Entity> {
     }
 
 
+    /**
+     * Returns the Builder's Entity Class
+     *
+     * @return The Entity class
+     */
     public Class<T> getType() {
         return type;
     }

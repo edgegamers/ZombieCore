@@ -1,17 +1,14 @@
 package xyz.msws.zombie.utils;
 
 import org.bukkit.Color;
-import org.bukkit.GameMode;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -42,18 +39,8 @@ public class Utils {
 
     }
 
-    public static GameMode getGameMode(String mode) {
-        String result = getOption(mode, GameMode.values());
-        return result == null ? null : GameMode.valueOf(result);
-    }
-
-    public static EntityType getEntityType(String type) {
-        String result = getOption(type, EntityType.values());
-        return result == null ? null : EntityType.valueOf(result);
-    }
-
     public static PotionEffectType getPotionEffect(String type) {
-        String result = getOption(type, Arrays.stream(PotionEffectType.values()).filter(p -> p != null)
+        String result = getOption(type, Arrays.stream(PotionEffectType.values()).filter(Objects::nonNull)
                 .map(potion -> potion.getName()).collect(Collectors.toList()));
         return result == null ? null : PotionEffectType.getByName(result);
     }
@@ -116,15 +103,5 @@ public class Utils {
             }
         }
         return null;
-    }
-
-    public static boolean containsUnsafeEnchantments(ItemStack item) {
-        for (Entry<Enchantment, Integer> entry : item.getEnchantments().entrySet()) {
-            if (!entry.getKey().canEnchantItem(item))
-                return true;
-            if (entry.getKey().getMaxLevel() < entry.getValue())
-                return true;
-        }
-        return false;
     }
 }

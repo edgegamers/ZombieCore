@@ -15,11 +15,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-public class ItemBuilder extends Module {
+public class ItemFactory extends Module {
 
     private final List<ItemAttribute> attr = new ArrayList<>();
 
-    public ItemBuilder(Plugin plugin) {
+    public ItemFactory(Plugin plugin) {
         super(plugin);
     }
 

@@ -15,6 +15,9 @@ import xyz.msws.zombie.utils.Serializer;
 
 import java.util.*;
 
+/**
+ * Command for custom boss creation
+ */
 public class SpawnCommand extends SubCommand implements Listener {
     public SpawnCommand(String name, ZCore plugin) {
         super(name, plugin);

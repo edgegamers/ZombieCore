@@ -6,7 +6,7 @@
 
     <groupId>xyz.msws</groupId>
     <artifactId>ZombieCore</artifactId>
-    <version>A.0.1</version>
+    <version>B.0.1</version>
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>

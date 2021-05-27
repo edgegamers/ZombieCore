@@ -8,6 +8,9 @@ import xyz.msws.zombie.data.EntityBuilder;
 
 import java.util.List;
 
+/**
+ * Primary {@link BaseCommand} for {@link ZCore}
+ */
 public class ZombieCoreCommand extends BaseCommand {
 
     private SpawnCommand spawn;

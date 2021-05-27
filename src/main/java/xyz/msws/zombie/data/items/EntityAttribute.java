@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.msws.zombie.utils.MSG;
+import xyz.msws.zombie.utils.Serializer;
 import xyz.msws.zombie.utils.Utils;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public class EntityAttribute implements ItemAttribute {
             return item;
         CreatureSpawner spawner = (CreatureSpawner) bsm.getBlockState();
 
-        EntityType type = Utils.getEntityType(line.split(":")[1]);
+        EntityType type = Serializer.getEnum(line.split(":")[1], EntityType.class);
         if (type == null) {
             MSG.warn("Unknown entity type: " + line);
             return item;

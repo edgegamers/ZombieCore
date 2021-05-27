@@ -7,7 +7,7 @@ import xyz.msws.zombie.commands.ZombieCoreCommand;
 import xyz.msws.zombie.data.Lang;
 import xyz.msws.zombie.data.YMLZConfig;
 import xyz.msws.zombie.data.ZombieConfig;
-import xyz.msws.zombie.data.items.ItemBuilder;
+import xyz.msws.zombie.data.items.ItemFactory;
 import xyz.msws.zombie.modules.ModuleManager;
 import xyz.msws.zombie.modules.breeding.AnimalBreeding;
 import xyz.msws.zombie.modules.daylight.DaylightSpawn;
@@ -23,7 +23,6 @@ public class ZombieCore extends JavaPlugin implements ZCore {
     @Override
     public void onEnable() {
         loadFiles();
-
         loadModules();
 
         getCommand("zombiecore").setExecutor(new ZombieCoreCommand("zombiecore", this));
@@ -41,7 +40,7 @@ public class ZombieCore extends JavaPlugin implements ZCore {
     private void loadModules() {
         manager = new ModuleManager(this);
 
-        manager.addModule(new ItemBuilder(this));
+        manager.addModule(new ItemFactory(this));
         manager.addModule(new AnimalBreeding(this));
         manager.addModule(new DaylightSpawn(this));
         manager.addModule(new FishModule(this));
@@ -66,7 +65,7 @@ public class ZombieCore extends JavaPlugin implements ZCore {
     }
 
     @Override
-    public ItemBuilder getItemBuilder() {
-        return manager.getModule(ItemBuilder.class);
+    public ItemFactory getItemBuilder() {
+        return manager.getModule(ItemFactory.class);
     }
 }

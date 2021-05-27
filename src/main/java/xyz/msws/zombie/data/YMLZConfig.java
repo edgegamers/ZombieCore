@@ -11,6 +11,9 @@ import xyz.msws.zombie.modules.noenchant.YMLEnchantConfig;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * A YML Implementation of {@link ZombieConfig}
+ */
 public class YMLZConfig extends ZombieConfig {
     private final File file;
     private YamlConfiguration config;
