@@ -19,8 +19,9 @@ public class ZombieCoreCommand extends BaseCommand {
         super(name, plugin);
 
         commands.put("spawn", (spawn = new SpawnCommand("spawn", plugin)));
-        commands.put("reset", new ResetCommand("spawn", plugin));
+        commands.put("reset", new ResetCommand("reset", plugin));
         commands.put("reload", new ReloadCommand("reload", plugin));
+        commands.put("delete", new DeleteCommand("delete", plugin));
     }
 
     @Override
