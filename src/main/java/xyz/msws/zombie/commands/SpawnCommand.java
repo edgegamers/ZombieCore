@@ -26,7 +26,7 @@ public class SpawnCommand extends SubCommand implements Listener {
         super(name, plugin);
         Bukkit.getPluginManager().registerEvents(this, plugin);
         setPermission("zombiecore.command.spawn");
-        setUsage("[Entity]");
+        setUsage(" [Entity]");
         setDescription("Starts customization of a custom mob");
     }
 

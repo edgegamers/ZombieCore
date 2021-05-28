@@ -11,7 +11,7 @@ public class ResetCommand extends SubCommand {
     protected ResetCommand(String name, ZCore plugin) {
         super(name, plugin);
         setPermission("zombiecore.command.reset");
-        setUsage("/<command> reset");
+        setUsage("");
         setDescription("Resets ZombieCore's config and lang files");
     }
 

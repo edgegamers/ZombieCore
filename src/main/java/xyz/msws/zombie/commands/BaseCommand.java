@@ -43,7 +43,8 @@ public abstract class BaseCommand extends ZombieCommand implements CommandExecut
         for (Map.Entry<String, SubCommand> cmd : commands.entrySet()) {
             if (cmd.getValue().getPermission() != null && !sender.hasPermission(cmd.getValue().getPermission()))
                 continue;
-            MSG.tell(sender, cmd.getValue().getDescription().isEmpty() ? "&f/&7%s &e%s" : "&f/&7%s &e%s &7- &8%s", this.getName(), cmd.getKey(), cmd.getValue().getDescription());
+            String format = "&f/&7%s &f%s&e%s &7- &8%s";
+            MSG.tell(sender, format, this.getName(), cmd.getKey(), cmd.getValue().getUsage(), cmd.getValue().getDescription());
         }
     }
 

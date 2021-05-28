@@ -52,8 +52,4 @@ public class ZombieCoreCommand extends BaseCommand {
 
         return super.tabComplete(sender, label, args);
     }
-
-    public SpawnCommand getSpawnCommand() {
-        return spawn;
-    }
 }

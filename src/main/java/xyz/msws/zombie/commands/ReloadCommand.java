@@ -12,7 +12,7 @@ public class ReloadCommand extends SubCommand {
     protected ReloadCommand(String name, ZCore plugin) {
         super(name, plugin);
         setPermission("zombiecore.command.reload");
-        setUsage("/<command> reload");
+        setUsage("");
         setDescription("Reload ZombieCore's config and lang files");
     }
 

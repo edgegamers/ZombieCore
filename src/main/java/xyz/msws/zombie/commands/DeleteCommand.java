@@ -13,7 +13,7 @@ public class DeleteCommand extends SubCommand {
         super(name, plugin);
         setPermission("zombiecore.command.delete");
         setDescription("Deletes saved custom mobs");
-        setUsage("[Mob]");
+        setUsage(" [Mob]");
     }
 
     @Override
