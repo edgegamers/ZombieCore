@@ -263,6 +263,8 @@ public class EntityBuilder<T extends Entity> implements Cloneable {
                     blueprint.remove(blueprint.size() - 1);
                     return false;
                 }
+                if (chance > 1)
+                    chance /= 100f;
                 for (EquipmentSlot slot : EquipmentSlot.values())
                     rates.put(slot, chance);
                 MSG.tell(sender, Lang.COMMAND_SPAWN_SETATTRIBUTE, "All Drop Chances", chance);
