@@ -2,9 +2,12 @@ package xyz.msws.zombie.api;
 
 import org.bukkit.plugin.Plugin;
 import xyz.msws.zombie.commands.ZombieCoreCommand;
+import xyz.msws.zombie.data.EntityBuilder;
 import xyz.msws.zombie.data.ZombieConfig;
 import xyz.msws.zombie.data.items.ItemFactory;
 import xyz.msws.zombie.modules.ModuleManager;
+
+import java.util.Map;
 
 /**
  * Represents a ZombieCore Plugin
@@ -31,10 +34,7 @@ public interface ZCore extends Plugin {
      */
     ItemFactory getItemBuilder();
 
-    /**
-     * Gets the plugin's core command
-     *
-     * @return The plugin's {@link ZombieCoreCommand}
-     */
-    ZombieCoreCommand getCoreCommand();
+    Map<String, EntityBuilder<?>> getCustomMobs();
+
+    void refreshMobs();
 }

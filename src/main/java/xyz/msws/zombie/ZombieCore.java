@@ -4,6 +4,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.msws.zombie.api.ZCore;
 import xyz.msws.zombie.commands.ZombieCoreCommand;
+import xyz.msws.zombie.data.EntityBuilder;
 import xyz.msws.zombie.data.Lang;
 import xyz.msws.zombie.data.YMLZConfig;
 import xyz.msws.zombie.data.ZombieConfig;
@@ -15,19 +16,21 @@ import xyz.msws.zombie.modules.fishing.FishModule;
 import xyz.msws.zombie.modules.noenchant.NoEnchantSpawn;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ZombieCore extends JavaPlugin implements ZCore {
     private ModuleManager manager;
     private ZombieConfig config;
-    private ZombieCoreCommand core;
+    private Map<String, EntityBuilder<?>> mobs = new HashMap<>();
 
     @Override
     public void onEnable() {
         loadFiles();
         loadModules();
 
-        getCommand("zombiecore").setExecutor((core = new ZombieCoreCommand("zombiecore", this)));
-        core.getSpawnCommand().refreshMobs();
+        getCommand("zombiecore").setExecutor(new ZombieCoreCommand("zombiecore", this));
+        refreshMobs();
     }
 
     private void loadFiles() {
@@ -72,7 +75,15 @@ public class ZombieCore extends JavaPlugin implements ZCore {
     }
 
     @Override
-    public ZombieCoreCommand getCoreCommand() {
-        return core;
+    public Map<String, EntityBuilder<?>> getCustomMobs() {
+        return mobs;
+    }
+
+    public void refreshMobs() {
+        mobs = new HashMap<>();
+        File file = new File(getDataFolder(), "data.yml");
+        YamlConfiguration data = YamlConfiguration.loadConfiguration(file);
+        for (String key : data.getKeys(false))
+            mobs.put(key, EntityBuilder.fromBlueprint(this, data.getStringList(key)));
     }
 }

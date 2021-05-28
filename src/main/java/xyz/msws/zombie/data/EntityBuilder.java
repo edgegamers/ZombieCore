@@ -37,6 +37,7 @@ public class EntityBuilder<T extends Entity> implements Cloneable {
     private final List<Map.Entry<Attribute, AttributeModifier>> modifiers = new ArrayList<>();
     private String name = null;
     private final Map<EquipmentSlot, ItemStack> items = new HashMap<>();
+    private final Map<EquipmentSlot, Float> rates = new HashMap<>();
     private final List<PotionEffect> effects = new ArrayList<>();
     private double hp = -1;
     private final ZCore plugin;
@@ -170,14 +171,14 @@ public class EntityBuilder<T extends Entity> implements Cloneable {
             String name = query.split(" ")[1];
             File file = new File(plugin.getDataFolder(), "data.yml");
             YamlConfiguration data = YamlConfiguration.loadConfiguration(file);
-            data.set(query.split(" ")[1], this.getBlueprint());
+            data.set(name, this.getBlueprint());
             try {
                 data.save(file);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            plugin.getCoreCommand().getSpawnCommand().refreshMobs();
-            MSG.tell(sender, Lang.COMMAND_SPAWN_SAVED, query.split(" ")[1]);
+            plugin.refreshMobs();
+            MSG.tell(sender, Lang.COMMAND_SPAWN_SAVED, name);
             return false;
         }
         if (args < 2) {
@@ -187,20 +188,20 @@ public class EntityBuilder<T extends Entity> implements Cloneable {
         String value = String.join(" ", query.substring(query.indexOf(" ") + 1));
         ItemStack item;
         switch (query.split(" ")[0].toLowerCase()) {
-            case "hp" -> {
+            case "hp", "health" -> {
                 double hp = checkNumber(sender, value);
                 if (hp == -1) {
                     blueprint.remove(blueprint.size() - 1);
                     return false;
                 }
                 hp(hp);
-                MSG.tell(sender, Lang.COMMAND_SPAWN_SETATTRIBUTE, "health", hp);
+                MSG.tell(sender, Lang.COMMAND_SPAWN_SETATTRIBUTE, "Health", hp);
                 return false;
             }
-            case "maxhp" -> type = Attribute.GENERIC_MAX_HEALTH;
+            case "maxhp", "maxhealth" -> type = Attribute.GENERIC_MAX_HEALTH;
             case "name" -> {
                 name(value);
-                MSG.tell(sender, Lang.COMMAND_SPAWN_SETATTRIBUTE, "name", name);
+                MSG.tell(sender, Lang.COMMAND_SPAWN_SETATTRIBUTE, "Name", name);
                 return false;
             }
             case "head", "chest", "hand", "off_hand", "legs", "feet" -> {
@@ -220,16 +221,16 @@ public class EntityBuilder<T extends Entity> implements Cloneable {
                 MSG.tell(sender, Lang.COMMAND_SPAWN_SETATTRIBUTE, MSG.camelCase(slot.toString()), builder.humanReadable(item));
                 return false;
             }
-            case "speed" -> type = Attribute.GENERIC_MOVEMENT_SPEED;
-            case "damage" -> type = Attribute.GENERIC_ATTACK_DAMAGE;
-            case "followrange" -> type = Attribute.GENERIC_FOLLOW_RANGE;
-            case "kbres" -> type = Attribute.GENERIC_KNOCKBACK_RESISTANCE;
-            case "kbstr" -> type = Attribute.GENERIC_ATTACK_KNOCKBACK;
+            case "speed", "movespeed" -> type = Attribute.GENERIC_MOVEMENT_SPEED;
+            case "damage", "strength" -> type = Attribute.GENERIC_ATTACK_DAMAGE;
+            case "followrange", "sight", "perception", "range" -> type = Attribute.GENERIC_FOLLOW_RANGE;
+            case "kbres", "weight", "mass", "knockbacksesistance" -> type = Attribute.GENERIC_KNOCKBACK_RESISTANCE;
+            case "kbstr", "fightSpeed", "brute", "knockbackstrength" -> type = Attribute.GENERIC_ATTACK_KNOCKBACK;
             case "reinforcement" -> type = Attribute.ZOMBIE_SPAWN_REINFORCEMENTS;
-            case "jumpstr" -> type = Attribute.HORSE_JUMP_STRENGTH;
-            case "atkspd" -> type = Attribute.GENERIC_ATTACK_SPEED;
-            case "flyspd" -> type = Attribute.GENERIC_FLYING_SPEED;
-            case "potion" -> {
+            case "jumpstr", "jump", "jumpstrength" -> type = Attribute.HORSE_JUMP_STRENGTH;
+            case "atkspd", "attackspeed", "rof", "reloadspeed" -> type = Attribute.GENERIC_ATTACK_SPEED;
+            case "flyspd", "zoom", "flight" -> type = Attribute.GENERIC_FLYING_SPEED;
+            case "potion", "potions" -> {
                 PotionEffectType pot = Utils.getPotionEffect(value.split(" ")[0]);
                 if (pot == null) {
                     MSG.tell(sender, Lang.COMMAND_INVALID_ARGUMENT, "Unknown potion type", value.split(" ")[0]);
@@ -254,6 +255,34 @@ public class EntityBuilder<T extends Entity> implements Cloneable {
                 }
                 this.effect(new PotionEffect(pot, duration, level));
                 MSG.tell(sender, Lang.COMMAND_SPAWN_ADDPOTION, duration == Integer.MAX_VALUE ? "Permanent" : MSG.getDuration(duration / 20 * 1000L) + " of", MSG.camelCase(pot.getName()), level);
+                return false;
+            }
+            case "dropchance" -> {
+                float chance = (float) checkNumber(value);
+                if (chance == -1) {
+                    blueprint.remove(blueprint.size() - 1);
+                    return false;
+                }
+                for (EquipmentSlot slot : EquipmentSlot.values())
+                    rates.put(slot, chance);
+                MSG.tell(sender, Lang.COMMAND_SPAWN_SETATTRIBUTE, "All Drop Chances", chance);
+                return false;
+            }
+            case "headdropchance", "chestdropchance", "handdropchance", "off_handdropchance", "legsdropchance", "feetdropchance",
+                    "headdc", "chestdc", "handdc", "off_handdc", "legsdc", "feetdc" -> {
+                EquipmentSlot slot = Serializer.getEnum(query.split(" ")[0].replace("DropChance", "").replace("DC", ""), EquipmentSlot.class);
+                if (slot == null) {
+                    MSG.tell(sender, Lang.COMMAND_INVALID_ARGUMENT, "Unknown equipment slot", value);
+                    blueprint.remove(blueprint.size() - 1);
+                    return false;
+                }
+                float chance = (float) checkNumber(value);
+                if (chance == -1) {
+                    blueprint.remove(blueprint.size() - 1);
+                    return false;
+                }
+                rates.put(slot, chance);
+                MSG.tell(sender, Lang.COMMAND_SPAWN_SETATTRIBUTE, MSG.camelCase(slot.toString()) + " Drop Chance", chance);
                 return false;
             }
             default -> {
@@ -325,10 +354,22 @@ public class EntityBuilder<T extends Entity> implements Cloneable {
         }
 
         EntityEquipment eq = living.getEquipment();
-        if (eq != null)
+        if (eq != null) {
             for (Map.Entry<EquipmentSlot, ItemStack> entry : items.entrySet()) {
                 eq.setItem(entry.getKey(), entry.getValue());
             }
+            for (Map.Entry<EquipmentSlot, Float> entry : rates.entrySet()) {
+                switch (entry.getKey()) {
+                    case HAND -> eq.setItemInMainHandDropChance(entry.getValue());
+                    case OFF_HAND -> eq.setItemInOffHandDropChance(entry.getValue());
+                    case HEAD -> eq.setHelmetDropChance(entry.getValue());
+                    case CHEST -> eq.setChestplateDropChance(entry.getValue());
+                    case LEGS -> eq.setLeggingsDropChance(entry.getValue());
+                    case FEET -> eq.setBootsDropChance(entry.getValue());
+                }
+            }
+        }
+
 
         for (PotionEffect effect : effects)
             living.addPotionEffect(effect);
@@ -349,5 +390,16 @@ public class EntityBuilder<T extends Entity> implements Cloneable {
     @Override
     public Object clone() throws CloneNotSupportedException {
         return super.clone();
+    }
+
+    public void delete(String name) {
+        File file = new File(plugin.getDataFolder(), "data.yml");
+        YamlConfiguration data = YamlConfiguration.loadConfiguration(file);
+        data.set(name, null);
+        try {
+            data.save(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
