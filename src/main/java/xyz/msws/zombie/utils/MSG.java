@@ -53,6 +53,8 @@ public class MSG {
      * @param format  Objects to format message with
      */
     public static void tell(CommandSender sender, String message, Object... format) {
+        if (sender == null)
+            return;
         sender.sendMessage(ChatColor.translateAlternateColorCodes('&', String.format(message, format)));
     }
 

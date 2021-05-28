@@ -3,6 +3,7 @@ package xyz.msws.zombie.commands;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
 import org.bukkit.event.Listener;
 import org.bukkit.potion.PotionEffectType;
@@ -12,19 +13,31 @@ import xyz.msws.zombie.data.Lang;
 import xyz.msws.zombie.data.items.ItemAttribute;
 import xyz.msws.zombie.utils.MSG;
 import xyz.msws.zombie.utils.Serializer;
+import xyz.msws.zombie.utils.Utils;
 
+import java.io.File;
 import java.util.*;
 
 /**
  * Command for custom boss creation
  */
 public class SpawnCommand extends SubCommand implements Listener {
+
+    private Map<String, EntityBuilder<? extends Entity>> mobs = new HashMap<>();
+
     public SpawnCommand(String name, ZCore plugin) {
         super(name, plugin);
         Bukkit.getPluginManager().registerEvents(this, plugin);
         setPermission("zombiecore.command.spawn");
         setUsage("/<command> spawn [Entity]");
         setDescription("Starts customization of a custom mob");
+    }
+
+    public void refreshMobs() {
+        File file = new File(plugin.getDataFolder(), "data.yml");
+        YamlConfiguration data = YamlConfiguration.loadConfiguration(file);
+        for (String key : data.getKeys(false))
+            mobs.put(key, EntityBuilder.fromBlueprint(plugin, data.getStringList(key)));
     }
 
     private final Map<UUID, EntityBuilder<?>> builders = new HashMap<>();
@@ -43,10 +56,22 @@ public class SpawnCommand extends SubCommand implements Listener {
             return true;
         }
 
+
         EntityType type;
         type = Serializer.getEnum(args[0], EntityType.class);
         if (type == null) {
-            MSG.tell(sender, "Unknown entity type", args[0]);
+            String name = Utils.getOption(args[0], mobs.keySet());
+            if (name != null) {
+                try {
+                    builders.put(player.getUniqueId(), (EntityBuilder<?>) mobs.get(name).clone());
+                } catch (CloneNotSupportedException e) {
+                    e.printStackTrace();
+                }
+                MSG.tell(sender, Lang.COMMAND_SPAWN_STARTED, name);
+                return true;
+            }
+
+            MSG.tell(sender, Lang.COMMAND_INVALID_ARGUMENT, "Unknown entity type", args[0]);
             return true;
         }
         if (!type.isSpawnable()) {
@@ -56,7 +81,7 @@ public class SpawnCommand extends SubCommand implements Listener {
 
         if (type.getEntityClass() == null) {
             MSG.log("Could not find entity class for %s", type);
-            MSG.tell(sender, Lang.COMMAND_INVALID_ARGUMENT, "An error occured, please check console for details", "Unknown Entity Class");
+            MSG.tell(sender, Lang.COMMAND_INVALID_ARGUMENT, "An error occurred, please check console for details", "Unknown Entity Class");
         }
 
         builders.put(player.getUniqueId(), new EntityBuilder<>(plugin, type.getEntityClass()));
@@ -73,18 +98,21 @@ public class SpawnCommand extends SubCommand implements Listener {
 
 
         if (!builders.containsKey(player.getUniqueId())) {
+            for (String name : mobs.keySet()) {
+                if (args.length == 0 || MSG.normalize(name).startsWith(MSG.normalize(args[0])))
+                    result.add(name);
+            }
             for (EntityType type : EntityType.values()) {
                 if (!type.isSpawnable())
                     continue;
-                if (args.length == 0 || type.toString().toLowerCase().startsWith(MSG.normalize(type.toString())))
+                if (args.length == 0 || MSG.normalize(type.toString()).startsWith(MSG.normalize(args[0])))
                     result.add(MSG.normalize(type.toString()));
             }
             return result;
         }
 
         if (args.length == 1) {
-            List<String> attributes = new ArrayList<>(Arrays.asList("atkspd", "maxhp", "hp", "name", "head", "chest", "hand", "off_hand", "legs", "feet", "speed", "damage", "potion", "followRange", "kbRes", "kbStr", "spawn", "new", "reset"));
-
+            List<String> attributes = new ArrayList<>(Arrays.asList("atkspd", "flyspd", "maxhp", "hp", "name", "head", "chest", "hand", "off_hand", "legs", "feet", "speed", "damage", "potion", "followRange", "kbRes", "kbStr", "spawn", "new", "reset", "save"));
             Class<? extends Entity> clazz = builders.get(player.getUniqueId()).getType();
 
             if (Zombie.class.isAssignableFrom(clazz)) {

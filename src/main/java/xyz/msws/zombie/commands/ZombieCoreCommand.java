@@ -17,7 +17,7 @@ public class ZombieCoreCommand extends BaseCommand {
 
     public ZombieCoreCommand(String name, ZCore plugin) {
         super(name, plugin);
-        
+
         commands.put("spawn", (spawn = new SpawnCommand("spawn", plugin)));
         commands.put("reset", new ResetCommand("spawn", plugin));
         commands.put("reload", new ReloadCommand("reload", plugin));
@@ -50,5 +50,9 @@ public class ZombieCoreCommand extends BaseCommand {
             return spawn.tab(sender, label, args);
 
         return super.tabComplete(sender, label, args);
+    }
+
+    public SpawnCommand getSpawnCommand() {
+        return spawn;
     }
 }

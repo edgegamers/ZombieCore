@@ -1,9 +1,12 @@
 package xyz.msws.zombie.data;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -20,6 +23,8 @@ import xyz.msws.zombie.utils.MSG;
 import xyz.msws.zombie.utils.Serializer;
 import xyz.msws.zombie.utils.Utils;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -27,7 +32,7 @@ import java.util.*;
  *
  * @param <T> Entity Class
  */
-public class EntityBuilder<T extends Entity> {
+public class EntityBuilder<T extends Entity> implements Cloneable {
     private final Class<T> type;
     private final List<Map.Entry<Attribute, AttributeModifier>> modifiers = new ArrayList<>();
     private String name = null;
@@ -36,11 +41,32 @@ public class EntityBuilder<T extends Entity> {
     private double hp = -1;
     private final ZCore plugin;
     private final ItemFactory builder;
+    private final List<String> blueprint = new ArrayList<>();
 
     public EntityBuilder(ZCore plugin, Class<T> type) {
         this.plugin = plugin;
         this.type = type;
         this.builder = plugin.getItemBuilder();
+        blueprint.add(type.getName());
+    }
+
+    public static <T extends Entity> EntityBuilder<?> fromBlueprint(ZCore plugin, List<String> bp) {
+        Class<T> type;
+        try {
+            type = (Class<T>) Class.forName(bp.get(0));
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        EntityBuilder<?> builder = new EntityBuilder<>(plugin, type);
+        for (int i = 1; i < bp.size(); i++)
+            builder.accept(bp.get(i));
+        return builder;
+    }
+
+    public List<String> getBlueprint() {
+        return blueprint;
     }
 
     /**
@@ -48,7 +74,7 @@ public class EntityBuilder<T extends Entity> {
      *
      * @param attr     {@link Attribute} type to add
      * @param modifier {@link AttributeModifier} modifier of said attribute
-     * @return The current Builder
+     * @return The resulting Builder
      */
     public EntityBuilder<T> withAttr(Attribute attr, AttributeModifier modifier) {
         modifiers.add(new AbstractMap.SimpleEntry<>(attr, modifier));
@@ -59,7 +85,7 @@ public class EntityBuilder<T extends Entity> {
      * Sets the mob's custom name
      *
      * @param name Name to set
-     * @return The current Builder
+     * @return The resulting Builder
      */
     public EntityBuilder<T> name(String name) {
         this.name = name;
@@ -67,10 +93,21 @@ public class EntityBuilder<T extends Entity> {
     }
 
     /**
+     * Set's the mob's current HP
+     *
+     * @param hp Hp points to set
+     * @return The resulting Builder
+     */
+    public EntityBuilder<T> hp(double hp) {
+        this.hp = hp;
+        return this;
+    }
+
+    /**
      * Adds the specified potion effect
      *
      * @param effect {@link PotionEffect} to add
-     * @return The current Builder
+     * @return The resulting Builder
      */
     public EntityBuilder<T> effect(PotionEffect effect) {
         effects.add(effect);
@@ -82,11 +119,22 @@ public class EntityBuilder<T extends Entity> {
      *
      * @param slot {@link EquipmentSlot} to set
      * @param item {@link ItemStack} to set slot to
-     * @return The current Builder
+     * @return The resulting Builder
      */
     public EntityBuilder<T> item(EquipmentSlot slot, ItemStack item) {
         items.put(slot, item);
         return this;
+    }
+
+
+    /**
+     * Accepts a user input in the form of [property] [value], returns true if the user requested to reset the mob.
+     *
+     * @param query Query String
+     * @return true if the entity should be reset, false otherwise
+     */
+    public boolean accept(String query) {
+        return accept(Bukkit.getConsoleSender(), query);
     }
 
     /**
@@ -96,78 +144,92 @@ public class EntityBuilder<T extends Entity> {
      * @param query  Query String
      * @return true if the entity should be reset, false otherwise
      */
-    public boolean accept(Player sender, String query) {
+    public boolean accept(CommandSender sender, String query) {
         Attribute type;
         AttributeModifier modifier;
+        blueprint.add(query);
+        int args = query.split(" ").length;
 
         if (query.equalsIgnoreCase("spawn")) {
-            EntityType entType = spawn(sender.getLocation()).getType();
+            if (!(sender instanceof Player))
+                return false;
+            EntityType entType = spawn(((Player) sender).getLocation()).getType();
             MSG.tell(sender, Lang.COMMAND_SPAWN_SPAWNED, MSG.camelCase(entType.toString()));
+            blueprint.remove(blueprint.size() - 1);
             return false;
         } else if (query.equalsIgnoreCase("new") || query.equalsIgnoreCase("reset")) {
             MSG.tell(sender, Lang.COMMAND_SPAWN_CLEARED);
+            blueprint.clear();
             return true;
+        } else if (query.split(" ")[0].equalsIgnoreCase("save")) {
+            blueprint.remove(blueprint.size() - 1);
+            if (args != 2) {
+                MSG.tell(sender, Lang.COMMAND_MISSING_ARGUMENT, "Mob Name");
+                return false;
+            }
+            String name = query.split(" ")[1];
+            File file = new File(plugin.getDataFolder(), "data.yml");
+            YamlConfiguration data = YamlConfiguration.loadConfiguration(file);
+            data.set(query.split(" ")[1], this.getBlueprint());
+            try {
+                data.save(file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            plugin.getCoreCommand().getSpawnCommand().refreshMobs();
+            MSG.tell(sender, Lang.COMMAND_SPAWN_SAVED, query.split(" ")[1]);
+            return false;
         }
-        int args = query.split(" ").length;
         if (args < 2) {
             MSG.tell(sender, Lang.COMMAND_MISSING_ARGUMENT, args == 0 ? "Attribute Type" : "Value");
             return false;
         }
         String value = String.join(" ", query.substring(query.indexOf(" ") + 1));
-        MSG.log("value: %s", value);
         ItemStack item;
         switch (query.split(" ")[0].toLowerCase()) {
-            case "hp":
-                hp = Double.parseDouble(value);
+            case "hp" -> {
+                double hp = checkNumber(sender, value);
+                if (hp == -1) {
+                    blueprint.remove(blueprint.size() - 1);
+                    return false;
+                }
+                hp(hp);
                 MSG.tell(sender, Lang.COMMAND_SPAWN_SETATTRIBUTE, "health", hp);
                 return false;
-            case "maxhp":
-                type = Attribute.GENERIC_MAX_HEALTH;
-                break;
-            case "name":
-                this.name = value;
+            }
+            case "maxhp" -> type = Attribute.GENERIC_MAX_HEALTH;
+            case "name" -> {
+                name(value);
                 MSG.tell(sender, Lang.COMMAND_SPAWN_SETATTRIBUTE, "name", name);
                 return false;
-            case "head":
-            case "chest":
-            case "hand":
-            case "off_hand":
-            case "legs":
-            case "feet":
-                item = builder.build(value);
+            }
+            case "head", "chest", "hand", "off_hand", "legs", "feet" -> {
                 EquipmentSlot slot = Serializer.getEnum(query.split(" ")[0], EquipmentSlot.class);
                 if (slot == null) {
                     MSG.tell(sender, Lang.COMMAND_INVALID_ARGUMENT, "Unknown equipment slot", value);
+                    blueprint.remove(blueprint.size() - 1);
+                    return false;
+                }
+                item = builder.build(value);
+                if (item == null) {
+                    MSG.tell(sender, Lang.COMMAND_INVALID_ARGUMENT, "Unknown item", value);
+                    blueprint.remove(blueprint.size() - 1);
                     return false;
                 }
                 item(slot, item);
                 MSG.tell(sender, Lang.COMMAND_SPAWN_SETATTRIBUTE, MSG.camelCase(slot.toString()), builder.humanReadable(item));
                 return false;
-            case "speed":
-                type = Attribute.GENERIC_MOVEMENT_SPEED;
-                break;
-            case "damage":
-                type = Attribute.GENERIC_ATTACK_DAMAGE;
-                break;
-            case "followrange":
-                type = Attribute.GENERIC_FOLLOW_RANGE;
-                break;
-            case "kbres":
-                type = Attribute.GENERIC_KNOCKBACK_RESISTANCE;
-                break;
-            case "kbstr":
-                type = Attribute.GENERIC_ATTACK_KNOCKBACK;
-                break;
-            case "reinforcement":
-                type = Attribute.ZOMBIE_SPAWN_REINFORCEMENTS;
-                break;
-            case "jumpstr":
-                type = Attribute.HORSE_JUMP_STRENGTH;
-                break;
-            case "atkspd":
-                type = Attribute.GENERIC_ATTACK_SPEED;
-                break;
-            case "potion":
+            }
+            case "speed" -> type = Attribute.GENERIC_MOVEMENT_SPEED;
+            case "damage" -> type = Attribute.GENERIC_ATTACK_DAMAGE;
+            case "followrange" -> type = Attribute.GENERIC_FOLLOW_RANGE;
+            case "kbres" -> type = Attribute.GENERIC_KNOCKBACK_RESISTANCE;
+            case "kbstr" -> type = Attribute.GENERIC_ATTACK_KNOCKBACK;
+            case "reinforcement" -> type = Attribute.ZOMBIE_SPAWN_REINFORCEMENTS;
+            case "jumpstr" -> type = Attribute.HORSE_JUMP_STRENGTH;
+            case "atkspd" -> type = Attribute.GENERIC_ATTACK_SPEED;
+            case "flyspd" -> type = Attribute.GENERIC_FLYING_SPEED;
+            case "potion" -> {
                 PotionEffectType pot = Utils.getPotionEffect(value.split(" ")[0]);
                 if (pot == null) {
                     MSG.tell(sender, Lang.COMMAND_INVALID_ARGUMENT, "Unknown potion type", value.split(" ")[0]);
@@ -175,23 +237,56 @@ public class EntityBuilder<T extends Entity> {
                 }
                 int duration = Integer.MAX_VALUE;
                 int level = 1;
-                if (value.split(" ").length >= 2)
-                    level = Integer.parseInt(value.split(" ")[1]);
-                if (value.split(" ").length >= 3)
-                    duration = Integer.parseInt(value.split(" ")[2]) * 20;
+                try {
+                    if (value.split(" ").length >= 2)
+                        level = Integer.parseInt(value.split(" ")[1]);
+                } catch (NumberFormatException e) {
+                    MSG.tell(sender, Lang.COMMAND_INVALID_ARGUMENT, "Unknown level", value.split(" ")[1]);
+                    blueprint.remove(blueprint.size() - 1);
+                    return false;
+                }
+                try {
+                    if (value.split(" ").length >= 3)
+                        duration = Integer.parseInt(value.split(" ")[2]) * 20;
+                } catch (NumberFormatException e) {
+                    MSG.tell(sender, Lang.COMMAND_INVALID_ARGUMENT, "Unknown duration", value.split(" ")[2]);
+                    blueprint.remove(blueprint.size() - 1);
+                }
                 this.effect(new PotionEffect(pot, duration, level));
                 MSG.tell(sender, Lang.COMMAND_SPAWN_ADDPOTION, duration == Integer.MAX_VALUE ? "Permanent" : MSG.getDuration(duration / 20 * 1000L) + " of", MSG.camelCase(pot.getName()), level);
                 return false;
-            default:
+            }
+            default -> {
                 MSG.tell(sender, Lang.COMMAND_INVALID_ARGUMENT, "Unknown attribute", query.split(" ")[0]);
+                blueprint.remove(blueprint.size() - 1);
                 return false;
+            }
         }
 
-        double d = Double.parseDouble(value);
+        double d = checkNumber(sender, value);
+        if (d == -1) {
+            blueprint.remove(blueprint.size() - 1);
+            return false;
+        }
         modifier = new AttributeModifier("", d, AttributeModifier.Operation.ADD_NUMBER);
         withAttr(type, modifier);
         MSG.tell(sender, Lang.COMMAND_SPAWN_SETATTRIBUTE, MSG.camelCase(type.getKey().getKey()), d);
         return false;
+    }
+
+    private double checkNumber(CommandSender sender, String msg) {
+        double result = checkNumber(msg);
+        if (result == -1)
+            MSG.tell(sender, Lang.COMMAND_INVALID_ARGUMENT, "Invalid number", msg);
+        return result;
+    }
+
+    private double checkNumber(String msg) {
+        try {
+            return Double.parseDouble(msg);
+        } catch (NumberFormatException e) {
+            return -1;
+        }
     }
 
     /**
@@ -214,9 +309,6 @@ public class EntityBuilder<T extends Entity> {
             return ent;
 
         LivingEntity living = (LivingEntity) ent;
-        if (hp != -1)
-            living.setHealth(hp);
-
         for (Map.Entry<Attribute, AttributeModifier> entry : modifiers) {
             AttributeInstance attr = living.getAttribute(entry.getKey());
             if (attr == null) {
@@ -224,6 +316,12 @@ public class EntityBuilder<T extends Entity> {
                 continue;
             }
             attr.addModifier(entry.getValue());
+        }
+
+        if (hp != -1) {
+            if (hp > living.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue())
+                living.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(hp);
+            living.setHealth(hp);
         }
 
         EntityEquipment eq = living.getEquipment();
@@ -248,4 +346,8 @@ public class EntityBuilder<T extends Entity> {
         return type;
     }
 
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }

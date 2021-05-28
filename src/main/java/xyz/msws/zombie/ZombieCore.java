@@ -19,13 +19,15 @@ import java.io.File;
 public class ZombieCore extends JavaPlugin implements ZCore {
     private ModuleManager manager;
     private ZombieConfig config;
+    private ZombieCoreCommand core;
 
     @Override
     public void onEnable() {
         loadFiles();
         loadModules();
 
-        getCommand("zombiecore").setExecutor(new ZombieCoreCommand("zombiecore", this));
+        getCommand("zombiecore").setExecutor((core = new ZombieCoreCommand("zombiecore", this)));
+        core.getSpawnCommand().refreshMobs();
     }
 
     private void loadFiles() {
@@ -67,5 +69,10 @@ public class ZombieCore extends JavaPlugin implements ZCore {
     @Override
     public ItemFactory getItemBuilder() {
         return manager.getModule(ItemFactory.class);
+    }
+
+    @Override
+    public ZombieCoreCommand getCoreCommand() {
+        return core;
     }
 }

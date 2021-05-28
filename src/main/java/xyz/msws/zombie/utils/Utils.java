@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -50,7 +51,7 @@ public class Utils {
         return result == null ? null : ItemFlag.valueOf(result);
     }
 
-    public static String getOption(String key, List<?> options) {
+    public static String getOption(String key, Collection<?> options) {
         List<String> values = options.stream().map(Object::toString).collect(Collectors.toList());
         for (String s : values) {
             if (MSG.normalize(s).equals(MSG.normalize(key)))
