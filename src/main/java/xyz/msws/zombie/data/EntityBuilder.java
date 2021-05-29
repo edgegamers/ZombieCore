@@ -272,7 +272,7 @@ public class EntityBuilder<T extends Entity> implements Cloneable {
             }
             case "headdropchance", "chestdropchance", "handdropchance", "off_handdropchance", "legsdropchance", "feetdropchance",
                     "headdc", "chestdc", "handdc", "off_handdc", "legsdc", "feetdc" -> {
-                EquipmentSlot slot = Serializer.getEnum(query.split(" ")[0].replace("DropChance", "").replace("DC", ""), EquipmentSlot.class);
+                EquipmentSlot slot = Serializer.getEnum(query.split(" ")[0].toLowerCase().replace("dropchance", "").replace("dc", ""), EquipmentSlot.class);
                 if (slot == null) {
                     MSG.tell(sender, Lang.COMMAND_INVALID_ARGUMENT, "Unknown equipment slot", value);
                     blueprint.remove(blueprint.size() - 1);
@@ -350,7 +350,7 @@ public class EntityBuilder<T extends Entity> implements Cloneable {
         }
 
         if (hp != -1) {
-            if (hp > living.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue())
+            if (living.getAttribute(Attribute.GENERIC_MAX_HEALTH) != null && hp > living.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue())
                 living.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(hp);
             living.setHealth(hp);
         }
