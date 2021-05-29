@@ -13,6 +13,7 @@ import xyz.msws.zombie.modules.EventModule;
 import xyz.msws.zombie.utils.MSG;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.UUID;
 
@@ -20,6 +21,7 @@ public class AnimalBreeding extends EventModule {
     private final BreedingConfig config;
 
     private Map<UUID, Integer> attempts = new HashMap<>();
+    private HashSet<UUID> sent = new HashSet<>();
 
     public AnimalBreeding(ZCore plugin) {
         super(plugin);
@@ -75,7 +77,10 @@ public class AnimalBreeding extends EventModule {
         attempts.put(player.getUniqueId(), attempts.getOrDefault(player.getUniqueId(), 0) + 1);
         if (attempts.getOrDefault(player.getUniqueId(), 0) < config.getHopeless())
             return;
+        if (sent.contains(player.getUniqueId()))
+            return;
         attempts.put(player.getUniqueId(), 0);
+        sent.add(player.getUniqueId());
         for (Player p : Bukkit.getOnlinePlayers())
             MSG.tell(p, Lang.BREEDING_EGG, player.getName());
     }
