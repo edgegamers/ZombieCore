@@ -1,16 +1,25 @@
 package xyz.msws.zombie.modules.breeding;
 
-import org.bukkit.entity.Breedable;
-import org.bukkit.entity.Entity;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityBreedEvent;
+import org.bukkit.event.entity.EntityEnterLoveModeEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import xyz.msws.zombie.api.ZCore;
+import xyz.msws.zombie.data.Lang;
 import xyz.msws.zombie.modules.EventModule;
+import xyz.msws.zombie.utils.MSG;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class AnimalBreeding extends EventModule {
     private final BreedingConfig config;
+
+    private Map<UUID, Integer> attempts = new HashMap<>();
 
     public AnimalBreeding(ZCore plugin) {
         super(plugin);
@@ -34,17 +43,41 @@ public class AnimalBreeding extends EventModule {
             return;
         event.setCancelled(true);
         event.setExperience(0);
-
         if (!config.resetBreeding())
             return;
-
-        if (!(event.getMother() instanceof Breedable) || !(event.getFather() instanceof Breedable))
+        if (!(event.getMother() instanceof Animals) || !(event.getFather() instanceof Animals))
             return;
-        Breedable a = (Breedable) event.getMother();
-        Breedable b = (Breedable) event.getFather();
+        Animals a = (Animals) event.getMother();
+        Animals b = (Animals) event.getFather();
+        a.setBreed(true);
+        b.setBreed(true);
+        a.setLoveModeTicks(0);
+        b.setLoveModeTicks(0);
 
-        a.setBreed(false);
-        b.setBreed(false);
+        if (event.getBreeder() != null && config.getHopeless() != -1)
+            increment(event.getBreeder());
+    }
+
+    @EventHandler
+    public void onEnter(EntityEnterLoveModeEvent event) {
+        if (!config.blockLove())
+            return;
+        if (!config.blockBreeding(event.getEntityType()))
+            return;
+        event.setCancelled(true);
+        event.setTicksInLove(0);
+        if (event.getHumanEntity() == null)
+            return;
+        increment(event.getHumanEntity());
+    }
+
+    private void increment(LivingEntity player) {
+        attempts.put(player.getUniqueId(), attempts.getOrDefault(player.getUniqueId(), 0) + 1);
+        if (attempts.getOrDefault(player.getUniqueId(), 0) < config.getHopeless())
+            return;
+        attempts.put(player.getUniqueId(), 0);
+        for (Player p : Bukkit.getOnlinePlayers())
+            MSG.tell(p, Lang.BREEDING_EGG, player.getName());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)

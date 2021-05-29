@@ -35,6 +35,8 @@ public class YMLBreedingConfig extends BreedingConfig {
         clicks = breeding.getBoolean("BlockClicks", false);
         breed = breeding.getBoolean("BlockBreeding", true);
         resetBreeding = breeding.getBoolean("ResetBreeding", true);
+        hopeless = breeding.getInt("EggThreshold", 64);
+        love = breeding.getBoolean("BlockLove", true);
     }
 
     @Override
@@ -42,8 +44,11 @@ public class YMLBreedingConfig extends BreedingConfig {
         ConfigurationSection features = config.createSection("Features");
         List<String> types = new ArrayList<>();
         blockBreeding.forEach(s -> types.add(s.toString()));
-        features.set("DisableBreeding", types);
-
+        features.set("Breeding.Entities", types);
+        features.set("BlockClicks", clicks);
+        features.set("BlockBreeding", breed);
+        features.set("ResetBreeding", true);
+        features.set("EggThreshold", hopeless);
         config.set("Features", features);
     }
 }

@@ -10,7 +10,8 @@ import java.util.EnumSet;
 public abstract class BreedingConfig extends ModuleConfig<AnimalBreeding> {
 
     protected EnumSet<EntityType> blockBreeding = EnumSet.noneOf(EntityType.class);
-    protected boolean clicks = true, breed = false, resetBreeding = true;
+    protected boolean clicks = true, breed = false, love = true, resetBreeding = true;
+    protected int hopeless = 64;
 
     public BreedingConfig(ZCore plugin, ZombieConfig config) {
         super(plugin, config);
@@ -42,6 +43,14 @@ public abstract class BreedingConfig extends ModuleConfig<AnimalBreeding> {
 
     public boolean resetBreeding() {
         return resetBreeding;
+    }
+
+    public boolean blockLove() {
+        return love;
+    }
+
+    public int getHopeless() {
+        return hopeless;
     }
 
 }

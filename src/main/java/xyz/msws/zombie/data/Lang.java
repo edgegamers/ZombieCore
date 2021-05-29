@@ -15,11 +15,13 @@ public enum Lang {
     COMMAND_INVALID_ARGUMENT("%prefix% &cInvalid argument specified: &e%s &7(&8%s&7)."),
     COMMAND_SPAWN_SETATTRIBUTE("%prefix% Successfully set &e%s &7to &a%s&7."),
     COMMAND_SPAWN_ADDPOTION("%prefix% Successfully added &a%s %s %d&7."),
+    COMMAND_SPAWN_REMOVE("%prefix% Successully removed &a%s&7."),
     COMMAND_SPAWN_CLEARED("%prefix% Reset custom boss. Type /zc spawn [Entity] to start."),
     COMMAND_SPAWN_STARTED("%prefix% Started customization of &e%s&7. Type &f/zc [property] [value]&7 to customize."),
     COMMAND_RELOAD("%prefix% Successfully reloaded files."),
     COMMAND_SPAWN_SAVED("%prefix% Successfully saved &e%s&7 as a custom boss."),
     COMMAND_DELETE("%prefix% Successfully deleted &e%s&7."),
+    BREEDING_EGG("%prefix% &e%s&7 is a &dhopeless &5romantic&7."),
     ;
 
     private final String[] def;

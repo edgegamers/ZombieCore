@@ -104,7 +104,7 @@ public class SpawnCommand extends SubCommand implements Listener {
         if (args.length == 1) {
             List<String> attributes = new ArrayList<>();
             attributes.addAll(Arrays.asList("atkspd", "flyspd", "maxhp", "hp", "health", "name", "head", "chest", "hand", "off_hand", "legs", "feet"));
-            attributes.addAll(Arrays.asList("speed", "damage", "potion", "followRange", "kbRes", "kbStr", "spawn", "new", "reset", "save"));
+            attributes.addAll(Arrays.asList("speed", "damage", "potion", "removepotion", "followRange", "kbRes", "kbStr", "spawn", "new", "reset", "save"));
             attributes.addAll(Arrays.asList("headDropChance", "chestDropChance", "handDropChance", "off_handDropChance", "legsDropChance"));
             attributes.addAll(Arrays.asList("feetDropChance", "headDC", "chestDC", "handDC", "off_handDC", "legsDC", "feetDC", "dropChance"));
 
@@ -152,7 +152,7 @@ public class SpawnCommand extends SubCommand implements Listener {
                         result.addAll(add);
                     }
                 }
-            } else if (args[0].equalsIgnoreCase("potion")) {
+            } else if (args[0].toLowerCase().contains("potion")) {
                 if (args.length == 2) {
                     for (PotionEffectType type : PotionEffectType.values())
                         if (MSG.normalize(type.getName()).startsWith(args[1].toLowerCase()))

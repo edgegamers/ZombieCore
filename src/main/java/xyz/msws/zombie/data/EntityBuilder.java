@@ -99,7 +99,7 @@ public class EntityBuilder<T extends Entity> implements Cloneable {
      * @param hp Hp points to set
      * @return The resulting Builder
      */
-    public EntityBuilder<T> hp(double hp) {
+    public EntityBuilder<T> health(double hp) {
         this.hp = hp;
         return this;
     }
@@ -150,36 +150,39 @@ public class EntityBuilder<T extends Entity> implements Cloneable {
         AttributeModifier modifier;
         blueprint.add(query);
         int args = query.split(" ").length;
-
-        if (query.equalsIgnoreCase("spawn")) {
-            if (!(sender instanceof Player))
-                return false;
-            EntityType entType = spawn(((Player) sender).getLocation()).getType();
-            MSG.tell(sender, Lang.COMMAND_SPAWN_SPAWNED, MSG.camelCase(entType.toString()));
-            blueprint.remove(blueprint.size() - 1);
-            return false;
-        } else if (query.equalsIgnoreCase("new") || query.equalsIgnoreCase("reset")) {
-            MSG.tell(sender, Lang.COMMAND_SPAWN_CLEARED);
-            blueprint.clear();
-            return true;
-        } else if (query.split(" ")[0].equalsIgnoreCase("save")) {
-            blueprint.remove(blueprint.size() - 1);
-            if (args != 2) {
-                MSG.tell(sender, Lang.COMMAND_MISSING_ARGUMENT, "Mob Name");
+        switch (query.toLowerCase()) {
+            case "spawn" -> {
+                if (!(sender instanceof Player))
+                    return false;
+                EntityType entType = spawn(((Player) sender).getLocation()).getType();
+                MSG.tell(sender, Lang.COMMAND_SPAWN_SPAWNED, MSG.camelCase(entType.toString()));
+                blueprint.remove(blueprint.size() - 1);
                 return false;
             }
-            String name = query.split(" ")[1];
-            File file = new File(plugin.getDataFolder(), "data.yml");
-            YamlConfiguration data = YamlConfiguration.loadConfiguration(file);
-            data.set(name, this.getBlueprint());
-            try {
-                data.save(file);
-            } catch (IOException e) {
-                e.printStackTrace();
+            case "new", "reset" -> {
+                MSG.tell(sender, Lang.COMMAND_SPAWN_CLEARED);
+                blueprint.clear();
+                return true;
             }
-            plugin.refreshMobs();
-            MSG.tell(sender, Lang.COMMAND_SPAWN_SAVED, name);
-            return false;
+            case "save" -> {
+                blueprint.remove(blueprint.size() - 1);
+                if (args != 2) {
+                    MSG.tell(sender, Lang.COMMAND_MISSING_ARGUMENT, "Mob Name");
+                    return false;
+                }
+                String name = query.split(" ")[1];
+                File file = new File(plugin.getDataFolder(), "data.yml");
+                YamlConfiguration data = YamlConfiguration.loadConfiguration(file);
+                data.set(name, this.getBlueprint());
+                try {
+                    data.save(file);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                plugin.refreshMobs();
+                MSG.tell(sender, Lang.COMMAND_SPAWN_SAVED, name);
+                return false;
+            }
         }
         if (args < 2) {
             MSG.tell(sender, Lang.COMMAND_MISSING_ARGUMENT, args == 0 ? "Attribute Type" : "Value");
@@ -194,7 +197,7 @@ public class EntityBuilder<T extends Entity> implements Cloneable {
                     blueprint.remove(blueprint.size() - 1);
                     return false;
                 }
-                hp(hp);
+                health(hp);
                 MSG.tell(sender, Lang.COMMAND_SPAWN_SETATTRIBUTE, "Health", hp);
                 return false;
             }
@@ -255,6 +258,17 @@ public class EntityBuilder<T extends Entity> implements Cloneable {
                 }
                 this.effect(new PotionEffect(pot, duration, level));
                 MSG.tell(sender, Lang.COMMAND_SPAWN_ADDPOTION, duration == Integer.MAX_VALUE ? "Permanent" : MSG.getDuration(duration / 20 * 1000L) + " of", MSG.camelCase(pot.getName()), level);
+                return false;
+            }
+            case "removepotion" -> {
+                PotionEffectType pot = Utils.getPotionEffect(value.split(" ")[0]);
+                if (pot == null) {
+                    MSG.tell(sender, Lang.COMMAND_INVALID_ARGUMENT, "Unknown potion type", value.split(" ")[0]);
+                    return false;
+                }
+
+                effects.removeIf(effect -> effect.getType() == pot);
+                MSG.tell(sender, Lang.COMMAND_SPAWN_REMOVE, MSG.camelCase(pot.getName()));
                 return false;
             }
             case "dropchance" -> {
@@ -375,7 +389,6 @@ public class EntityBuilder<T extends Entity> implements Cloneable {
 
         for (PotionEffect effect : effects)
             living.addPotionEffect(effect);
-
         return ent;
     }
 

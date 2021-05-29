@@ -7,7 +7,9 @@ Features:
       - 'COW'
     BlockClicks: false  # If true, players will not be able to feed breedable animals
     BlockBreeding: true # If true, animals will not be able to breed
+    BlockLove: true     # If true, animals will not enter love mode at all
     ResetBreeding: true # If true, animals will be reset to a non-breeding state after attempting to breed
+    EggThreshold: 64 # (-1 to disable)
   DaySpawns:
     CorruptionChance: .1 # 10% Chance that a monster will spawn when a regular mob spawns
     MobWeights:
