@@ -22,6 +22,8 @@ public class FishModule extends EventModule {
     @EventHandler
     public void onFish(PlayerFishEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();
+        if (event.getPlayer().hasPermission("zombiecore.bypass.fishing"))
+            return;
         if (event.getState() == PlayerFishEvent.State.FISHING) {
             times.put(uuid, System.currentTimeMillis());
             return;

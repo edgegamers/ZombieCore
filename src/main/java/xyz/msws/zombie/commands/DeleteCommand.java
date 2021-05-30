@@ -39,10 +39,9 @@ public class DeleteCommand extends SubCommand {
         List<String> result = new ArrayList<>();
         if (args.length > 1)
             return result;
-        for (String res : plugin.getCustomMobs().keySet()) {
+        for (String res : plugin.getCustomMobs().keySet())
             if (res.toLowerCase().startsWith(args[0].toLowerCase()))
                 result.add(res);
-        }
         return result;
     }
 }

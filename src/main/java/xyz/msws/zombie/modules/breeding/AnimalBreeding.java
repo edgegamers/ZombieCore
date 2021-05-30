@@ -35,13 +35,17 @@ public class AnimalBreeding extends EventModule {
     @Override
     public void disable() {
         EntityBreedEvent.getHandlerList().unregister(this);
+        EntityEnterLoveModeEvent.getHandlerList().unregister(this);
+        PlayerInteractEntityEvent.getHandlerList().unregister(this);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onBreed(EntityBreedEvent event) {
         if (!config.blockBreeding())
             return;
-        if (!config.blockBreeding(event.getEntityType()))
+        if (config.allowBreeding(event.getEntityType()))
+            return;
+        if (event.getBreeder() != null && event.getBreeder().hasPermission("zombiecore.bypass.breeding"))
             return;
         event.setCancelled(true);
         event.setExperience(0);
@@ -64,7 +68,9 @@ public class AnimalBreeding extends EventModule {
     public void onEnter(EntityEnterLoveModeEvent event) {
         if (!config.blockLove())
             return;
-        if (!config.blockBreeding(event.getEntityType()))
+        if (config.allowBreeding(event.getEntityType()))
+            return;
+        if (event.getHumanEntity() != null && event.getHumanEntity().hasPermission("zombiecore.bypass.breeding"))
             return;
         event.setCancelled(true);
         event.setTicksInLove(0);
@@ -92,7 +98,9 @@ public class AnimalBreeding extends EventModule {
             return;
         if (!(entity instanceof Breedable))
             return;
-        if (!config.blockBreeding(entity.getType()))
+        if (config.allowBreeding(entity.getType()))
+            return;
+        if (event.getPlayer().hasPermission("zombiecore.bypass.breeding"))
             return;
         event.setCancelled(true);
     }

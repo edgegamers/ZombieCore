@@ -17,8 +17,8 @@ public abstract class BreedingConfig extends ModuleConfig<AnimalBreeding> {
         super(plugin, config);
     }
 
-    public boolean blockBreeding(EntityType type) {
-        return blockBreeding.contains(type);
+    public boolean allowBreeding(EntityType type) {
+        return !blockBreeding.contains(type);
     }
 
     public void addBreed(EntityType type) {

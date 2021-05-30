@@ -65,9 +65,8 @@ public abstract class BaseCommand extends ZombieCommand implements CommandExecut
                 result.addAll(cmd.getValue().tab(sender, label, args));
                 continue;
             }
-            if (cmd.getKey().startsWith(args[0].toLowerCase())) {
+            if (cmd.getKey().startsWith(args[0].toLowerCase()))
                 result.add(cmd.getKey());
-            }
             for (String alias : cmd.getValue().getAliases()) {
                 if (alias.startsWith(args[0].toLowerCase()))
                     result.add(alias);
