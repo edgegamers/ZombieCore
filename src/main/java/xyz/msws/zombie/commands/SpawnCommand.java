@@ -142,8 +142,6 @@ public class SpawnCommand extends SubCommand implements Listener {
                 }
                 if (args.length > 2) {
                     for (ItemAttribute attr : plugin.getItemBuilder().getAttributes()) {
-                        if (attr.getPermission() != null && !sender.hasPermission(attr.getPermission()))
-                            continue;
                         List<String> add = attr.tabComplete(args[args.length - 1], args, sender);
                         if (add == null || add.isEmpty())
                             continue;
