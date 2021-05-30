@@ -64,6 +64,8 @@ public class OwnerAttribute implements ItemAttribute {
         if (!(meta instanceof SkullMeta))
             return null;
         SkullMeta skull = (SkullMeta) meta;
+        if (skull.getOwningPlayer() == null)
+            return null;
         return "owned by " + skull.getOwningPlayer().getName();
     }
 

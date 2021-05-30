@@ -38,14 +38,12 @@ public class SpawnCommand extends SubCommand implements Listener {
             MSG.tell(sender, Lang.COMMAND_PLAYER_ONLY);
             return true;
         }
-
         Player player = (Player) sender;
 
         if (args.length != 1) {
             MSG.tell(sender, Lang.COMMAND_MISSING_ARGUMENT, "Entity Type");
             return true;
         }
-
 
         EntityType type;
         type = Serializer.getEnum(args[0], EntityType.class);
