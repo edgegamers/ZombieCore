@@ -25,6 +25,8 @@ public class DaylightSpawn extends EventModule {
             return;
         if (!config.doCorrupt())
             return;
+        if (event.getLocation().getBlock().isLiquid())
+            return;
 
         EntityType type = config.getRandomType();
         Location origin = event.getLocation().clone().add(config.getRandomOffset());
