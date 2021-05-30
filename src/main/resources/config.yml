@@ -40,6 +40,7 @@ Features:
       - 'ALL'
       - 'HEAD'
     Items:
+      - 'ALL'
       - 'DIAMOND_SWORD'
     Enchants:
       - 'ALL'
