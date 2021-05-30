@@ -25,7 +25,10 @@ import xyz.msws.zombie.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Helper builder for custom mobs
@@ -34,7 +37,7 @@ import java.util.*;
  */
 public class EntityBuilder<T extends Entity> implements Cloneable {
     private final Class<T> type;
-    private final List<Map.Entry<Attribute, AttributeModifier>> modifiers = new ArrayList<>();
+    private final Map<Attribute, AttributeModifier> modifiers = new HashMap<>();
     private String name = null;
     private final Map<EquipmentSlot, ItemStack> items = new HashMap<>();
     private final Map<EquipmentSlot, Float> rates = new HashMap<>();
@@ -78,7 +81,7 @@ public class EntityBuilder<T extends Entity> implements Cloneable {
      * @return The resulting Builder
      */
     public EntityBuilder<T> withAttr(Attribute attr, AttributeModifier modifier) {
-        modifiers.add(new AbstractMap.SimpleEntry<>(attr, modifier));
+        modifiers.put(attr, modifier);
         return this;
     }
 
@@ -354,13 +357,13 @@ public class EntityBuilder<T extends Entity> implements Cloneable {
             return ent;
 
         LivingEntity living = (LivingEntity) ent;
-        for (Map.Entry<Attribute, AttributeModifier> entry : modifiers) {
+        for (Map.Entry<Attribute, AttributeModifier> entry : modifiers.entrySet()) {
             AttributeInstance attr = living.getAttribute(entry.getKey());
             if (attr == null) {
                 MSG.log("Could not apply %s attribute to %s", entry.getKey().getKey(), type.getName());
                 continue;
             }
-            attr.addModifier(entry.getValue());
+            attr.setBaseValue(entry.getValue().getAmount());
         }
 
         if (hp != -1) {
