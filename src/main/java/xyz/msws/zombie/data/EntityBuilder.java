@@ -150,7 +150,7 @@ public class EntityBuilder<T extends Entity> implements Cloneable {
         AttributeModifier modifier;
         blueprint.add(query);
         int args = query.split(" ").length;
-        switch (query.toLowerCase()) {
+        switch (query.toLowerCase().split(" ")[0]) {
             case "spawn" -> {
                 if (!(sender instanceof Player))
                     return false;
@@ -159,7 +159,7 @@ public class EntityBuilder<T extends Entity> implements Cloneable {
                 blueprint.remove(blueprint.size() - 1);
                 return false;
             }
-            case "new", "reset" -> {
+            case "new", "reset", "quit" -> {
                 MSG.tell(sender, Lang.COMMAND_SPAWN_CLEARED);
                 blueprint.clear();
                 return true;
