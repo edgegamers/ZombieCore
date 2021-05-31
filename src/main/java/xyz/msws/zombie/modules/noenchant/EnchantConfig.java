@@ -41,4 +41,9 @@ public abstract class EnchantConfig extends ModuleConfig<NoEnchantSpawn> {
     public boolean restrictEnchant(Enchantment enchantment) {
         return enchants.contains(enchantment);
     }
+
+    @Override
+    public String getName() {
+        return "enchants";
+    }
 }

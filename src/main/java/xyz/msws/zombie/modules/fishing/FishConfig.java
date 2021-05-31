@@ -28,4 +28,9 @@ public abstract class FishConfig extends ModuleConfig<FishModule> {
     public long getMaxTime() {
         return maxTime;
     }
+
+    @Override
+    public String getName() {
+        return "fishing";
+    }
 }

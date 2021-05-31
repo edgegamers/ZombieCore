@@ -158,9 +158,12 @@ public class SpawnCommand extends SubCommand implements Listener {
                 } else if (args.length == 4) {
                     result.add("<duration>");
                 }
-
+            } else {
+                EntityBuilder<?> builder = builders.get(player.getUniqueId());
+                String add = builder.getDefault(args[0]);
+                if (add != null)
+                    result.add(add);
             }
-
             return result;
         }
         return result;

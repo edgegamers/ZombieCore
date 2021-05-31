@@ -130,6 +130,38 @@ public class EntityBuilder<T extends Entity> implements Cloneable {
         return this;
     }
 
+    public String getDefault(String key) {
+        return switch (key.toLowerCase()) {
+            case "name" -> name;
+            case "hp", "health" -> hp + "";
+            case "maxhealth", "maxhp" -> getDefault(Attribute.GENERIC_MAX_HEALTH);
+            case "speed" -> getDefault(Attribute.GENERIC_MOVEMENT_SPEED);
+            case "followrange", "sight", "perception", "range" -> getDefault(Attribute.GENERIC_FOLLOW_RANGE);
+            case "kbres", "weight", "mass", "knockbackresistance" -> getDefault(Attribute.GENERIC_KNOCKBACK_RESISTANCE);
+            case "damage", "strength" -> getDefault(Attribute.GENERIC_ATTACK_SPEED);
+            case "kbstr", "fightspeed", "brute", "knockbackstrength" -> getDefault(Attribute.GENERIC_ATTACK_KNOCKBACK);
+            case "reinforcement" -> getDefault(Attribute.ZOMBIE_SPAWN_REINFORCEMENTS);
+            case "jumpstr", "jump", "jumpstrength" -> getDefault(Attribute.HORSE_JUMP_STRENGTH);
+            case "atkspd", "attackspeed", "rof", "reloadspeed" -> getDefault(Attribute.GENERIC_ATTACK_SPEED);
+            case "flyspd", "zoom", "flight" -> getDefault(Attribute.GENERIC_FLYING_SPEED);
+            default -> "";
+        };
+    }
+
+    private String getDefault(Attribute attribute) {
+        return switch (attribute) {
+            case GENERIC_MAX_HEALTH -> 20 + "";
+            case GENERIC_FOLLOW_RANGE -> 32 + "";
+            case GENERIC_KNOCKBACK_RESISTANCE, GENERIC_ARMOR_TOUGHNESS, GENERIC_ATTACK_KNOCKBACK, GENERIC_ARMOR, GENERIC_LUCK -> 0 + "";
+            case GENERIC_MOVEMENT_SPEED -> .2 + "";
+            case GENERIC_ATTACK_DAMAGE -> 2 + "";
+            case GENERIC_ATTACK_SPEED -> 4 + "";
+            case HORSE_JUMP_STRENGTH -> 0.7 + "";
+            case GENERIC_FLYING_SPEED -> 0.4 + "";
+            case ZOMBIE_SPAWN_REINFORCEMENTS -> 0.0 + "";
+            default -> "";
+        };
+    }
 
     /**
      * Accepts a user input in the form of [property] [value], returns true if the user requested to reset the mob.
@@ -230,8 +262,8 @@ public class EntityBuilder<T extends Entity> implements Cloneable {
             case "speed", "movespeed" -> type = Attribute.GENERIC_MOVEMENT_SPEED;
             case "damage", "strength" -> type = Attribute.GENERIC_ATTACK_DAMAGE;
             case "followrange", "sight", "perception", "range" -> type = Attribute.GENERIC_FOLLOW_RANGE;
-            case "kbres", "weight", "mass", "knockbacksesistance" -> type = Attribute.GENERIC_KNOCKBACK_RESISTANCE;
-            case "kbstr", "fightSpeed", "brute", "knockbackstrength" -> type = Attribute.GENERIC_ATTACK_KNOCKBACK;
+            case "kbres", "weight", "mass", "knockbackresistance" -> type = Attribute.GENERIC_KNOCKBACK_RESISTANCE;
+            case "kbstr", "fightspeed", "brute", "knockbackstrength" -> type = Attribute.GENERIC_ATTACK_KNOCKBACK;
             case "reinforcement" -> type = Attribute.ZOMBIE_SPAWN_REINFORCEMENTS;
             case "jumpstr", "jump", "jumpstrength" -> type = Attribute.HORSE_JUMP_STRENGTH;
             case "atkspd", "attackspeed", "rof", "reloadspeed" -> type = Attribute.GENERIC_ATTACK_SPEED;

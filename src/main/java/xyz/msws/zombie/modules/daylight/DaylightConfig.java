@@ -89,4 +89,9 @@ public abstract class DaylightConfig extends ModuleConfig<DaylightSpawn> {
     public int getChunkMobs() {
         return chunkMobs;
     }
+
+    @Override
+    public String getName() {
+        return "spawning";
+    }
 }

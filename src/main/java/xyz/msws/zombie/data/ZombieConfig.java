@@ -52,4 +52,8 @@ public abstract class ZombieConfig {
         }
         return null;
     }
+
+    public List<ModuleConfig<?>> getConfigs() {
+        return configs;
+    }
 }

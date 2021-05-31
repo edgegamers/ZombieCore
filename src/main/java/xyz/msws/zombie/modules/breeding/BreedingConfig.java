@@ -53,4 +53,8 @@ public abstract class BreedingConfig extends ModuleConfig<AnimalBreeding> {
         return hopeless;
     }
 
+    @Override
+    public String getName() {
+        return "breeding";
+    }
 }

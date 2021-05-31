@@ -22,6 +22,8 @@ public enum Lang {
     COMMAND_SPAWN_SAVED("%prefix% Successfully saved &e%s&7 as a custom boss."),
     COMMAND_DELETE("%prefix% Successfully deleted &e%s&7."),
     BREEDING_EGG("%prefix% &e%s&7 is a &dhopeless &5romantic&7."),
+    COMMAND_CONFIG_ERROR("%prefix% Could not set &a%s&7 to &e%s&7 (&8%s&7)."),
+    COMMAND_CONFIG_SET("%prefix% Successfully set &a%s&7 to &e%s&7."),
     ;
 
     private final String[] def;
