@@ -1,7 +1,10 @@
 package xyz.msws.zombie.modules.daylight;
 
+import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Monster;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -27,6 +30,18 @@ public class DaylightSpawn extends EventModule {
             return;
         if (event.getLocation().getBlock().isLiquid())
             return;
+        if (config.getChunkMobs() != -1) {
+            Chunk chunk = event.getLocation().getChunk();
+            int amo = 0;
+            for (Entity ent : chunk.getEntities()) {
+                if (!(ent instanceof Monster))
+                    continue;
+                amo++;
+            }
+            if (amo > config.getChunkMobs())
+                return;
+        }
+
 
         EntityType type = config.getRandomType();
         Location origin = event.getLocation().clone().add(config.getRandomOffset());

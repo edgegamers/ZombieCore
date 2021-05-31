@@ -17,6 +17,7 @@ public abstract class DaylightConfig extends ModuleConfig<DaylightSpawn> {
     protected double corruptChance, minRange, maxRange;
     protected Map<Integer, Double> mobAmounts = new HashMap<>();
     protected Random random;
+    protected int chunkMobs;
 
     public DaylightConfig(ZCore plugin, ZombieConfig config) {
         super(plugin, config);
@@ -83,5 +84,9 @@ public abstract class DaylightConfig extends ModuleConfig<DaylightSpawn> {
 
     public boolean doCorrupt() {
         return random.nextDouble() < corruptChance;
+    }
+
+    public int getChunkMobs() {
+        return chunkMobs;
     }
 }

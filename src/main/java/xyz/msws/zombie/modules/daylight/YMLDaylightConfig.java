@@ -51,6 +51,7 @@ public class YMLDaylightConfig extends DaylightConfig {
 
         this.minRange = spawns.getDouble("RangeOffset.Min", 3);
         this.maxRange = spawns.getDouble("RangeOffset.Max", 10);
+        this.chunkMobs = spawns.getInt("MaxChunkMobs", 5);
 
         ConfigurationSection amounts = spawns.getConfigurationSection("MobAmount");
         if (amounts == null)

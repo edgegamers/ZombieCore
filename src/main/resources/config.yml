@@ -26,6 +26,7 @@ Features:
       5: 0.005
       #6: 0.0001  # (Examples)
     #10: 0.00001
+    MaxChunkMobs: 5 # Max amount of monsters per chunk, -1 to disable
   Fish:
     MinTime: 20000 # All hook events will be cancelled if they occur before this many milliseconds (-1 to disable)
     MaxTime: -1   # No hook events will be cancelled if they occur beyond this many milliseconds (-1 to disable)
