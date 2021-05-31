@@ -98,6 +98,11 @@ public class ConfigCommand extends SubCommand {
             }
         }
 
+        if (value == null) {
+            MSG.tell(sender, Lang.COMMAND_CONFIG_ERROR, args[1], joiner.toString(), "Unable to parse, please set value in config manually.");
+            return true;
+        }
+
         try {
             field.set(feature, value);
         } catch (ClassCastException | IllegalAccessException e) {
