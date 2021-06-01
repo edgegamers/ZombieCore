@@ -128,12 +128,13 @@ public class Serializer {
                 list.addAll(Arrays.asList(clazz.getEnumConstants()));
                 break;
             }
-            try {
-                E type = getEnum(s, clazz);
-                list.add(type);
-            } catch (IllegalArgumentException e) {
+            E type = getEnum(s, clazz);
+            if (type == null) {
                 MSG.log("Invalid enum value specified: %s", s);
+                continue;
             }
+            list.add(type);
+
         }
         return list;
     }

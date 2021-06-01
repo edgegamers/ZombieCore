@@ -16,6 +16,7 @@ import xyz.msws.zombie.modules.fishing.FishModule;
 import xyz.msws.zombie.modules.named.NamedSpawn;
 import xyz.msws.zombie.modules.noenchant.NoEnchantSpawn;
 import xyz.msws.zombie.modules.passivespawn.PassiveSpawn;
+import xyz.msws.zombie.utils.MSG;
 
 import java.io.File;
 import java.util.HashMap;
@@ -28,8 +29,18 @@ public class ZombieCore extends JavaPlugin implements ZCore {
 
     @Override
     public void onEnable() {
-        loadFiles();
-        loadModules();
+        try {
+            loadFiles();
+        } catch (Exception e) {
+            e.printStackTrace();
+            MSG.log("files failed");
+        }
+        try {
+            loadModules();
+        } catch (Exception e) {
+            e.printStackTrace();
+            MSG.log("modules failed");
+        }
 
         getCommand("zombiecore").setExecutor(new ZombieCoreCommand("zombiecore", this));
         refreshMobs();
@@ -45,8 +56,7 @@ public class ZombieCore extends JavaPlugin implements ZCore {
     }
 
     private void loadModules() {
-        manager = new ModuleManager(this);
-
+        this.manager = new ModuleManager(this);
         manager.addModule(new ItemFactory(this));
         manager.addModule(new AnimalBreeding(this));
         manager.addModule(new DaylightSpawn(this));
@@ -60,7 +70,7 @@ public class ZombieCore extends JavaPlugin implements ZCore {
 
     @Override
     public void onDisable() {
-        manager.disable();
+//        manager.disable();
     }
 
     @Override

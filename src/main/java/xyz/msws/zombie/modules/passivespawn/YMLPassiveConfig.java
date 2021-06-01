@@ -29,7 +29,6 @@ public class YMLPassiveConfig extends PassiveConfig {
             MSG.log("No passive mob spawning config specified");
             return;
         }
-
         block = new ConfigCollection<>(Serializer.getEnumSet(spawns.getStringList("Entities"), EntityType.class), EntityType.class);
         reasons = new ConfigCollection<>(Serializer.getEnumSet(spawns.getStringList("BlockReasons"), CreatureSpawnEvent.SpawnReason.class), CreatureSpawnEvent.SpawnReason.class);
         method = Serializer.getEnum(spawns.getString("Method"), BlockMethod.class);
