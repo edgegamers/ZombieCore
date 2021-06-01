@@ -12,6 +12,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import xyz.msws.zombie.api.ZCore;
 import xyz.msws.zombie.modules.EventModule;
+import xyz.msws.zombie.utils.MSG;
 
 public class DaylightSpawn extends EventModule {
     private final DaylightConfig config;
@@ -56,9 +57,11 @@ public class DaylightSpawn extends EventModule {
                 break;
             Block block = loc.getWorld().getHighestBlockAt(loc);
             if (!config.allowSpawn(block)) {
+                MSG.announce("&cBlocked &7spawn at &e%s &7(&2b&7:&a%d &6s&7:&e%d&7)", MSG.camelCase(block.getType().toString()), block.getLightFromBlocks(), block.getLightFromSky());
                 i--;
                 continue;
             }
+            MSG.announce("&aAllowed &7spawn at &e%s &7(&2b&7:&a%d &6s&7:&e%d&7)", MSG.camelCase(block.getType().toString()), block.getLightFromBlocks(), block.getLightFromSky());
             loc.getWorld().spawnEntity(block.getLocation().add(.5, 1, .5), type);
         }
     }

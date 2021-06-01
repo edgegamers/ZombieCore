@@ -79,3 +79,25 @@ Features:
       - 'DIAMOND_SWORD'
     Enchants:
       - 'ALL'
+  BlockSpawns:
+    Method: CANCEL # REMOVE, CANCEL, TP, HP
+    Entities:
+      - 'SHEEP'
+      - 'COW'
+      - 'BEE'
+      - 'PIG'
+      - 'OCELOT'
+      - 'CHICKEN'
+      - 'BAT'
+      - 'DONKEY'
+      - 'HORSE'
+      - 'FOX'
+      - 'MOOSHROOM'
+      - 'MULE'
+      - 'POLAR_BEAR'
+      - 'RABBIT'
+      - 'VILLAGER'
+      - 'SNOW_GOLEM'
+      - 'TURTLE'
+    BlockReasons:
+      - 'NATURAL'

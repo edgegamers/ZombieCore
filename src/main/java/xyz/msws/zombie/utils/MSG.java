@@ -62,6 +62,10 @@ public class MSG {
         tell(sender, message.format(objects));
     }
 
+    public static void announce(String message, Object... objects) {
+        Bukkit.broadcastMessage(String.format(message, objects));
+    }
+
     /**
      * Sends a {@link Sendable} message to the target
      * Formats the message if additional parameters are given

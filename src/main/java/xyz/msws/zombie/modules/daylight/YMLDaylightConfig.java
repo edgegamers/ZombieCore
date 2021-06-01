@@ -26,7 +26,7 @@ public class YMLDaylightConfig extends DaylightConfig {
 
         ConfigurationSection spawns = features.getConfigurationSection("DaySpawns");
         if (spawns == null) {
-            MSG.log("No dalight mob spawning config specified");
+            MSG.log("No daylight mob spawning config specified");
             return;
         }
 
