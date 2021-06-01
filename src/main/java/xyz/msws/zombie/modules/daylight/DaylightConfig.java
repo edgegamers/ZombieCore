@@ -5,6 +5,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.util.Vector;
 import xyz.msws.zombie.api.ZCore;
+import xyz.msws.zombie.data.ConfigMap;
 import xyz.msws.zombie.data.TimeVariable;
 import xyz.msws.zombie.data.ZombieConfig;
 import xyz.msws.zombie.modules.ModuleConfig;
@@ -16,11 +17,11 @@ import java.util.Random;
 
 public abstract class DaylightConfig extends ModuleConfig<DaylightSpawn> {
 
-    protected EnumMap<EntityType, Double> mobWeights = new EnumMap<>(EntityType.class);
+    protected ConfigMap<EntityType, Double> mobWeights = new ConfigMap<>(new EnumMap<>(EntityType.class), EntityType.class, Double.class);
     protected double minRange, maxRange;
     protected TimeVariable<Double> corruptChance;
     protected TimeVariable<Integer> chunkMobs;
-    protected Map<Integer, Double> mobAmounts = new HashMap<>();
+    protected ConfigMap<Integer, Double> mobAmounts = new ConfigMap<>(new HashMap<>(), Integer.class, Double.class);
     protected Random random;
     protected int minBlockLevel, maxBlocklevel, minSkyLevel, maxSkyLevel;
 
@@ -41,7 +42,7 @@ public abstract class DaylightConfig extends ModuleConfig<DaylightSpawn> {
         mobWeights.put(type, rate);
     }
 
-    public EnumMap<EntityType, Double> getMobWeights() {
+    public ConfigMap<EntityType, Double> getMobWeights() {
         return mobWeights;
     }
 

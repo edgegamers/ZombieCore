@@ -2,6 +2,7 @@ package xyz.msws.zombie.commands;
 
 import org.bukkit.command.CommandSender;
 import xyz.msws.zombie.api.ZCore;
+import xyz.msws.zombie.data.ConfigMap;
 import xyz.msws.zombie.data.Lang;
 import xyz.msws.zombie.modules.ModuleConfig;
 import xyz.msws.zombie.utils.MSG;
@@ -63,17 +64,38 @@ public class ConfigCommand extends SubCommand {
         StringJoiner joiner = new StringJoiner(" ");
         for (int i = 2; i < args.length; i++)
             joiner.add(args[i]);
-
         Class<?> type = field.getType();
         Object value = null;
         try {
-            value = cast(joiner.toString(), type);
+            if (ConfigMap.class.isAssignableFrom(type)) {
+                if (joiner.toString().split(" ").length < 2) {
+                    MSG.tell(sender, Lang.COMMAND_MISSING_ARGUMENT, "Key Value");
+                    return true;
+                }
+//                Object key = Long.parseLong(joiner.toString().split(" ")[0]);
+                ConfigMap<?, ?> tv = (ConfigMap<?, ?>) field.get(feature);
+                Object key = cast(joiner.toString().split(" ")[0], tv.getKey());
+                value = cast(joiner.toString().split(" ")[1], tv.getValue());
+                if (value == null) {
+                    MSG.tell(sender, Lang.COMMAND_CONFIG_ERROR, args[1], joiner.toString().split(" ")[1], "Unable to cast to " + tv.getValue());
+                    return true;
+                }
+
+                tv.putObject(key, value);
+                MSG.tell(sender, Lang.COMMAND_CONFIG_SET, field.getName() + " (" + key + ")", value);
+                return true;
+            } else {
+                value = cast(joiner.toString(), type);
+            }
+
         } catch (NumberFormatException nf) {
             MSG.tell(sender, Lang.COMMAND_CONFIG_ERROR, args[1], joiner.toString(), "Must be a " + field.getType().getSimpleName());
             return true;
         } catch (ClassCastException cc) {
             MSG.tell(sender, Lang.COMMAND_CONFIG_ERROR, args[1], joiner.toString(), "Unable to cast to " + field.getType().getSimpleName());
             return true;
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
         }
         if (value == null) {
             MSG.tell(sender, Lang.COMMAND_CONFIG_ERROR, args[1], joiner.toString(), "Unable to parse, please set value in config manually.");
@@ -149,7 +171,37 @@ public class ConfigCommand extends SubCommand {
                 if (!fields.get(conf.getClass()).containsKey(args[1]))
                     break;
                 try {
+                    Field field = fields.get(conf.getClass()).get(args[1]);
+                    if (ConfigMap.class.isAssignableFrom(field.getType())) {
+                        ConfigMap<?, ?> tv = (ConfigMap<?, ?>) field.get(conf);
+                        for (Object obj : tv.keySet()) {
+                            if (obj.toString().startsWith(args[args.length - 1]))
+                                result.add(obj.toString());
+                        }
+                        break;
+                    }
                     result.add(fields.get(conf.getClass()).get(args[1]).get(conf) + "");
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case 4:
+                conf = names.get(args[0]);
+                if (conf == null)
+                    break;
+                if (fields.get(conf.getClass()) == null)
+                    break;
+                if (!fields.get(conf.getClass()).containsKey(args[1]))
+                    break;
+                try {
+                    Field field = fields.get(conf.getClass()).get(args[1]);
+                    if (ConfigMap.class.isAssignableFrom(field.getType())) {
+                        ConfigMap<?, ?> tv = (ConfigMap<?, ?>) field.get(conf);
+                        Object key = cast(args[2], tv.getKey());
+                        if (tv.get(key) == null)
+                            break;
+                        result.add(tv.get(key).toString());
+                    }
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
