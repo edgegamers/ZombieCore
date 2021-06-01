@@ -24,6 +24,7 @@ public enum Lang {
     BREEDING_EGG("%prefix% &e%s&7 is a &dhopeless &5romantic&7."),
     COMMAND_CONFIG_ERROR("%prefix% Could not set &a%s&7 to &e%s&7 (&8%s&7)."),
     COMMAND_CONFIG_SET("%prefix% Successfully set &a%s&7 to &e%s&7."),
+    COMMAND_CONFIG_REMOVE("%prefix% Successfully removed &e%s&7 from &a%s&7."),
     ;
 
     private final String[] def;

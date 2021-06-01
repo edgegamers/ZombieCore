@@ -72,27 +72,34 @@ public class ConfigCommand extends SubCommand {
                     MSG.tell(sender, Lang.COMMAND_MISSING_ARGUMENT, "Key Value");
                     return true;
                 }
-//                Object key = Long.parseLong(joiner.toString().split(" ")[0]);
-                ConfigMap<?, ?> tv = (ConfigMap<?, ?>) field.get(feature);
-                Object key = cast(joiner.toString().split(" ")[0], tv.getKey());
-                value = cast(joiner.toString().split(" ")[1], tv.getValue());
-                if (value == null) {
-                    MSG.tell(sender, Lang.COMMAND_CONFIG_ERROR, args[1], joiner.toString().split(" ")[1], "Unable to cast to " + tv.getValue());
+                String[] jArgs = joiner.toString().split(" ");
+                String keyString = jArgs[0], valueString = jArgs[1];
+                ConfigMap<?, ?> cm = (ConfigMap<?, ?>) field.get(feature);
+                Object key = cast(keyString, cm.getKey());
+                if (valueString.equalsIgnoreCase("null") || valueString.equalsIgnoreCase("remove")) {
+                    cm.remove(key);
+                    MSG.tell(sender, Lang.COMMAND_CONFIG_REMOVE, keyString, field.getName());
                     return true;
                 }
 
-                tv.putObject(key, value);
+                value = cast(valueString, cm.getValue());
+
+                if (value == null) {
+                    MSG.tell(sender, Lang.COMMAND_CONFIG_ERROR, args[1], valueString, "Unable to cast to " + cm.getValue());
+                    return true;
+                }
+
+                cm.putObject(key, value);
                 MSG.tell(sender, Lang.COMMAND_CONFIG_SET, field.getName() + " (" + key + ")", value);
                 return true;
             } else {
                 value = cast(joiner.toString(), type);
             }
-
         } catch (NumberFormatException nf) {
-            MSG.tell(sender, Lang.COMMAND_CONFIG_ERROR, args[1], joiner.toString(), "Must be a " + field.getType().getSimpleName());
+            MSG.tell(sender, Lang.COMMAND_CONFIG_ERROR, args[1], joiner.toString(), "Must be a " + type.getSimpleName());
             return true;
         } catch (ClassCastException cc) {
-            MSG.tell(sender, Lang.COMMAND_CONFIG_ERROR, args[1], joiner.toString(), "Unable to cast to " + field.getType().getSimpleName());
+            MSG.tell(sender, Lang.COMMAND_CONFIG_ERROR, args[1], joiner.toString(), "Unable to cast to " + type.getSimpleName());
             return true;
         } catch (IllegalAccessException e) {
             e.printStackTrace();
@@ -173,8 +180,8 @@ public class ConfigCommand extends SubCommand {
                 try {
                     Field field = fields.get(conf.getClass()).get(args[1]);
                     if (ConfigMap.class.isAssignableFrom(field.getType())) {
-                        ConfigMap<?, ?> tv = (ConfigMap<?, ?>) field.get(conf);
-                        for (Object obj : tv.keySet()) {
+                        ConfigMap<?, ?> cm = (ConfigMap<?, ?>) field.get(conf);
+                        for (Object obj : cm.keySet()) {
                             if (obj.toString().startsWith(args[args.length - 1]))
                                 result.add(obj.toString());
                         }
@@ -200,10 +207,15 @@ public class ConfigCommand extends SubCommand {
                         Object key = cast(args[2], tv.getKey());
                         if (tv.get(key) == null)
                             break;
-                        result.add(tv.get(key).toString());
+                        if (tv.get(key).toString().startsWith(args[args.length - 1]))
+                            result.add(tv.get(key).toString());
                     }
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
+                }
+                for (String res : new String[]{"null", "remove"}) {
+                    if (res.startsWith(args[args.length - 1]))
+                        result.add(res);
                 }
                 break;
         }
