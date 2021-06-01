@@ -1,7 +1,11 @@
 package xyz.msws.zombie.modules.fishing;
 
+import org.bukkit.Material;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerFishEvent;
+import org.bukkit.inventory.ItemStack;
 import xyz.msws.zombie.api.ZCore;
 import xyz.msws.zombie.modules.EventModule;
 
@@ -25,8 +29,22 @@ public class FishModule extends EventModule {
         if (event.getPlayer().hasPermission("zombiecore.bypass.fishing"))
             return;
         if (event.getState() == PlayerFishEvent.State.FISHING) {
+            if (config.getMinTime() == -1)
+                return;
+            event.getHook().setMinWaitTime((int) config.getMinTime() / 1000);
+        }
+        if (event.getState() == PlayerFishEvent.State.FISHING) {
             times.put(uuid, System.currentTimeMillis());
             return;
+        }
+        if (event.getState() == PlayerFishEvent.State.REEL_IN) {
+            Entity ent = event.getCaught();
+            if (!(ent instanceof Item))
+                return;
+            Item item = (Item) ent;
+            if (!config.restrict(item.getItemStack().getType()))
+                return;
+            item.setItemStack(new ItemStack(Material.COD, 1));
         }
         if (event.getState() != PlayerFishEvent.State.BITE)
             return;

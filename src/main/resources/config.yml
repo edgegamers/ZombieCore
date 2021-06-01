@@ -59,6 +59,12 @@ Features:
   Fish:
     MinTime: 20000 # All hook events will be cancelled if they occur before this many milliseconds (-1 to disable)
     MaxTime: -1   # No hook events will be cancelled if they occur beyond this many milliseconds (-1 to disable)
+    Restrict:
+      - ENCHANTED_BOOK
+      - NAME_TAG
+      - SADDLE
+      - NAUTILUS_SHELL
+      - BOW
     CancelChance: #  a(x+b)^c
       Constant: 80  # a
       Offset: 80   # b

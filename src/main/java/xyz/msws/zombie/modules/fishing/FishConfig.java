@@ -1,14 +1,18 @@
 package xyz.msws.zombie.modules.fishing;
 
+import org.bukkit.Material;
 import xyz.msws.zombie.api.ZCore;
+import xyz.msws.zombie.data.ConfigCollection;
 import xyz.msws.zombie.data.ZombieConfig;
 import xyz.msws.zombie.modules.ModuleConfig;
 
+import java.util.EnumSet;
 import java.util.function.Function;
 
 public abstract class FishConfig extends ModuleConfig<FishModule> {
 
     protected Function<Double, Double> method;
+    protected ConfigCollection<Material> restricted = new ConfigCollection<>(EnumSet.noneOf(Material.class), Material.class);
     protected long minTime, maxTime;
 
     public FishConfig(ZCore plugin, ZombieConfig config) {
@@ -27,6 +31,10 @@ public abstract class FishConfig extends ModuleConfig<FishModule> {
 
     public long getMaxTime() {
         return maxTime;
+    }
+
+    public boolean restrict(Material mat) {
+        return restricted.contains(mat);
     }
 
     @Override

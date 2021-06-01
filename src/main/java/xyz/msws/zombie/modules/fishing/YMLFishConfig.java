@@ -1,10 +1,13 @@
 package xyz.msws.zombie.modules.fishing;
 
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import xyz.msws.zombie.api.ZCore;
+import xyz.msws.zombie.data.ConfigCollection;
 import xyz.msws.zombie.data.YMLZConfig;
 import xyz.msws.zombie.utils.MSG;
+import xyz.msws.zombie.utils.Serializer;
 
 import java.util.Random;
 import java.util.function.Function;
@@ -35,7 +38,7 @@ public class YMLFishConfig extends FishConfig {
         exp = fish.getDouble("CancelChance.Exponent", -1);
         minTime = fish.getLong("MinTime", 20000);
         maxTime = fish.getLong("MaxTime", -1);
-
+        restricted = new ConfigCollection<>(Serializer.getEnumSet(fish.getStringList("Restrict"), Material.class), Material.class);
         this.method = x -> constant * Math.pow(x + offset, exp);
     }
 
