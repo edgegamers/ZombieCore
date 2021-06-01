@@ -3,6 +3,12 @@ package xyz.msws.zombie.data;
 import java.util.Collection;
 import java.util.Iterator;
 
+/**
+ * Represents a {@link Collection}, with the added usage of getType
+ * This supports grabbing the type that this collection contains
+ *
+ * @param <E> The type contained
+ */
 public class ConfigCollection<E> implements Collection<E> {
     private final Collection<E> col;
     private final Class<E> type;
@@ -51,7 +57,7 @@ public class ConfigCollection<E> implements Collection<E> {
         return col.add(e);
     }
 
-    public boolean addObject(Object e){
+    public boolean addObject(Object e) {
         return col.add((E) e);
     }
 

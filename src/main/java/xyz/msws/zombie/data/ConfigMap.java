@@ -4,6 +4,13 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Represents a {@link Map} with the added usage of getKey and getValue
+ * This supports grabbing the key and value types that this map contains
+ *
+ * @param <K> Key type
+ * @param <V> Value type
+ */
 public class ConfigMap<K, V> implements Map<K, V> {
     private final Map<K, V> map;
     private final Class<K> key;
