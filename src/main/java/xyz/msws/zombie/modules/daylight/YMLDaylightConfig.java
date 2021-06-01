@@ -4,6 +4,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import xyz.msws.zombie.api.ZCore;
+import xyz.msws.zombie.data.TimeVariable;
 import xyz.msws.zombie.data.YMLZConfig;
 import xyz.msws.zombie.utils.MSG;
 
@@ -33,7 +34,7 @@ public class YMLDaylightConfig extends DaylightConfig {
         if (weights == null)
             throw new IllegalArgumentException("MobWeights is either null or improperly configured");
 
-        corruptChance = spawns.getDouble("CorruptionChance", .4);
+        corruptChance = new TimeVariable<>(spawns.getConfigurationSection("CorruptionChances"), Double.class);
         for (Map.Entry<String, Object> entry : weights.getValues(false).entrySet()) {
             EntityType type;
             try {
@@ -51,7 +52,11 @@ public class YMLDaylightConfig extends DaylightConfig {
 
         this.minRange = spawns.getDouble("RangeOffset.Min", 3);
         this.maxRange = spawns.getDouble("RangeOffset.Max", 10);
-        this.chunkMobs = spawns.getInt("MaxChunkMobs", 5);
+        this.chunkMobs = new TimeVariable<>(spawns.getConfigurationSection("MaxChunkMobs"), Integer.class);
+        this.minBlockLevel = spawns.getInt("LightLevels.BlockMin", 0);
+        this.maxBlocklevel = spawns.getInt("LightLevels.BlockMax", 7);
+        this.minSkyLevel = spawns.getInt("LightLevels.SkyMin", 0);
+        this.maxSkyLevel = spawns.getInt("LightLevels.SkyMax", 15);
 
         ConfigurationSection amounts = spawns.getConfigurationSection("MobAmount");
         if (amounts == null)

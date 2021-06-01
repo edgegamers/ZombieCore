@@ -20,8 +20,8 @@ import java.util.UUID;
 public class AnimalBreeding extends EventModule {
     private final BreedingConfig config;
 
-    private Map<UUID, Integer> attempts = new HashMap<>();
-    private HashSet<UUID> sent = new HashSet<>();
+    private final Map<UUID, Integer> attempts = new HashMap<>();
+    private final HashSet<UUID> sent = new HashSet<>();
 
     public AnimalBreeding(ZCore plugin) {
         super(plugin);

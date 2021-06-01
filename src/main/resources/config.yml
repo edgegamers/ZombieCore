@@ -11,7 +11,28 @@ Features:
     ResetBreeding: true # If true, animals will be reset to a non-breeding state after attempting to breed
     EggThreshold: 64 # (-1 to disable)
   DaySpawns:
-    CorruptionChance: .1 # 10% Chance that a monster will spawn when a regular mob spawns
+    CorruptionChances: # 10% Chance that a monster will spawn when a regular mob spawns
+      0: 0.2      # Start of day, 6 AM
+      1000: 0.15
+      2000: 0.1
+      3000: 0.01  # 9 AM
+      6000: 0.0     # Midday
+      8000: 0.01
+      9000: 0.05
+      11000: 0.1
+      12000: 0.15 # Sunset
+      13000: 0.2
+      14000: 0.3
+      15000: 0.35
+      16000: 0.4
+      18000: 0.5  # Midnight
+      21000: 0.4
+      23000: 0.35 # Sunrise
+    LightLevels:
+      SkyMin: 0
+      SkyMax: 15
+      BlockMin: 0
+      BlockMax: 7
     MobWeights:
       ZOMBIE: 0.2       # These are WEIGHTs, not percentages
       SKELETON: 0.18
@@ -26,7 +47,17 @@ Features:
       5: 0.005
       #6: 0.0001  # (Examples)
     #10: 0.00001
-    MaxChunkMobs: 5 # Max amount of monsters per chunk, -1 to disable
+    MaxChunkMobs:
+      0: 3      # Start of day, 6 AM
+      3000: 2  # 9 AM
+      6000: 1     # Midday
+      9000: 2
+      11000: 3
+      12500: 4
+      14000: 5
+      18000: 6  # Midnight
+      21000: 5
+      23000: 4 # Sunrise
   Fish:
     MinTime: 20000 # All hook events will be cancelled if they occur before this many milliseconds (-1 to disable)
     MaxTime: -1   # No hook events will be cancelled if they occur beyond this many milliseconds (-1 to disable)

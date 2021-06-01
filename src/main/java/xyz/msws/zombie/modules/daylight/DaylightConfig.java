@@ -1,8 +1,11 @@
 package xyz.msws.zombie.modules.daylight;
 
+import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.util.Vector;
 import xyz.msws.zombie.api.ZCore;
+import xyz.msws.zombie.data.TimeVariable;
 import xyz.msws.zombie.data.ZombieConfig;
 import xyz.msws.zombie.modules.ModuleConfig;
 
@@ -14,14 +17,20 @@ import java.util.Random;
 public abstract class DaylightConfig extends ModuleConfig<DaylightSpawn> {
 
     protected EnumMap<EntityType, Double> mobWeights = new EnumMap<>(EntityType.class);
-    protected double corruptChance, minRange, maxRange;
+    protected double minRange, maxRange;
+    protected TimeVariable<Double> corruptChance;
+    protected TimeVariable<Integer> chunkMobs;
     protected Map<Integer, Double> mobAmounts = new HashMap<>();
     protected Random random;
-    protected int chunkMobs;
+    protected int minBlockLevel, maxBlocklevel, minSkyLevel, maxSkyLevel;
 
     public DaylightConfig(ZCore plugin, ZombieConfig config) {
         super(plugin, config);
         random = new Random();
+    }
+
+    public boolean doCorrupt(World world) {
+        return random.nextDouble() <= corruptChance.getValue(world.getTime());
     }
 
     public double getMobWeight(EntityType type) {
@@ -36,7 +45,7 @@ public abstract class DaylightConfig extends ModuleConfig<DaylightSpawn> {
         return mobWeights;
     }
 
-    public double getCorruptionChance() {
+    public TimeVariable<Double> getCorruptionChance() {
         return corruptChance;
     }
 
@@ -75,23 +84,27 @@ public abstract class DaylightConfig extends ModuleConfig<DaylightSpawn> {
                 return entry.getKey();
             v -= entry.getValue();
         }
-        throw new IllegalArgumentException(String.format("Invalid map data: could not get random type (%.2f, %.2f)", v, total));
+        throw new IllegalArgumentException(String.format("Invalid map data: could not get random type (%.2f/%.2f)", v, total));
     }
 
     public int getRandomAmount() {
         return getRandom(mobAmounts);
     }
 
-    public boolean doCorrupt() {
-        return random.nextDouble() < corruptChance;
+    public TimeVariable<Integer> getChunkMobs() {
+        return chunkMobs;
     }
 
-    public int getChunkMobs() {
-        return chunkMobs;
+    public boolean allowSpawn(Block block) {
+        if (block.isLiquid())
+            return false;
+        if (block.getLightFromBlocks() < minBlockLevel || block.getLightFromBlocks() > maxBlocklevel)
+            return false;
+        return block.getLightFromSky() >= minSkyLevel && block.getLightFromSky() <= maxSkyLevel;
     }
 
     @Override
     public String getName() {
-        return "spawning";
+        return "dayspawns";
     }
 }

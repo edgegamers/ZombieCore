@@ -30,7 +30,6 @@ public class ConfigCommand extends SubCommand {
         names.put(config.getName(), config);
         Map<String, Field> fieldMap = fields.getOrDefault(config.getClass(), new HashMap<>());
         for (Field f : config.getClass().getSuperclass().getDeclaredFields()) {
-            MSG.log("Adding %s of %s", f.getName(), config.getName());
             f.setAccessible(true);
             fieldMap.put(f.getName(), f);
         }
@@ -67,50 +66,55 @@ public class ConfigCommand extends SubCommand {
 
         Class<?> type = field.getType();
         Object value = null;
-
-        if (type == String.class) {
-            value = joiner.toString();
-        } else if (type == boolean.class || type == Boolean.class) {
-            value = Boolean.parseBoolean(joiner.toString());
-        } else if (type == int.class || type == Integer.class) {
-            value = Integer.parseInt(joiner.toString());
-        } else if (type == double.class || type == Double.class) {
-            value = Double.parseDouble(joiner.toString());
-        } else if (type == float.class || type == Float.class) {
-            value = Float.parseFloat(joiner.toString());
-        } else if (type == long.class || type == Long.class) {
-            value = Long.parseLong(joiner.toString());
-        } else if (type.isEnum()) {
-            try {
-                value = type.getMethod("valueOf", String.class).invoke(null, joiner.toString());
-            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException unused) {
-                try {
-                    value = type.getMethod("fromString", String.class).invoke(null, joiner.toString());
-                } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException unused2) {
-                }
-            }
-        } else {
-            try {
-                value = field.getType().cast(value);
-            } catch (ClassCastException e) {
-                MSG.tell(sender, Lang.COMMAND_CONFIG_ERROR, args[1], joiner.toString(), "Unable to cast to " + field.getType().getSimpleName());
-                return true;
-            }
+        try {
+            value = cast(joiner.toString(), type);
+        } catch (NumberFormatException nf) {
+            MSG.tell(sender, Lang.COMMAND_CONFIG_ERROR, args[1], joiner.toString(), "Must be a " + field.getType().getSimpleName());
+            return true;
+        } catch (ClassCastException cc) {
+            MSG.tell(sender, Lang.COMMAND_CONFIG_ERROR, args[1], joiner.toString(), "Unable to cast to " + field.getType().getSimpleName());
+            return true;
         }
-
         if (value == null) {
             MSG.tell(sender, Lang.COMMAND_CONFIG_ERROR, args[1], joiner.toString(), "Unable to parse, please set value in config manually.");
             return true;
         }
-
         try {
             field.set(feature, value);
         } catch (ClassCastException | IllegalAccessException e) {
             MSG.tell(sender, Lang.COMMAND_CONFIG_ERROR, args[1], joiner.toString(), e.getMessage());
+            return true;
         }
-
         MSG.tell(sender, Lang.COMMAND_CONFIG_SET, field.getName(), value + "");
         return true;
+    }
+
+    private <T> T cast(Object obj, Class<T> type) throws ClassCastException, NumberFormatException {
+        Object value = null;
+        if (type == String.class) {
+            value = obj.toString();
+        } else if (type == boolean.class || type == Boolean.class) {
+            value = Boolean.parseBoolean(obj.toString());
+        } else if (type == int.class || type == Integer.class) {
+            value = Integer.parseInt(obj.toString());
+        } else if (type == double.class || type == Double.class) {
+            value = Double.parseDouble(obj.toString());
+        } else if (type == float.class || type == Float.class) {
+            value = Float.parseFloat(obj.toString());
+        } else if (type == long.class || type == Long.class) {
+            value = Long.parseLong(obj.toString());
+        } else if (type.isEnum()) {
+            try {
+                value = type.getMethod("valueOf", String.class).invoke(null, obj.toString());
+            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException unused) {
+                try {
+                    value = type.getMethod("fromString", String.class).invoke(null, obj.toString());
+                } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException unused2) {
+                    return null;
+                }
+            }
+        }
+        return type.cast(value);
     }
 
     @Override

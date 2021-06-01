@@ -2,6 +2,7 @@ package xyz.msws.zombie.modules.daylight;
 
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Monster;
@@ -26,11 +27,12 @@ public class DaylightSpawn extends EventModule {
             return;
         if (event.getSpawnReason() != CreatureSpawnEvent.SpawnReason.NATURAL)
             return;
-        if (!config.doCorrupt())
+        if (!config.doCorrupt(event.getLocation().getWorld()))
             return;
         if (event.getLocation().getBlock().isLiquid())
             return;
-        if (config.getChunkMobs() != -1) {
+        int cm = config.getChunkMobs().getValue(event.getLocation().getWorld());
+        if (cm != -1) {
             Chunk chunk = event.getLocation().getChunk();
             int amo = 0;
             for (Entity ent : chunk.getEntities()) {
@@ -38,20 +40,26 @@ public class DaylightSpawn extends EventModule {
                     continue;
                 amo++;
             }
-            if (amo > config.getChunkMobs())
+            if (amo > cm)
                 return;
         }
-
 
         EntityType type = config.getRandomType();
         Location origin = event.getLocation().clone().add(config.getRandomOffset());
         int toSpawn = config.getRandomAmount();
+        int attempts = 0;
         for (int i = 0; i < toSpawn; i++) {
+            if (attempts++ > toSpawn * 2)
+                break;
             Location loc = origin.clone().add(config.getRandomOffset(-2, 2));
             if (loc.getWorld() == null)
                 break;
-            loc.setY(loc.getWorld().getHighestBlockYAt(loc) + 1);
-            loc.getWorld().spawnEntity(loc, type);
+            Block block = loc.getWorld().getHighestBlockAt(loc);
+            if (!config.allowSpawn(block)) {
+                i--;
+                continue;
+            }
+            loc.getWorld().spawnEntity(block.getLocation().add(.5, 0, .5), type);
         }
     }
 
