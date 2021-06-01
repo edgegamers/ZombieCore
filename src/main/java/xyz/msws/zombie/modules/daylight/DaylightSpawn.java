@@ -59,7 +59,7 @@ public class DaylightSpawn extends EventModule {
                 i--;
                 continue;
             }
-            loc.getWorld().spawnEntity(block.getLocation().add(.5, 0, .5), type);
+            loc.getWorld().spawnEntity(block.getLocation().add(.5, 1, .5), type);
         }
     }
 
