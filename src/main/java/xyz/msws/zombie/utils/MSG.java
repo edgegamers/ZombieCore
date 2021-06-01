@@ -63,7 +63,7 @@ public class MSG {
     }
 
     public static void announce(String message, Object... objects) {
-        Bukkit.broadcastMessage(String.format(message, objects));
+        Bukkit.broadcastMessage(MSG.color(String.format(message, objects)));
     }
 
     /**

@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class TimeVariable<T> extends ConfigMap<Long, T> {
-    private Class<T> type;
+    private final Class<T> type;
 
     public TimeVariable(ConfigurationSection section, Class<T> clazz) {
         super(new TreeMap<>(), Long.class, clazz);
@@ -28,7 +28,7 @@ public class TimeVariable<T> extends ConfigMap<Long, T> {
     public T getValue(long time) {
         T last;
         List<Map.Entry<Long, T>> entries = new ArrayList<>(entrySet());
-        for (int i = 0; i < entries.size() - 2; i++) {
+        for (int i = 0; i < entries.size() - 1; i++) {
             if (time >= entries.get(i).getKey() && time < entries.get(i + 1).getKey())
                 return entries.get(i).getValue();
         }
