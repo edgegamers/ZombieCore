@@ -2,6 +2,7 @@ package xyz.msws.zombie.modules.daylight;
 
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.Waterlogged;
 import org.bukkit.entity.EntityType;
 import org.bukkit.util.Vector;
 import xyz.msws.zombie.api.ZCore;
@@ -95,6 +96,11 @@ public abstract class DaylightConfig extends ModuleConfig<DaylightSpawn> {
     public boolean allowSpawn(Block block) {
         if (block.isLiquid())
             return false;
+        if (block.getBlockData() instanceof Waterlogged) {
+            Waterlogged log = (Waterlogged) block.getBlockData();
+            if (log.isWaterlogged())
+                return false;
+        }
         if (block.getLightFromBlocks() < minBlockLevel || block.getLightFromBlocks() > maxBlocklevel)
             return false;
         return block.getLightFromSky() >= minSkyLevel && block.getLightFromSky() <= maxSkyLevel;
