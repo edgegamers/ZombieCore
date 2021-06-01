@@ -102,5 +102,7 @@ Features:
       - 'STRIDER'
       - 'PARROT'
       - 'SQUID'
+      - 'WOLF'
+      - 'CAT'
     BlockReasons:
       - 'NATURAL'
