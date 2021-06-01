@@ -55,8 +55,9 @@ public class DaylightSpawn extends EventModule {
             Location loc = origin.clone().add(config.getRandomOffset(-2, 2));
             if (loc.getWorld() == null)
                 break;
+            Block source = loc.getWorld().getHighestBlockAt(loc);
             Block block = loc.getWorld().getHighestBlockAt(loc).getRelative(BlockFace.UP);
-            if (!config.allowSpawn(block)) {
+            if (!config.allowSpawn(source) || !config.allowSpawn(block)) {
                 i--;
                 continue;
             }
