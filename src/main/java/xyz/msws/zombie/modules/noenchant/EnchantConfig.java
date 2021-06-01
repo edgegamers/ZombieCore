@@ -5,6 +5,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.EquipmentSlot;
 import xyz.msws.zombie.api.ZCore;
+import xyz.msws.zombie.data.ConfigCollection;
 import xyz.msws.zombie.data.ZombieConfig;
 import xyz.msws.zombie.modules.ModuleConfig;
 
@@ -13,16 +14,16 @@ import java.util.HashSet;
 
 public abstract class EnchantConfig extends ModuleConfig<NoEnchantSpawn> {
 
-    protected EnumSet<EntityType> types = EnumSet.noneOf(EntityType.class);
-    protected EnumSet<EquipmentSlot> slots = EnumSet.noneOf(EquipmentSlot.class);
-    protected EnumSet<Material> materials = EnumSet.noneOf(Material.class);
-    protected HashSet<Enchantment> enchants = new HashSet<>();
+    protected ConfigCollection<EntityType> types = new ConfigCollection<>(EnumSet.noneOf(EntityType.class), EntityType.class);
+    protected ConfigCollection<EquipmentSlot> slots = new ConfigCollection<>(EnumSet.noneOf(EquipmentSlot.class), EquipmentSlot.class);
+    protected ConfigCollection<Material> materials = new ConfigCollection<>(EnumSet.noneOf(Material.class), Material.class);
+    protected ConfigCollection<Enchantment> enchants = new ConfigCollection<>(new HashSet<>(), Enchantment.class);
 
     public EnchantConfig(ZCore plugin, ZombieConfig config) {
         super(plugin, config);
     }
 
-    public EnumSet<EquipmentSlot> getSlots() {
+    public ConfigCollection<EquipmentSlot> getSlots() {
         return slots;
     }
 

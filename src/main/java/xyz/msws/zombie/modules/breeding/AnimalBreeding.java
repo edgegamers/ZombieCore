@@ -8,20 +8,21 @@ import org.bukkit.event.entity.EntityBreedEvent;
 import org.bukkit.event.entity.EntityEnterLoveModeEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import xyz.msws.zombie.api.ZCore;
+import xyz.msws.zombie.data.ConfigCollection;
+import xyz.msws.zombie.data.ConfigMap;
 import xyz.msws.zombie.data.Lang;
 import xyz.msws.zombie.modules.EventModule;
 import xyz.msws.zombie.utils.MSG;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.UUID;
 
 public class AnimalBreeding extends EventModule {
     private final BreedingConfig config;
 
-    private final Map<UUID, Integer> attempts = new HashMap<>();
-    private final HashSet<UUID> sent = new HashSet<>();
+    private final ConfigMap<UUID, Integer> attempts = new ConfigMap<>(new HashMap<>(), UUID.class, Integer.class);
+    private final ConfigCollection<UUID> sent = new ConfigCollection<>(new HashSet<>(), UUID.class);
 
     public AnimalBreeding(ZCore plugin) {
         super(plugin);

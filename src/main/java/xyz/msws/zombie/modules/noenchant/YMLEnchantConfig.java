@@ -8,6 +8,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.EquipmentSlot;
 import xyz.msws.zombie.api.ZCore;
+import xyz.msws.zombie.data.ConfigCollection;
 import xyz.msws.zombie.data.YMLZConfig;
 import xyz.msws.zombie.utils.MSG;
 import xyz.msws.zombie.utils.Serializer;
@@ -30,9 +31,9 @@ public class YMLEnchantConfig extends EnchantConfig {
             return;
         }
 
-        types = Serializer.getEnumSet(noEnchants.getStringList("Entities"), EntityType.class);
-        slots = Serializer.getEnumSet(noEnchants.getStringList("Slots"), EquipmentSlot.class);
-        materials = Serializer.getEnumSet(noEnchants.getStringList("Items"), Material.class);
+        types = new ConfigCollection<>(Serializer.getEnumSet(noEnchants.getStringList("Entities"), EntityType.class), EntityType.class);
+        slots = new ConfigCollection<>(Serializer.getEnumSet(noEnchants.getStringList("Slots"), EquipmentSlot.class), EquipmentSlot.class);
+        materials = new ConfigCollection<>(Serializer.getEnumSet(noEnchants.getStringList("Items"), Material.class), Material.class);
 
         for (String s : noEnchants.getStringList("Enchants")) {
             if (s.equalsIgnoreCase("all")) {

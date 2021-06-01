@@ -4,6 +4,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import xyz.msws.zombie.api.ZCore;
+import xyz.msws.zombie.data.ConfigCollection;
 import xyz.msws.zombie.data.YMLZConfig;
 import xyz.msws.zombie.utils.MSG;
 import xyz.msws.zombie.utils.Serializer;
@@ -31,7 +32,7 @@ public class YMLBreedingConfig extends BreedingConfig {
             return;
         }
 
-        blockBreeding = Serializer.getEnumSet(features.getStringList("Breeding.Entities"), EntityType.class);
+        blockBreeding = new ConfigCollection<>(Serializer.getEnumSet(features.getStringList("Breeding.Entities"), EntityType.class), EntityType.class);
         clicks = breeding.getBoolean("BlockClicks", false);
         breed = breeding.getBoolean("BlockBreeding", true);
         resetBreeding = breeding.getBoolean("ResetBreeding", true);

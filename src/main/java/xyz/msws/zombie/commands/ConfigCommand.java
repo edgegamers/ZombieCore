@@ -2,6 +2,7 @@ package xyz.msws.zombie.commands;
 
 import org.bukkit.command.CommandSender;
 import xyz.msws.zombie.api.ZCore;
+import xyz.msws.zombie.data.ConfigCollection;
 import xyz.msws.zombie.data.ConfigMap;
 import xyz.msws.zombie.data.Lang;
 import xyz.msws.zombie.modules.ModuleConfig;
@@ -10,6 +11,7 @@ import xyz.msws.zombie.utils.MSG;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ConfigCommand extends SubCommand {
 
@@ -83,35 +85,76 @@ public class ConfigCommand extends SubCommand {
                 }
 
                 value = cast(valueString, cm.getValue());
-
+                if (key == null) {
+                    MSG.tell(sender, Lang.COMMAND_CONFIG_ERROR, field.getName(), keyString, "Must be a " + cm.getKey().getSimpleName());
+                    return true;
+                }
                 if (value == null) {
-                    MSG.tell(sender, Lang.COMMAND_CONFIG_ERROR, args[1], valueString, "Unable to cast to " + cm.getValue());
+                    MSG.tell(sender, Lang.COMMAND_CONFIG_ERROR, field.getName(), valueString, "Unable to cast to " + cm.getValue().getSimpleName());
                     return true;
                 }
 
                 cm.putObject(key, value);
                 MSG.tell(sender, Lang.COMMAND_CONFIG_SET, field.getName() + " (" + key + ")", value);
                 return true;
-            } else {
-                value = cast(joiner.toString(), type);
             }
+            if (ConfigCollection.class.isAssignableFrom(type)) {
+                String[] jArgs = joiner.toString().split(" ");
+                ConfigCollection<?> cm = (ConfigCollection<?>) field.get(feature);
+                if (jArgs[0].equalsIgnoreCase("list")) {
+                    MSG.tell(sender, Lang.COMMAND_CONFIG_LIST, field.getName(), cm.stream().map(Object::toString).collect(Collectors.joining("&7, &e")));
+                    return true;
+                }
+                if (joiner.toString().split(" ").length < 2) {
+                    MSG.tell(sender, Lang.COMMAND_MISSING_ARGUMENT, "Key Operation");
+                    return true;
+                }
+                String keyString = jArgs[0], valueString = jArgs[1];
+                value = cast(valueString, cm.getType());
+                switch (keyString.toLowerCase()) {
+                    case "add" -> {
+                        cm.addObject(value);
+                        MSG.tell(sender, Lang.COMMAND_CONFIG_ADD, value, field.getName());
+                        return true;
+                    }
+                    case "remove" -> {
+                        cm.remove(value);
+                        MSG.tell(sender, Lang.COMMAND_CONFIG_REMOVE, value, field.getName());
+                        return true;
+                    }
+                    case "clear" -> {
+                        cm.clear();
+                        MSG.tell(sender, Lang.COMMAND_CONFIG_CLEAR, field.getName());
+                        return true;
+                    }
+                    default -> {
+                        MSG.tell(sender, Lang.COMMAND_INVALID_ARGUMENT, "Unknown key operation");
+                        return true;
+                    }
+                }
+            }
+            value = cast(joiner.toString(), type);
         } catch (NumberFormatException nf) {
-            MSG.tell(sender, Lang.COMMAND_CONFIG_ERROR, args[1], joiner.toString(), "Must be a " + type.getSimpleName());
+            MSG.tell(sender, Lang.COMMAND_CONFIG_ERROR, field.getName(), joiner.toString(), "Must be a " + type.getSimpleName());
             return true;
         } catch (ClassCastException cc) {
-            MSG.tell(sender, Lang.COMMAND_CONFIG_ERROR, args[1], joiner.toString(), "Unable to cast to " + type.getSimpleName());
+            MSG.tell(sender, Lang.COMMAND_CONFIG_ERROR, field.getName(), joiner.toString(), "Unable to cast " + value + " to " + type.getSimpleName());
+            cc.printStackTrace();
             return true;
         } catch (IllegalAccessException e) {
             e.printStackTrace();
+            MSG.tell(sender, Lang.COMMAND_CONFIG_ERROR, field.getName(), joiner.toString(), e.getMessage());
+            return true;
         }
         if (value == null) {
-            MSG.tell(sender, Lang.COMMAND_CONFIG_ERROR, args[1], joiner.toString(), "Unable to parse, please set value in config manually.");
+            MSG.tell(sender, Lang.COMMAND_CONFIG_ERROR, field.getName(), joiner.toString(), "Unable to parse, please set value in config manually.");
             return true;
         }
         try {
             field.set(feature, value);
-        } catch (ClassCastException | IllegalAccessException e) {
+        } catch (IllegalAccessException e) {
             MSG.tell(sender, Lang.COMMAND_CONFIG_ERROR, args[1], joiner.toString(), e.getMessage());
+            e.printStackTrace();
             return true;
         }
         MSG.tell(sender, Lang.COMMAND_CONFIG_SET, field.getName(), value + "");
@@ -143,13 +186,18 @@ public class ConfigCommand extends SubCommand {
                 }
             }
         }
-        return type.cast(value);
+        return (T) value;
     }
 
     @Override
     public List<String> tab(CommandSender sender, String alias, String[] args) throws IllegalArgumentException {
         List<String> result = new ArrayList<>();
-        ModuleConfig<?> conf;
+        ModuleConfig<?> conf = null;
+        Field field = null;
+        if (args.length >= 2)
+            conf = names.get(args[0]);
+        if (args.length >= 3 && conf != null && fields.containsKey(conf.getClass()))
+            field = fields.get(conf.getClass()).get(args[1]);
         switch (args.length) {
             case 0:
             case 1:
@@ -159,7 +207,6 @@ public class ConfigCommand extends SubCommand {
                 }
                 break;
             case 2:
-                conf = names.get(args[0]);
                 if (conf == null)
                     break;
                 if (fields.get(conf.getClass()) == null)
@@ -170,45 +217,45 @@ public class ConfigCommand extends SubCommand {
                 }
                 break;
             case 3:
-                conf = names.get(args[0]);
-                if (conf == null)
-                    break;
-                if (fields.get(conf.getClass()) == null)
-                    break;
-                if (!fields.get(conf.getClass()).containsKey(args[1]))
+                if (conf == null || field == null)
                     break;
                 try {
-                    Field field = fields.get(conf.getClass()).get(args[1]);
                     if (ConfigMap.class.isAssignableFrom(field.getType())) {
                         ConfigMap<?, ?> cm = (ConfigMap<?, ?>) field.get(conf);
                         for (Object obj : cm.keySet()) {
-                            if (obj.toString().startsWith(args[args.length - 1]))
+                            if (MSG.normalize(obj.toString()).startsWith(MSG.normalize(args[args.length - 1])))
                                 result.add(obj.toString());
                         }
                         break;
+                    } else if (ConfigCollection.class.isAssignableFrom(field.getType())) {
+                        for (String res : new String[]{"add", "remove", "clear", "list"}) {
+                            if (res.startsWith(args[args.length - 1].toLowerCase()))
+                                result.add(res);
+                        }
+                    } else {
+                        result.add(fields.get(conf.getClass()).get(args[1]).get(conf) + "");
                     }
-                    result.add(fields.get(conf.getClass()).get(args[1]).get(conf) + "");
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
                 break;
             case 4:
-                conf = names.get(args[0]);
-                if (conf == null)
-                    break;
-                if (fields.get(conf.getClass()) == null)
-                    break;
-                if (!fields.get(conf.getClass()).containsKey(args[1]))
+                if (conf == null || field == null)
                     break;
                 try {
-                    Field field = fields.get(conf.getClass()).get(args[1]);
                     if (ConfigMap.class.isAssignableFrom(field.getType())) {
                         ConfigMap<?, ?> tv = (ConfigMap<?, ?>) field.get(conf);
                         Object key = cast(args[2], tv.getKey());
                         if (tv.get(key) == null)
                             break;
-                        if (tv.get(key).toString().startsWith(args[args.length - 1]))
+                        if (MSG.normalize(tv.get(key).toString()).startsWith(MSG.normalize(args[args.length - 1])))
                             result.add(tv.get(key).toString());
+                    } else if (ConfigCollection.class.isAssignableFrom(field.getType())) {
+                        ConfigCollection<?> collection = (ConfigCollection<?>) field.get(conf);
+                        for (Object res : collection) {
+                            if (MSG.normalize(res.toString()).startsWith(MSG.normalize(args[args.length - 1])))
+                                result.add(res.toString());
+                        }
                     }
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();

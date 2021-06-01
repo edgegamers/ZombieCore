@@ -2,6 +2,7 @@ package xyz.msws.zombie.modules.breeding;
 
 import org.bukkit.entity.EntityType;
 import xyz.msws.zombie.api.ZCore;
+import xyz.msws.zombie.data.ConfigCollection;
 import xyz.msws.zombie.data.ZombieConfig;
 import xyz.msws.zombie.modules.ModuleConfig;
 
@@ -9,7 +10,7 @@ import java.util.EnumSet;
 
 public abstract class BreedingConfig extends ModuleConfig<AnimalBreeding> {
 
-    protected EnumSet<EntityType> blockBreeding = EnumSet.noneOf(EntityType.class);
+    protected ConfigCollection<EntityType> blockBreeding = new ConfigCollection<>(EnumSet.noneOf(EntityType.class), EntityType.class);
     protected boolean clicks = true, breed = false, love = true, resetBreeding = true;
     protected int hopeless = 64;
 
@@ -19,18 +20,6 @@ public abstract class BreedingConfig extends ModuleConfig<AnimalBreeding> {
 
     public boolean allowBreeding(EntityType type) {
         return !blockBreeding.contains(type);
-    }
-
-    public void addBreed(EntityType type) {
-        blockBreeding.add(type);
-    }
-
-    public void removeBreed(EntityType type) {
-        blockBreeding.remove(type);
-    }
-
-    public EnumSet<EntityType> getBreeds() {
-        return blockBreeding;
     }
 
     public boolean blockClicks() {

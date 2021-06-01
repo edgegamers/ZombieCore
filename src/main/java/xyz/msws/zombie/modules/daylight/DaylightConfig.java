@@ -38,10 +38,6 @@ public abstract class DaylightConfig extends ModuleConfig<DaylightSpawn> {
         return mobWeights.getOrDefault(type, 0.0);
     }
 
-    public void setMobWeight(EntityType type, double rate) {
-        mobWeights.put(type, rate);
-    }
-
     public ConfigMap<EntityType, Double> getMobWeights() {
         return mobWeights;
     }
