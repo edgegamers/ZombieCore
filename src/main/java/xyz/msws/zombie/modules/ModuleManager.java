@@ -1,6 +1,7 @@
 package xyz.msws.zombie.modules;
 
 import org.bukkit.plugin.Plugin;
+import xyz.msws.zombie.utils.MSG;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,10 @@ public class ModuleManager extends Module {
 
     @Override
     public void enable() {
-        modules.forEach(Module::enable);
+        for (Module module : modules) {
+            MSG.log("Loading %s module...", module.getClass().getSimpleName());
+            module.enable();
+        }
     }
 
     public <T extends Module> T addModule(T module) {

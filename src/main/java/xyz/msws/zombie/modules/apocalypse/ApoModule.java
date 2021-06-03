@@ -4,6 +4,7 @@ import com.ericdebouwer.zombieapocalypse.api.ApocalypseAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.world.WorldLoadEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 import xyz.msws.zombie.api.ZCore;
 import xyz.msws.zombie.modules.EventModule;
 
@@ -20,9 +21,15 @@ public class ApoModule extends EventModule {
 
     @Override
     public void enable() {
-        for (String name : config.getMaps()) {
-            ApocalypseAPI.getInstance().startApocalypse(name);
-        }
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (String name : config.getMaps()) {
+                    ApocalypseAPI.getInstance().startApocalypse(name);
+                }
+            }
+        }.runTask(plugin);
+
     }
 
     @EventHandler
