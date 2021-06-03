@@ -3,6 +3,8 @@ version: ${version}
 api-version: 1.16
 author: MSWS
 main: xyz.msws.zombie.ZombieCore
+softdepend:
+  - ZombieApocalypse
 commands:
   zombiecore:
     aliases: zc

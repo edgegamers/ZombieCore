@@ -1,5 +1,6 @@
 package xyz.msws.zombie;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.msws.zombie.api.ZCore;
@@ -10,13 +11,13 @@ import xyz.msws.zombie.data.YMLZConfig;
 import xyz.msws.zombie.data.ZombieConfig;
 import xyz.msws.zombie.data.items.ItemFactory;
 import xyz.msws.zombie.modules.ModuleManager;
+import xyz.msws.zombie.modules.apocalypse.ApoModule;
 import xyz.msws.zombie.modules.breeding.AnimalBreeding;
 import xyz.msws.zombie.modules.daylight.DaylightSpawn;
 import xyz.msws.zombie.modules.fishing.FishModule;
 import xyz.msws.zombie.modules.named.NamedSpawn;
 import xyz.msws.zombie.modules.noenchant.NoEnchantSpawn;
 import xyz.msws.zombie.modules.passivespawn.PassiveSpawn;
-import xyz.msws.zombie.utils.MSG;
 
 import java.io.File;
 import java.util.HashMap;
@@ -29,21 +30,17 @@ public class ZombieCore extends JavaPlugin implements ZCore {
 
     @Override
     public void onEnable() {
-        try {
-            loadFiles();
-        } catch (Exception e) {
-            e.printStackTrace();
-            MSG.log("files failed");
-        }
-        try {
-            loadModules();
-        } catch (Exception e) {
-            e.printStackTrace();
-            MSG.log("modules failed");
-        }
+        loadFiles();
+        loadModules();
+
 
         getCommand("zombiecore").setExecutor(new ZombieCoreCommand("zombiecore", this));
         refreshMobs();
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
     }
 
     private void loadFiles() {
@@ -64,6 +61,8 @@ public class ZombieCore extends JavaPlugin implements ZCore {
         manager.addModule(new NoEnchantSpawn(this));
         manager.addModule(new NamedSpawn(this));
         manager.addModule(new PassiveSpawn(this));
+        if (Bukkit.getPluginManager().isPluginEnabled("ZombieApocalypse"))
+            manager.addModule(new ApoModule(this));
 
         manager.enable();
     }

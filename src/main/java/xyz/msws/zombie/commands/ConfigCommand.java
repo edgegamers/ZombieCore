@@ -26,7 +26,7 @@ public class ConfigCommand extends SubCommand {
 
         setPermission("zombiecore.command.config");
         setDescription("Modify ZombieCore configuration");
-        setUsage("[feature] [key] [value]");
+        setUsage(" [feature] [key] [value]");
     }
 
     private void load(ModuleConfig<?> config) {

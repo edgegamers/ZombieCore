@@ -81,28 +81,10 @@ Features:
       - 'ALL'
   BlockSpawns:
     Method: CANCEL # REMOVE, CANCEL, TP, HP
-    Entities:
-      - 'SHEEP'
-      - 'COW'
-      - 'BEE'
-      - 'PIG'
-      - 'OCELOT'
-      - 'CHICKEN'
-      - 'BAT'
-      - 'DONKEY'
-      - 'HORSE'
-      - 'FOX'
-      - 'MULE'
-      - 'POLAR_BEAR'
-      - 'RABBIT'
-      - 'VILLAGER'
-      - 'SNOWMAN'
-      - 'TURTLE'
-      - 'PIGLIN'
-      - 'STRIDER'
-      - 'PARROT'
-      - 'SQUID'
-      - 'WOLF'
-      - 'CAT'
+    Entities: [ BAT, BEE, CAT, CHICKEN, COW, DONKEY, FOX, HORSE, MULE, OCELOT, PARROT, PIG, PIGLIN, POLAR_BEAR, RABBIT, SHEEP, SNOWMAN, SQUID, STRIDER, TURTLE, VILLAGER, WOLF ]
     BlockReasons:
       - 'NATURAL'
+  Apocalypse:
+    AutoStart:
+      - 'ALL'
+    StartLoads: true

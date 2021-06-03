@@ -3,6 +3,7 @@ package xyz.msws.zombie.data;
 import org.bukkit.configuration.file.YamlConfiguration;
 import xyz.msws.zombie.api.ZCore;
 import xyz.msws.zombie.modules.ModuleConfig;
+import xyz.msws.zombie.modules.apocalypse.YMLApoConfig;
 import xyz.msws.zombie.modules.breeding.YMLBreedingConfig;
 import xyz.msws.zombie.modules.daylight.YMLDaylightConfig;
 import xyz.msws.zombie.modules.fishing.YMLFishConfig;
@@ -35,6 +36,7 @@ public class YMLZConfig extends ZombieConfig {
         configs.add(new YMLFishConfig(plugin, this));
         configs.add(new YMLEnchantConfig(plugin, this));
         configs.add(new YMLPassiveConfig(plugin, this));
+        configs.add(new YMLApoConfig(plugin, this));
 
         configs.forEach(ModuleConfig::load);
     }

@@ -1,20 +1,21 @@
 package xyz.msws.zombie.modules.passivespawn;
 
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import xyz.msws.zombie.api.ZCore;
 import xyz.msws.zombie.modules.EventModule;
 
 public class PassiveSpawn extends EventModule {
 
-    private PassiveConfig config;
+    private final PassiveConfig config;
 
     public PassiveSpawn(ZCore plugin) {
         super(plugin);
         this.config = plugin.getZConfig().getConfig(PassiveConfig.class);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onSpawn(CreatureSpawnEvent event) {
         if (!config.blockType(event.getEntityType()))
             return;
