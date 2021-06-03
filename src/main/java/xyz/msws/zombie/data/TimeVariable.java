@@ -34,7 +34,7 @@ public class TimeVariable<T> extends ConfigMap<Long, T> {
         }
         if (time >= entries.get(entries.size() - 1).getKey())
             return entries.get(entries.size() - 1).getValue();
-        return null;
+        throw new NullPointerException("Could not get value for " + time);
     }
 
     public T getValue(World world) {

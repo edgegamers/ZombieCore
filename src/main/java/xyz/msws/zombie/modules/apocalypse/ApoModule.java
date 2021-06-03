@@ -25,7 +25,7 @@ public class ApoModule extends EventModule {
             @Override
             public void run() {
                 for (String name : config.getMaps()) {
-                    ApocalypseAPI.getInstance().startApocalypse(name);
+                    ApocalypseAPI.getInstance().startApocalypse(name, Integer.MAX_VALUE);
                 }
             }
         }.runTask(plugin);
@@ -36,7 +36,7 @@ public class ApoModule extends EventModule {
     public void onLoad(WorldLoadEvent event) {
         if (!config.doStartLoads())
             return;
-        ApocalypseAPI.getInstance().startApocalypse(event.getWorld().getName());
+        ApocalypseAPI.getInstance().startApocalypse(event.getWorld().getName(), Integer.MAX_VALUE);
     }
 
     @Override
