@@ -36,7 +36,7 @@ public class PassiveSpawn extends EventModule {
     public void onSpawn(ChunkLoadEvent event) {
         for (Entity ent : event.getChunk().getEntities()) {
             if (!config.blockType(ent.getType()))
-                return;
+                continue;
             switch (config.getMethod()) {
                 case HP -> {
                     if (ent instanceof LivingEntity) {
