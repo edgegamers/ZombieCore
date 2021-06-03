@@ -1,8 +1,11 @@
 package xyz.msws.zombie.modules.passivespawn;
 
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.world.ChunkLoadEvent;
 import xyz.msws.zombie.api.ZCore;
 import xyz.msws.zombie.modules.EventModule;
 
@@ -29,8 +32,28 @@ public class PassiveSpawn extends EventModule {
         }
     }
 
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onSpawn(ChunkLoadEvent event) {
+        for (Entity ent : event.getChunk().getEntities()) {
+            if (!config.blockType(ent.getType()))
+                return;
+            switch (config.getMethod()) {
+                case HP -> {
+                    if (ent instanceof LivingEntity) {
+                        ((LivingEntity) ent).setHealth(0);
+                    } else {
+                        ent.remove();
+                    }
+                }
+                case REMOVE, CANCEL -> ent.remove();
+                case TP -> ent.teleport(ent.getLocation().clone().subtract(0, 1000, 0));
+            }
+        }
+    }
+
     @Override
     public void disable() {
         CreatureSpawnEvent.getHandlerList().unregister(this);
+        ChunkLoadEvent.getHandlerList().unregister(this);
     }
 }
