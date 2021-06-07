@@ -30,9 +30,6 @@ Features:
       SkyMax: 15
       BlockMin: 0
       BlockMax: 7
-    MobWeights:
-      ZOMBIE: 0.2       # These are WEIGHTs, not percentages
-      SKELETON: 0.18
     RangeOffset: # The mobs can spawn up to 10 blocks away from the original mob spawn
       Min: -10
       Max: 10

@@ -1,11 +1,11 @@
 package xyz.msws.zombie.modules.daylight;
 
+import com.ericdebouwer.zombieapocalypse.api.ApocalypseAPI;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Monster;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -24,8 +24,6 @@ public class DaylightSpawn extends EventModule {
 
     @EventHandler(priority = EventPriority.LOW) // Towny Compatability
     public void onSpawn(CreatureSpawnEvent event) {
-        if (config.getMobWeights().containsKey(event.getEntityType()))
-            return;
         if (event.getSpawnReason() != CreatureSpawnEvent.SpawnReason.NATURAL)
             return;
         if (!config.doCorrupt(event.getLocation().getWorld()))
@@ -44,8 +42,6 @@ public class DaylightSpawn extends EventModule {
             if (amo > cm)
                 return;
         }
-
-        EntityType type = config.getRandomType();
         Location origin = event.getLocation().clone().add(config.getRandomOffset());
         int toSpawn = config.getRandomAmount();
         int attempts = 0;
@@ -61,7 +57,7 @@ public class DaylightSpawn extends EventModule {
                 i--;
                 continue;
             }
-            loc.getWorld().spawnEntity(block.getLocation().add(.5, 0, .5), type);
+            ApocalypseAPI.getInstance().spawnZombie(block.getLocation().add(.5, 0, .5));
         }
     }
 

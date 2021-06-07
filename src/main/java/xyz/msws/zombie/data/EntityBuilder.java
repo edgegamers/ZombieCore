@@ -14,7 +14,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import xyz.msws.zombie.api.ZCore;
@@ -378,7 +377,7 @@ public class EntityBuilder<T extends Entity> implements Cloneable {
     public T spawn(Location loc) {
         if (loc.getWorld() == null)
             throw new NullPointerException();
-        T ent = loc.getWorld().spawn(loc, type, t -> t.setMetadata("ignoreZombie", new FixedMetadataValue(plugin, true)));
+        T ent = loc.getWorld().spawn(loc, type);
 
         if (name != null) {
             ent.setCustomName(MSG.color(name));

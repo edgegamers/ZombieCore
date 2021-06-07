@@ -2,7 +2,6 @@ package xyz.msws.zombie.modules.daylight;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.EntityType;
 import xyz.msws.zombie.api.ZCore;
 import xyz.msws.zombie.data.TimeVariable;
 import xyz.msws.zombie.data.YMLZConfig;
@@ -30,25 +29,7 @@ public class YMLDaylightConfig extends DaylightConfig {
             return;
         }
 
-        ConfigurationSection weights = spawns.getConfigurationSection("MobWeights");
-        if (weights == null)
-            throw new IllegalArgumentException("MobWeights is either null or improperly configured");
-
         corruptChance = new TimeVariable<>(spawns.getConfigurationSection("CorruptionChances"), Double.class);
-        for (Map.Entry<String, Object> entry : weights.getValues(false).entrySet()) {
-            EntityType type;
-            try {
-                type = EntityType.valueOf(entry.getKey().toUpperCase());
-            } catch (IllegalArgumentException e) {
-                MSG.log("Invalid entity type: %s", entry.getKey());
-                continue;
-            }
-            if (!(entry.getValue() instanceof Number)) {
-                MSG.log("Invalid entity weight for %s: %s", entry.getKey(), entry.getValue().toString());
-                continue;
-            }
-            mobWeights.put(type, ((Number) entry.getValue()).doubleValue());
-        }
 
         this.minRange = spawns.getDouble("RangeOffset.Min", 3);
         this.maxRange = spawns.getDouble("RangeOffset.Max", 10);
@@ -75,7 +56,6 @@ public class YMLDaylightConfig extends DaylightConfig {
     public void save() {
         ConfigurationSection spawns = config.createSection("Features.DaySpawns");
         spawns.set("CorruptionChance", corruptChance);
-        spawns.set("MobWeights", mobWeights);
         spawns.set("RangeOffset.Min", minRange);
         spawns.set("RangeOffset.Max", maxRange);
         spawns.set("MobAmount", mobAmounts);

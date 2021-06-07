@@ -128,7 +128,7 @@ public class ConfigCommand extends SubCommand {
                         return true;
                     }
                     default -> {
-                        MSG.tell(sender, Lang.COMMAND_INVALID_ARGUMENT, "Unknown key operation");
+                        MSG.tell(sender, Lang.COMMAND_INVALID_ARGUMENT, "Unknown key operation", keyString);
                         return true;
                     }
                 }

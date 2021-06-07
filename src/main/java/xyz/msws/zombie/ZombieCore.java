@@ -1,6 +1,5 @@
 package xyz.msws.zombie;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.msws.zombie.api.ZCore;
@@ -33,7 +32,6 @@ public class ZombieCore extends JavaPlugin implements ZCore {
         loadFiles();
         loadModules();
 
-
         getCommand("zombiecore").setExecutor(new ZombieCoreCommand("zombiecore", this));
         refreshMobs();
     }
@@ -61,15 +59,14 @@ public class ZombieCore extends JavaPlugin implements ZCore {
         manager.addModule(new NoEnchantSpawn(this));
         manager.addModule(new NamedSpawn(this));
         manager.addModule(new PassiveSpawn(this));
-        if (Bukkit.getPluginManager().isPluginEnabled("ZombieApocalypse"))
-            manager.addModule(new ApoModule(this));
+        manager.addModule(new ApoModule(this));
 
         manager.enable();
     }
 
     @Override
     public void onDisable() {
-//        manager.disable();
+        manager.disable();
     }
 
     @Override

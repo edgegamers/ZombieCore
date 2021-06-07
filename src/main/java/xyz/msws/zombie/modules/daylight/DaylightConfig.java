@@ -3,7 +3,6 @@ package xyz.msws.zombie.modules.daylight;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Waterlogged;
-import org.bukkit.entity.EntityType;
 import org.bukkit.util.Vector;
 import xyz.msws.zombie.api.ZCore;
 import xyz.msws.zombie.data.ConfigMap;
@@ -11,14 +10,12 @@ import xyz.msws.zombie.data.TimeVariable;
 import xyz.msws.zombie.data.ZombieConfig;
 import xyz.msws.zombie.modules.ModuleConfig;
 
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
 public abstract class DaylightConfig extends ModuleConfig<DaylightSpawn> {
 
-    protected ConfigMap<EntityType, Double> mobWeights = new ConfigMap<>(new EnumMap<>(EntityType.class), EntityType.class, Double.class);
     protected double minRange, maxRange;
     protected TimeVariable<Double> corruptChance;
     protected TimeVariable<Integer> chunkMobs;
@@ -35,14 +32,6 @@ public abstract class DaylightConfig extends ModuleConfig<DaylightSpawn> {
         return random.nextDouble() <= corruptChance.getValue(world.getTime());
     }
 
-    public double getMobWeight(EntityType type) {
-        return mobWeights.getOrDefault(type, 0.0);
-    }
-
-    public ConfigMap<EntityType, Double> getMobWeights() {
-        return mobWeights;
-    }
-
     public TimeVariable<Double> getCorruptionChance() {
         return corruptChance;
     }
@@ -53,10 +42,6 @@ public abstract class DaylightConfig extends ModuleConfig<DaylightSpawn> {
 
     public double getMaxRange() {
         return maxRange;
-    }
-
-    public EntityType getRandomType() {
-        return getRandom(mobWeights);
     }
 
     public Vector getRandomOffset() {
