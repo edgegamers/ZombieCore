@@ -85,3 +85,7 @@ Features:
     AutoStart:
       - 'ALL'
     StartLoads: true
+  Crafting:
+    Block:
+      - 'ENCHANTING_TABLE'
+    RestrictItem: 'graystainedglasspane name:&c&lDisabled lore:&7This item is disabled!'

@@ -12,6 +12,7 @@ import xyz.msws.zombie.data.items.ItemFactory;
 import xyz.msws.zombie.modules.ModuleManager;
 import xyz.msws.zombie.modules.apocalypse.ApoModule;
 import xyz.msws.zombie.modules.breeding.AnimalBreeding;
+import xyz.msws.zombie.modules.crafting.CraftBlocker;
 import xyz.msws.zombie.modules.daylight.DaylightSpawn;
 import xyz.msws.zombie.modules.fishing.FishModule;
 import xyz.msws.zombie.modules.named.NamedSpawn;
@@ -60,6 +61,7 @@ public class ZombieCore extends JavaPlugin implements ZCore {
         manager.addModule(new NamedSpawn(this));
         manager.addModule(new PassiveSpawn(this));
         manager.addModule(new ApoModule(this));
+        manager.addModule(new CraftBlocker(this));
 
         manager.enable();
     }

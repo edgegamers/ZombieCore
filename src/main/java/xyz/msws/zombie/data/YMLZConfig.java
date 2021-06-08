@@ -5,6 +5,7 @@ import xyz.msws.zombie.api.ZCore;
 import xyz.msws.zombie.modules.ModuleConfig;
 import xyz.msws.zombie.modules.apocalypse.YMLApoConfig;
 import xyz.msws.zombie.modules.breeding.YMLBreedingConfig;
+import xyz.msws.zombie.modules.crafting.YMLCraftConfig;
 import xyz.msws.zombie.modules.daylight.YMLDaylightConfig;
 import xyz.msws.zombie.modules.fishing.YMLFishConfig;
 import xyz.msws.zombie.modules.noenchant.YMLEnchantConfig;
@@ -37,6 +38,7 @@ public class YMLZConfig extends ZombieConfig {
         configs.add(new YMLEnchantConfig(plugin, this));
         configs.add(new YMLPassiveConfig(plugin, this));
         configs.add(new YMLApoConfig(plugin, this));
+        configs.add(new YMLCraftConfig(plugin, this));
 
         configs.forEach(ModuleConfig::load);
     }

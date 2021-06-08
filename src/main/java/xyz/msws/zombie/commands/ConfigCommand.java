@@ -111,6 +111,10 @@ public class ConfigCommand extends SubCommand {
                 }
                 String keyString = jArgs[0], valueString = jArgs[1];
                 value = cast(valueString, cm.getType());
+                if (value == null) {
+                    MSG.tell(sender, Lang.COMMAND_CONFIG_ERROR, field.getName(), valueString, "Unable to cast to " + cm.getType().getSimpleName());
+                    return true;
+                }
                 switch (keyString.toLowerCase()) {
                     case "add" -> {
                         cm.addObject(value);
@@ -177,10 +181,12 @@ public class ConfigCommand extends SubCommand {
             value = Long.parseLong(obj.toString());
         } else if (type.isEnum()) {
             try {
-                value = type.getMethod("valueOf", String.class).invoke(null, obj.toString());
+                value = type.getDeclaredMethod("valueOf", String.class).invoke(null, obj.toString());
             } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException unused) {
+                unused.printStackTrace();
                 try {
-                    value = type.getMethod("fromString", String.class).invoke(null, obj.toString());
+                    value = type.getDeclaredMethod("fromString", String.class).invoke(null, obj.toString());
+                    MSG.log("value (fromString) assigned to %s", value + "");
                 } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException unused2) {
                     return null;
                 }
