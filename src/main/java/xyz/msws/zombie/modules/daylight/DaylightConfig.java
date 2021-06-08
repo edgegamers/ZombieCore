@@ -1,5 +1,6 @@
 package xyz.msws.zombie.modules.daylight;
 
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Waterlogged;
@@ -78,17 +79,17 @@ public abstract class DaylightConfig extends ModuleConfig<DaylightSpawn> {
         return chunkMobs;
     }
 
-    public boolean allowSpawn(Block block) {
-        if (block.isLiquid())
-            return false;
+    public boolean blockSpawn(Block block) {
+        if (block.isLiquid() || block.getType() == Material.KELP_PLANT)
+            return true;
         if (block.getBlockData() instanceof Waterlogged) {
             Waterlogged log = (Waterlogged) block.getBlockData();
             if (log.isWaterlogged())
-                return false;
+                return true;
         }
         if (block.getLightFromBlocks() < minBlockLevel || block.getLightFromBlocks() > maxBlocklevel)
-            return false;
-        return block.getLightFromSky() >= minSkyLevel && block.getLightFromSky() <= maxSkyLevel;
+            return true;
+        return block.getLightFromSky() < minSkyLevel || block.getLightFromSky() > maxSkyLevel;
     }
 
     @Override

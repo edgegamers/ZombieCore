@@ -24,6 +24,7 @@ public class ZombieCoreCommand extends BaseCommand {
         commands.put("delete", new DeleteCommand("delete", plugin));
         commands.put("config", new ConfigCommand("config", plugin));
         commands.put("light", new GetLightCommand("light", plugin));
+        commands.put("testspawn", new GetSpawnCommand("spawn", plugin));
     }
 
     @Override
