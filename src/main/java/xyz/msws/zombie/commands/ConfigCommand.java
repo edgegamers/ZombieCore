@@ -258,10 +258,9 @@ public class ConfigCommand extends SubCommand {
                             result.add(tv.get(key).toString());
                     } else if (ConfigCollection.class.isAssignableFrom(field.getType())) {
                         ConfigCollection<?> collection = (ConfigCollection<?>) field.get(conf);
-                        for (Object res : collection) {
+                        for (Object res : collection)
                             if (MSG.normalize(res.toString()).startsWith(MSG.normalize(args[args.length - 1])))
                                 result.add(res.toString());
-                        }
                     }
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();

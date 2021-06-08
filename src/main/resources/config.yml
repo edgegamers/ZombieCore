@@ -81,11 +81,11 @@ Features:
     Entities: [ BAT, BEE, CAT, CHICKEN, COW, DONKEY, FOX, HORSE, MULE, OCELOT, PARROT, PIG, PIGLIN, POLAR_BEAR, RABBIT, SHEEP, SNOWMAN, SQUID, STRIDER, TURTLE, VILLAGER, WOLF ]
     BlockReasons:
       - 'NATURAL'
-  Apocalypse:
+  Apocalypse: # True if the apocalypse should auto-start
     AutoStart:
       - 'ALL'
     StartLoads: true
-  Crafting:
+  Crafting: # Blocks specific item crafting
     Block:
       - 'ENCHANTING_TABLE'
-    RestrictItem: 'graystainedglasspane name:&c&lDisabled lore:&7This item is disabled!'
+    RestrictItem: 'graystainedglasspane name:&c&lDisabled! lore:&7This item is disabled!'

@@ -104,7 +104,13 @@ Fish:
   MinTime: 20000
   # If a player was going catch after these milliseconds (1000 ms = 1 second), NEVER cancel it (-1 to disable)
   MaxTime: -1
-  # Function to represent exponential decay chance of cancelling event. 1 = 100% cancel, 0 = 0% cancel
+  Restrict: # Restrict which items can be fished
+    - ENCHANTED_BOOK
+    - NAME_TAG
+    - SADDLE
+    - NAUTILUS_SHELL
+    - BOW
+    # Function to represent exponential decay chance of cancelling event. 1 = 100% cancel, 0 = 0% cancel
   CancelChance: #  a(x+b)^c
     Constant: 80  # a
     Offset: 80   # b
@@ -132,4 +138,29 @@ NoEnchants: # Restricts what items mobs can spawn with
   # Restrict which specific enchantments cannot be spawned.
   Enchants:
     - 'ALL'
+```
+
+### Disables spawning of specific entities
+
+```yml
+# Valid methods:
+# REMOVE - Removes the entity
+# CANCEL - Prevents the entity from spawning
+# TP - Teleports the entity under the world
+# HP - Sets the entity's HP to 0
+BlockSpawns:
+  Method: CANCEL # REMOVE, CANCEL, TP, HP
+  Entities: [ BAT, BEE, CAT, CHICKEN, COW, DONKEY, FOX, HORSE, MULE, OCELOT, PARROT, PIG, PIGLIN, POLAR_BEAR, RABBIT, SHEEP, SNOWMAN, SQUID, STRIDER, TURTLE, VILLAGER, WOLF ]
+  BlockReasons:
+    - 'NATURAL'
+```
+
+### Disables crafting of specific items
+
+```yml
+Crafting: # Blocks specific item crafting
+  Block: # Items to block
+    - 'ENCHANTING_TABLE'
+  # Item to replace with result slot
+  RestrictItem: 'graystainedglasspane name:&c&lDisabled! lore:&7This item is disabled!'
 ```
