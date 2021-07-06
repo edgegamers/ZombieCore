@@ -4,6 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import xyz.msws.zombie.api.ZCore;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -27,6 +28,10 @@ public abstract class SubCommand extends ZombieCommand {
             nArgs[i] = array[i + depth];
         }
         return nArgs;
+    }
+
+    protected void setAliases(String... strings) {
+        setAliases(Arrays.asList(strings));
     }
 
     protected abstract boolean exec(CommandSender sender, String label, String[] args);

@@ -11,6 +11,7 @@ import xyz.msws.zombie.data.ZombieConfig;
 import xyz.msws.zombie.data.items.ItemFactory;
 import xyz.msws.zombie.modules.ModuleManager;
 import xyz.msws.zombie.modules.apocalypse.ApoModule;
+import xyz.msws.zombie.modules.book.BookModule;
 import xyz.msws.zombie.modules.breeding.AnimalBreeding;
 import xyz.msws.zombie.modules.crafting.CraftBlocker;
 import xyz.msws.zombie.modules.daylight.DaylightSpawn;
@@ -22,6 +23,7 @@ import xyz.msws.zombie.modules.passivespawn.PassiveSpawn;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class ZombieCore extends JavaPlugin implements ZCore {
     private ModuleManager manager;
@@ -33,7 +35,7 @@ public class ZombieCore extends JavaPlugin implements ZCore {
         loadFiles();
         loadModules();
 
-        getCommand("zombiecore").setExecutor(new ZombieCoreCommand("zombiecore", this));
+        Objects.requireNonNull(getCommand("zombiecore")).setExecutor(new ZombieCoreCommand("zombiecore", this));
         refreshMobs();
     }
 
@@ -43,12 +45,15 @@ public class ZombieCore extends JavaPlugin implements ZCore {
     }
 
     private void loadFiles() {
-        config = new YMLZConfig(this, new File(getDataFolder(), "config.yml"));
-        config.load();
-        File langYml = new File(getDataFolder(), "lang.yml");
+
+        File langYml = new File(getDataFolder(), "lang.yml"), book = new File(getDataFolder(), "book.txt");
         if (!langYml.exists())
             Lang.saveFile(langYml);
+        if (!book.exists())
+            saveResource("book.txt", true);
         Lang.load(YamlConfiguration.loadConfiguration(langYml));
+        config = new YMLZConfig(this, new File(getDataFolder(), "config.yml"));
+        config.load();
     }
 
     private void loadModules() {
@@ -62,6 +67,7 @@ public class ZombieCore extends JavaPlugin implements ZCore {
         manager.addModule(new PassiveSpawn(this));
         manager.addModule(new ApoModule(this));
         manager.addModule(new CraftBlocker(this));
+        manager.addModule(new BookModule(this));
 
         manager.enable();
     }

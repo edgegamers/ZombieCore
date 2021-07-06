@@ -22,11 +22,11 @@ public abstract class ApoConfig extends ModuleConfig<ApoModule> {
         return "apocalypse";
     }
 
-    public Collection<String> getMaps(){
+    public Collection<String> getMaps() {
         return maps;
     }
 
-    public boolean doStartLoads(){
+    public boolean doStartLoads() {
         return startLoads;
     }
 }

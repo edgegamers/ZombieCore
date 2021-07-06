@@ -10,7 +10,7 @@ import xyz.msws.zombie.utils.MSG;
 
 public class YMLApoConfig extends ApoConfig {
 
-    private YamlConfiguration config;
+    private final YamlConfiguration config;
 
     public YMLApoConfig(ZCore plugin, YMLZConfig config) {
         super(plugin, config);

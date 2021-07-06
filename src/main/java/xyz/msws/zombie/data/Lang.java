@@ -28,6 +28,7 @@ public enum Lang {
     COMMAND_CONFIG_ADD("%prefix% Successfully added &e%s&7 to &a%s&7."),
     COMMAND_CONFIG_CLEAR("%prefix% Successfully cleared &a%s&."),
     COMMAND_CONFIG_LIST("%prefix% &a%s&7 values: &e%s"),
+    COMMAND_GIVEBOOK("%prefix% Successfully gave &e%s&7 a guide book."),
     ;
 
     private final String[] def;
