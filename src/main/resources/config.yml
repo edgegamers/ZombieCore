@@ -1,0 +1,91 @@
+Features:
+  Breeding:
+    Entities:
+      - 'ALL'
+      - 'COW'
+    BlockClicks: false  # If true, players will not be able to feed breedable animals
+    BlockBreeding: true # If true, animals will not be able to breed
+    BlockLove: true     # If true, animals will not enter love mode at all
+    ResetBreeding: true # If true, animals will be reset to a non-breeding state after attempting to breed
+    EggThreshold: 64 # (-1 to disable)
+  DaySpawns:
+    CorruptionChances: # 10% Chance that a monster will spawn when a regular mob spawns
+      0: 0.3      # Start of day, 6 AM
+      1000: 0.25
+      2000: 0.2
+      3000: 0.1  # 9 AM
+      6000: 0.05     # Midday
+      9000: 0.1
+      11000: 0.2
+      12000: 0.25 # Sunset
+      13000: 0.3
+      14000: 0.35
+      15000: 0.4
+      16000: 0.45
+      18000: 0.5  # Midnight
+      21000: 0.4
+      23000: 0.35 # Sunrise
+    LightLevels:
+      SkyMin: 0
+      SkyMax: 15
+      BlockMin: 0
+      BlockMax: 7
+    RangeOffset: # The mobs can spawn up to 10 blocks away from the original mob spawn
+      Min: -10
+      Max: 10
+    MobAmount: # These are WEIGHTs, currently configured to also be percentages
+      1: 0.70    # 70% chance for 1 mob to spawn
+      2: 0.25    # 25% for 2, etc.
+      3: 0.03
+      4: 0.015
+      5: 0.005
+      #6: 0.0001  # (Examples)
+    #10: 0.00001
+    MaxChunkMobs:
+      0: 4      # Start of day, 6 AM
+      6000: 3     # Midday
+      9000: 2
+      11000: 3
+      12500: 4
+      14000: 5
+      16000: 6
+      18000: 8  # Midnight
+      21000: 6
+      23000: 5 # Sunrise
+  Fish:
+    MinTime: 20000 # All hook events will be cancelled if they occur before this many milliseconds (-1 to disable)
+    MaxTime: -1   # No hook events will be cancelled if they occur beyond this many milliseconds (-1 to disable)
+    Restrict:
+      - ENCHANTED_BOOK
+      - NAME_TAG
+      - SADDLE
+      - NAUTILUS_SHELL
+      - BOW
+    CancelChance: #  a(x+b)^c
+      Constant: 80  # a
+      Offset: 80   # b
+      Exponent: -1 # c
+  NoEnchants: # Restricts what items mobs can spawn with
+    Entities:
+      - 'ALL'
+    Slots:
+      - 'ALL'
+      - 'HEAD'
+    Items:
+      - 'ALL'
+      - 'DIAMOND_SWORD'
+    Enchants:
+      - 'ALL'
+  BlockSpawns:
+    Method: CANCEL # REMOVE, CANCEL, TP, HP
+    Entities: [ BAT, BEE, CAT, CHICKEN, COW, DONKEY, FOX, HORSE, MULE, OCELOT, PARROT, PIG, PIGLIN, POLAR_BEAR, RABBIT, SHEEP, SNOWMAN, SQUID, STRIDER, TURTLE, VILLAGER, WOLF ]
+    BlockReasons:
+      - 'NATURAL'
+  Apocalypse: # True if the apocalypse should auto-start
+    AutoStart:
+      - 'ALL'
+    StartLoads: true
+  Crafting: # Blocks specific item crafting
+    Block:
+      - 'ENCHANTING_TABLE'
+    RestrictItem: 'graystainedglasspane name:&c&lDisabled! lore:&7This item is disabled!'
