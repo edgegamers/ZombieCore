@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 public class TimeVariable<T> extends ConfigMap<Long, T> {
     private final Class<T> type;
@@ -26,15 +27,15 @@ public class TimeVariable<T> extends ConfigMap<Long, T> {
     }
 
     public T getValue(long time) {
-        T last;
         List<Map.Entry<Long, T>> entries = new ArrayList<>(entrySet());
+        if (time >= entries.get(entries.size() - 1).getKey())
+            return entries.get(entries.size() - 1).getValue();
         for (int i = 0; i < entries.size() - 1; i++) {
             if (time >= entries.get(i).getKey() && time < entries.get(i + 1).getKey())
                 return entries.get(i).getValue();
         }
-        if (time >= entries.get(entries.size() - 1).getKey())
-            return entries.get(entries.size() - 1).getValue();
-        throw new NullPointerException("Could not get value for " + time);
+
+        throw new NullPointerException("Could not get value for " + time + ". Ordered keys: " + entries.stream().map(s -> s.getKey().toString()).collect(Collectors.joining(", ")) + ".");
     }
 
     public T getValue(World world) {

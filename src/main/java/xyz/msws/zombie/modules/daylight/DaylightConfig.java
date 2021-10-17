@@ -17,7 +17,7 @@ import java.util.Random;
 
 public abstract class DaylightConfig extends ModuleConfig<DaylightSpawn> {
 
-    protected double minRange, maxRange;
+    protected double minRange, maxRange, minPlayerRange;
     protected TimeVariable<Double> corruptChance;
     protected TimeVariable<Integer> chunkMobs;
     protected ConfigMap<Integer, Double> mobAmounts = new ConfigMap<>(new HashMap<>(), Integer.class, Double.class);
@@ -43,6 +43,10 @@ public abstract class DaylightConfig extends ModuleConfig<DaylightSpawn> {
 
     public double getMaxRange() {
         return maxRange;
+    }
+
+    public double getMinPlayerRange() {
+        return minPlayerRange;
     }
 
     public Vector getRandomOffset() {
