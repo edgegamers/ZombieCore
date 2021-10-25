@@ -34,7 +34,7 @@ public class CountCommand extends SubCommand {
         LinkedHashMap<EntityType, Map<Integer, Integer>> results = new LinkedHashMap<>();
         Map<EntityType, Integer> counts = new HashMap<>();
 
-        for (Entity ent : player.getNearbyEntities(maxRange, maxRange, maxRange)) {
+        for (Entity ent : player.getNearbyEntities(maxRange, Integer.MAX_VALUE, maxRange)) {
             for (int i = chunkRanges.length - 1; i >= 0; i--) {
                 double blocks = Math.pow(chunkRanges[i] * 16.0, 2.0);
                 Location hLoc = ent.getLocation().clone(), hpLoc = player.getLocation().clone();
