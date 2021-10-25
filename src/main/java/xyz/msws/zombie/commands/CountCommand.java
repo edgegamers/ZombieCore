@@ -39,7 +39,7 @@ public class CountCommand extends SubCommand {
                 Location hLoc = ent.getLocation().clone(), hpLoc = player.getLocation().clone();
                 hLoc.setY(0);
                 hpLoc.setY(0);
-                if (hLoc.distanceSquared(hpLoc) > Math.pow(maxRange, 2))
+                if (hLoc.distanceSquared(hpLoc) > Math.pow(chunkRanges[i] * 16, 2))
                     break;
                 Map<Integer, Integer> rs = results.getOrDefault(ent.getType(), new HashMap<>());
                 rs.put(chunkRanges[i], rs.getOrDefault(chunkRanges[i], 0) + 1);
