@@ -1,7 +1,6 @@
 package xyz.msws.zombie.modules.passivespawn;
 
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -25,6 +24,8 @@ public class PassiveSpawn extends EventModule {
             return;
         if (!config.blockReason(event.getSpawnReason()))
             return;
+        if (event.getEntity().getCustomName() != null && config.allowNames)
+            return;
         switch (config.getMethod()) {
             case CANCEL -> event.setCancelled(true);
             case HP -> event.getEntity().setHealth(0);
@@ -37,6 +38,8 @@ public class PassiveSpawn extends EventModule {
     public void onSpawn(ChunkLoadEvent event) {
         for (Entity ent : event.getChunk().getEntities()) {
             if (!config.blockType(ent.getType()))
+                continue;
+            if (ent.getCustomName() != null && config.allowNames)
                 continue;
             switch (config.getMethod()) {
                 case HP -> {

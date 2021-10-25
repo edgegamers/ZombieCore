@@ -79,6 +79,7 @@ Features:
       - 'ALL'
   BlockSpawns:
     Method: CANCEL # REMOVE, CANCEL, TP, HP
+    AllowNamed: true # If true, mobs that are name tagged will remain
     Entities: [ BAT, BEE, CAT, CHICKEN, COW, DONKEY, FOX, HORSE, MULE, OCELOT, PARROT, PIG, PIGLIN, POLAR_BEAR, RABBIT, SHEEP, SNOWMAN, SQUID, STRIDER, TURTLE, VILLAGER, WOLF ]
     BlockReasons:
       - 'NATURAL'

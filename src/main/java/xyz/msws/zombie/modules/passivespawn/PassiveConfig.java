@@ -14,6 +14,7 @@ public abstract class PassiveConfig extends ModuleConfig<PassiveSpawn> {
     protected ConfigCollection<EntityType> block = new ConfigCollection<>(EnumSet.noneOf(EntityType.class), EntityType.class);
     protected ConfigCollection<CreatureSpawnEvent.SpawnReason> reasons = new ConfigCollection<>(EnumSet.noneOf(CreatureSpawnEvent.SpawnReason.class), CreatureSpawnEvent.SpawnReason.class);
     protected BlockMethod method;
+    protected boolean allowNames;
 
     public PassiveConfig(ZCore plugin, ZombieConfig config) {
         super(plugin, config);

@@ -30,7 +30,7 @@ public class CountCommand extends SubCommand {
             return true;
         }
         int[] chunkRanges = new int[]{1, 4, 16, 64};
-        int maxRange = (chunkRanges[chunkRanges.length - 1] * 16) / 2;
+        int maxRange = chunkRanges[chunkRanges.length - 1] * 8;
         LinkedHashMap<EntityType, Map<Integer, Integer>> results = new LinkedHashMap<>();
         Map<EntityType, Integer> counts = new HashMap<>();
 
@@ -65,13 +65,6 @@ public class CountCommand extends SubCommand {
             }
             joiner.add(builder.substring(0, builder.length() - 3));
         }
-//        for (Map.Entry<EntityType, Map<Integer, Integer>> entry : results.entrySet()) {
-//            StringBuilder builder = new StringBuilder(MSG.FORMAT_INFO + MSG.camelCase(entry.getKey().toString()) + ": " + MSG.NUMBER);
-//            for (Map.Entry<Integer, Integer> mobs : entry.getValue().entrySet().stream().sorted(Map.Entry.comparingByValue()).collect(Collectors.toList())) {
-//                builder.append(mobs.getValue()).append(ChatColor.DARK_GRAY).append("/").append(MSG.NUMBER);
-//            }
-//            joiner.add(builder.substring(0, builder.length() - 3));
-//        }
         MSG.tell(sender, joiner.toString());
         return true;
     }
