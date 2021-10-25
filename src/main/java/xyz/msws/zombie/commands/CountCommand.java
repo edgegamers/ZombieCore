@@ -30,17 +30,16 @@ public class CountCommand extends SubCommand {
             return true;
         }
         int[] chunkRanges = new int[]{1, 4, 16, 64};
-        int maxRange = chunkRanges[chunkRanges.length - 1] * 8;
+        int maxRange = chunkRanges[chunkRanges.length - 1] * 16;
         LinkedHashMap<EntityType, Map<Integer, Integer>> results = new LinkedHashMap<>();
         Map<EntityType, Integer> counts = new HashMap<>();
 
-        for (Entity ent : player.getNearbyEntities(maxRange, Integer.MAX_VALUE, maxRange)) {
+        for (Entity ent : player.getNearbyEntities(maxRange / 2.0, Integer.MAX_VALUE, maxRange / 2.0)) {
             for (int i = chunkRanges.length - 1; i >= 0; i--) {
-                double blocks = Math.pow(chunkRanges[i] * 16.0, 2.0);
                 Location hLoc = ent.getLocation().clone(), hpLoc = player.getLocation().clone();
                 hLoc.setY(0);
                 hpLoc.setY(0);
-                if (hLoc.distanceSquared(hpLoc) > blocks)
+                if (hLoc.distanceSquared(hpLoc) > Math.pow(maxRange, 2))
                     break;
                 Map<Integer, Integer> rs = results.getOrDefault(ent.getType(), new HashMap<>());
                 rs.put(chunkRanges[i], rs.getOrDefault(chunkRanges[i], 0) + 1);
@@ -50,7 +49,10 @@ public class CountCommand extends SubCommand {
             }
         }
         int total = counts.values().stream().mapToInt(i -> i).sum();
-
+        if (total == 0) {
+            MSG.tell(sender, "&cNo mobs nearby.");
+            return true;
+        }
         StringJoiner joiner = new StringJoiner("\n");
         StringBuilder header = new StringBuilder("\n" + MSG.FORMATTER + "Mobs within chunks " + MSG.FORMATTER + "(");
         for (int chunk : chunkRanges) {
