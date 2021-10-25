@@ -71,7 +71,6 @@ public class DaylightSpawn extends EventModule {
         }
     }
 
-
     @Override
     public void disable() {
         EntitySpawnEvent.getHandlerList().unregister(this);

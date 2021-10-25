@@ -15,6 +15,7 @@ public class GetSpawnCommand extends SubCommand {
     protected GetSpawnCommand(String name, ZCore plugin) {
         super(name, plugin);
 
+        setDescription("Checks if zombies can spawn where you are standing");
         setAliases(Arrays.asList("testspawn", "getspawn"));
     }
 

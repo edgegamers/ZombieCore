@@ -13,6 +13,7 @@ public class GetLightCommand extends SubCommand {
     protected GetLightCommand(String name, ZCore plugin) {
         super(name, plugin);
         setAliases(Arrays.asList("getlight"));
+        setDescription("Gets block/sky light");
     }
 
     @Override
