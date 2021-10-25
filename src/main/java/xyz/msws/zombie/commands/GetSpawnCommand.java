@@ -17,6 +17,7 @@ public class GetSpawnCommand extends SubCommand {
 
         setDescription("Checks if zombies can spawn where you are standing");
         setAliases(Arrays.asList("testspawn", "getspawn"));
+        setPermission("zombiecore.command.count");
     }
 
     @Override
