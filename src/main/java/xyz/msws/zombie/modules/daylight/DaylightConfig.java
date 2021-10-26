@@ -84,7 +84,7 @@ public abstract class DaylightConfig extends ModuleConfig<DaylightSpawn> {
     }
 
     public boolean blockSpawn(Block block) {
-        if (block.isLiquid() || block.getType() == Material.KELP_PLANT)
+        if (block.isLiquid() || block.getType() == Material.KELP_PLANT || block.getType() == Material.KELP)
             return true;
         if (block.getBlockData() instanceof Waterlogged) {
             Waterlogged log = (Waterlogged) block.getBlockData();
