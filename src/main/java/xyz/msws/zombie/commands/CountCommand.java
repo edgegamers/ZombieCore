@@ -43,13 +43,13 @@ public class CountCommand extends SubCommand {
                     Map<Integer, Integer> rs = results.getOrDefault(ent.getType(), new HashMap<>());
                     rs.put(chunkRanges[i], 0);
                     results.put(ent.getType(), rs);
-                    counts.put(ent.getType(), rs.get(chunkRanges[i]));
+                    counts.put(ent.getType(), rs.getOrDefault(chunkRanges[chunkRanges.length - 1], 0));
                     break;
                 }
                 Map<Integer, Integer> rs = results.getOrDefault(ent.getType(), new HashMap<>());
                 rs.put(chunkRanges[i], rs.getOrDefault(chunkRanges[i], 0) + 1);
                 results.put(ent.getType(), rs);
-                counts.put(ent.getType(), rs.get(chunkRanges[i]));
+                counts.put(ent.getType(), rs.getOrDefault(chunkRanges[chunkRanges.length - 1], 0));
             }
         }
         int total = counts.values().stream().mapToInt(i -> i).sum();
