@@ -193,7 +193,7 @@ public class EntityBuilder<T extends Entity> implements Cloneable {
                 blueprint.remove(blueprint.size() - 1);
                 return false;
             }
-            case "new", "reset", "quit" -> {
+            case "new", "reset", "quit", "exit" -> {
                 MSG.tell(sender, Lang.COMMAND_SPAWN_CLEARED);
                 blueprint.clear();
                 return true;

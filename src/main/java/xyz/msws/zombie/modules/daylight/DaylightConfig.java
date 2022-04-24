@@ -17,7 +17,7 @@ import java.util.Random;
 
 public abstract class DaylightConfig extends ModuleConfig<DaylightSpawn> {
 
-    protected double minRange, maxRange;
+    protected double minRange, maxRange, minPlayerRange;
     protected TimeVariable<Double> corruptChance;
     protected TimeVariable<Integer> chunkMobs;
     protected ConfigMap<Integer, Double> mobAmounts = new ConfigMap<>(new HashMap<>(), Integer.class, Double.class);
@@ -43,6 +43,10 @@ public abstract class DaylightConfig extends ModuleConfig<DaylightSpawn> {
 
     public double getMaxRange() {
         return maxRange;
+    }
+
+    public double getMinPlayerRange() {
+        return minPlayerRange;
     }
 
     public Vector getRandomOffset() {
@@ -80,7 +84,7 @@ public abstract class DaylightConfig extends ModuleConfig<DaylightSpawn> {
     }
 
     public boolean blockSpawn(Block block) {
-        if (block.isLiquid() || block.getType() == Material.KELP_PLANT)
+        if (block.isLiquid() || block.getType() == Material.KELP_PLANT || block.getType() == Material.KELP)
             return true;
         if (block.getBlockData() instanceof Waterlogged) {
             Waterlogged log = (Waterlogged) block.getBlockData();

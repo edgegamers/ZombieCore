@@ -33,6 +33,7 @@ public class YMLDaylightConfig extends DaylightConfig {
 
         this.minRange = spawns.getDouble("RangeOffset.Min", 3);
         this.maxRange = spawns.getDouble("RangeOffset.Max", 10);
+        this.minPlayerRange = spawns.getDouble("MinimumPlayerRangeSquared", 16);
         this.chunkMobs = new TimeVariable<>(spawns.getConfigurationSection("MaxChunkMobs"), Integer.class);
         this.minBlockLevel = spawns.getInt("LightLevels.BlockMin", 0);
         this.maxBlocklevel = spawns.getInt("LightLevels.BlockMax", 7);

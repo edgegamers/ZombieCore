@@ -102,7 +102,7 @@ public class SpawnCommand extends SubCommand implements Listener {
         if (args.length == 1) {
             List<String> attributes = new ArrayList<>();
             attributes.addAll(Arrays.asList("atkspd", "flyspd", "maxhp", "hp", "health", "name", "head", "chest", "hand", "off_hand", "legs", "feet"));
-            attributes.addAll(Arrays.asList("speed", "damage", "potion", "removepotion", "followRange", "kbRes", "kbStr", "spawn", "new", "reset", "save"));
+            attributes.addAll(Arrays.asList("speed", "damage", "potion", "removepotion", "followRange", "kbRes", "kbStr", "spawn", "new", "reset", "quit", "exit", "save"));
             attributes.addAll(Arrays.asList("headDropChance", "chestDropChance", "handDropChance", "off_handDropChance", "legsDropChance"));
             attributes.addAll(Arrays.asList("feetDropChance", "headDC", "chestDC", "handDC", "off_handDC", "legsDC", "feetDC", "dropChance"));
 
