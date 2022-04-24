@@ -7,6 +7,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Monster;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -31,9 +32,9 @@ public class DaylightSpawn extends EventModule {
         if (event.getLocation().getBlock().isLiquid())
             return;
         int cm = config.getChunkMobs().getValue(event.getLocation().getWorld());
+        int amo = 0;
         if (cm != -1) {
             Chunk chunk = event.getLocation().getChunk();
-            int amo = 0;
             for (Entity ent : chunk.getEntities()) {
                 if (!(ent instanceof Monster))
                     continue;
@@ -43,7 +44,7 @@ public class DaylightSpawn extends EventModule {
                 return;
         }
         Location origin = event.getLocation().clone().add(config.getRandomOffset());
-        int toSpawn = config.getRandomAmount();
+        int toSpawn = Math.min(config.getRandomAmount(), cm - amo);
         int attempts = 0;
         for (int i = 0; i < toSpawn; i++) {
             if (attempts++ > toSpawn * 2)
@@ -57,10 +58,18 @@ public class DaylightSpawn extends EventModule {
                 i--;
                 continue;
             }
+            boolean spawn = true;
+            for (Player p : block.getWorld().getPlayers()) {
+                if (block.getLocation().distanceSquared(p.getLocation()) < config.getMinPlayerRange()) {
+                    spawn = false;
+                    break;
+                }
+            }
+            if (!spawn)
+                continue;
             ApocalypseAPI.getInstance().spawnZombie(block.getLocation().add(.5, 0, .5));
         }
     }
-
 
     @Override
     public void disable() {

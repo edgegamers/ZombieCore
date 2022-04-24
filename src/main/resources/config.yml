@@ -33,6 +33,7 @@ Features:
     RangeOffset: # The mobs can spawn up to 10 blocks away from the original mob spawn
       Min: -10
       Max: 10
+    MinimumPlayerRangeSquared: 1024 # Mobs won't spawn within sqrt(1024) = 32 blocks of the player
     MobAmount: # These are WEIGHTs, currently configured to also be percentages
       1: 0.70    # 70% chance for 1 mob to spawn
       2: 0.25    # 25% for 2, etc.
@@ -78,6 +79,7 @@ Features:
       - 'ALL'
   BlockSpawns:
     Method: CANCEL # REMOVE, CANCEL, TP, HP
+    AllowNamed: true # If true, mobs that are name tagged will remain
     Entities: [ BAT, BEE, CAT, CHICKEN, COW, DONKEY, FOX, HORSE, MULE, OCELOT, PARROT, PIG, PIGLIN, POLAR_BEAR, RABBIT, SHEEP, SNOWMAN, SQUID, STRIDER, TURTLE, VILLAGER, WOLF ]
     BlockReasons:
       - 'NATURAL'

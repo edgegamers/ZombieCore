@@ -29,6 +29,7 @@ public enum Lang {
     COMMAND_CONFIG_CLEAR("%prefix% Successfully cleared &a%s&."),
     COMMAND_CONFIG_LIST("%prefix% &a%s&7 values: &e%s"),
     COMMAND_GIVEBOOK("%prefix% Successfully gave &e%s&7 a guide book."),
+    COMMAND_DEBUG("%prefix% Corruption chance: &e%1.0f%%%%&7. Chunk Limit: &a%d&7."),
     ;
 
     private final String[] def;
