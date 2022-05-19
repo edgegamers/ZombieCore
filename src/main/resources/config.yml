@@ -61,13 +61,24 @@ Features:
       Offset: 80 # b
       Exponent: -1 # c
     BlockEnchants: true
-    Restrict:
-      - ENCHANTED_BOOK
-      - NAME_TAG
-      - SADDLE
-      - NAUTILUS_SHELL
-      - BOW
-      - FISHING_ROD
+    Whitelist:
+      - RAW_COD
+      - RAW_SALMON
+      - TROPICAL_FISH
+      - PUFFERFISH
+      - LILY_PAD
+      - BOWL
+      - LEATHER
+      - LEATHER_BOOTS
+      - ROTTEN_FLESH
+      - STICK
+      - STRING
+      - WATER_BOTTLE
+      - BONE
+      - INK_SAC
+      - TRIPWIRE_HOOK
+      - BAMBOO
+      - COCOA_BEANS
   NoEnchants: # Restricts what items mobs can spawn with
     Entities:
       - 'ALL'
