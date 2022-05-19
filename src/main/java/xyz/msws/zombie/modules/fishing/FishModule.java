@@ -1,6 +1,7 @@
 package xyz.msws.zombie.modules.fishing;
 
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
@@ -39,9 +40,14 @@ public class FishModule extends EventModule {
         }
         if (event.getState() == PlayerFishEvent.State.REEL_IN) {
             Entity ent = event.getCaught();
-            if (!(ent instanceof Item))
+            if (!(ent instanceof Item item))
                 return;
-            Item item = (Item) ent;
+            ItemStack stack = item.getItemStack();
+            if (config.blockEnchants()) {
+                for (Enchantment ench : stack.getEnchantments().keySet())
+                    stack.removeEnchantment(ench);
+                item.setItemStack(stack);
+            }
             if (!config.restrict(item.getItemStack().getType()))
                 return;
             item.setItemStack(new ItemStack(Material.COD, 1));

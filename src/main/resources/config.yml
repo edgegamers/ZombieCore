@@ -55,17 +55,19 @@ Features:
       23000: 5 # Sunrise
   Fish:
     MinTime: 20000 # All hook events will be cancelled if they occur before this many milliseconds (-1 to disable)
-    MaxTime: -1   # No hook events will be cancelled if they occur beyond this many milliseconds (-1 to disable)
+    MaxTime: -1 # No hook events will be cancelled if they occur beyond this many milliseconds (-1 to disable)
+    CancelChance: #  a(x+b)^c
+      Constant: 80 # a
+      Offset: 80 # b
+      Exponent: -1 # c
+    BlockEnchants: true
     Restrict:
       - ENCHANTED_BOOK
       - NAME_TAG
       - SADDLE
       - NAUTILUS_SHELL
       - BOW
-    CancelChance: #  a(x+b)^c
-      Constant: 80  # a
-      Offset: 80   # b
-      Exponent: -1 # c
+      - FISHING_ROD
   NoEnchants: # Restricts what items mobs can spawn with
     Entities:
       - 'ALL'

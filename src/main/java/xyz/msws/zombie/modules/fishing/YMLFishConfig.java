@@ -69,7 +69,6 @@ public class YMLFishConfig extends FishConfig {
         if (minTime != -1 && time < minTime)
             return true;
         double t = time / 1000.0;
-        MSG.log("Checking f(%1f) = %.2f", t, method.apply(t));
         return random.nextDouble() < method.apply(t);
     }
 

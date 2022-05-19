@@ -14,6 +14,7 @@ public abstract class FishConfig extends ModuleConfig<FishModule> {
     protected Function<Double, Double> method;
     protected ConfigCollection<Material> restricted = new ConfigCollection<>(EnumSet.noneOf(Material.class), Material.class);
     protected long minTime, maxTime;
+    protected boolean blockEnchants;
 
     public FishConfig(ZCore plugin, ZombieConfig config) {
         super(plugin, config);
@@ -35,6 +36,10 @@ public abstract class FishConfig extends ModuleConfig<FishModule> {
 
     public boolean restrict(Material mat) {
         return restricted.contains(mat);
+    }
+
+    public boolean blockEnchants() {
+        return blockEnchants;
     }
 
     @Override
