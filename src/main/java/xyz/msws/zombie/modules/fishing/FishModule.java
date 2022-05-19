@@ -27,35 +27,29 @@ public class FishModule extends EventModule {
     @EventHandler
     public void onFish(PlayerFishEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();
-        if (event.getPlayer().hasPermission("zombiecore.bypass.fishing"))
-            return;
+        if (event.getPlayer().hasPermission("zombiecore.bypass.fishing")) return;
         if (event.getState() == PlayerFishEvent.State.FISHING) {
-            if (config.getMinTime() == -1)
-                return;
+            if (config.getMinTime() == -1) return;
             event.getHook().setMinWaitTime((int) config.getMinTime() / 1000);
         }
         if (event.getState() == PlayerFishEvent.State.FISHING) {
             times.put(uuid, System.currentTimeMillis());
             return;
         }
-        if (event.getState() == PlayerFishEvent.State.REEL_IN) {
+        if (event.getState() == PlayerFishEvent.State.CAUGHT_FISH) {
             Entity ent = event.getCaught();
-            if (!(ent instanceof Item item))
-                return;
+            if (!(ent instanceof Item item)) return;
             ItemStack stack = item.getItemStack();
-            if (config.blockEnchants()) {
+            if (config.isBlockEnchants()) {
                 for (Enchantment ench : stack.getEnchantments().keySet())
                     stack.removeEnchantment(ench);
                 item.setItemStack(stack);
             }
-            if (config.allow(item.getItemStack().getType()))
-                return;
+            if (config.allow(item.getItemStack().getType())) return;
             item.setItemStack(new ItemStack(Material.COD, 1));
         }
-        if (event.getState() != PlayerFishEvent.State.BITE)
-            return;
-        if (!config.cancel(System.currentTimeMillis() - times.getOrDefault(uuid, 0L)))
-            return;
+        if (event.getState() != PlayerFishEvent.State.BITE) return;
+        if (!config.cancel(System.currentTimeMillis() - times.getOrDefault(uuid, 0L))) return;
         event.setCancelled(true);
     }
 
