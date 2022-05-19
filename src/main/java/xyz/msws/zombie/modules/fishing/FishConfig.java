@@ -1,5 +1,6 @@
 package xyz.msws.zombie.modules.fishing;
 
+import lombok.Getter;
 import org.bukkit.Material;
 import xyz.msws.zombie.api.ZCore;
 import xyz.msws.zombie.data.ConfigCollection;
@@ -13,7 +14,9 @@ public abstract class FishConfig extends ModuleConfig<FishModule> {
 
     protected Function<Double, Double> method;
     protected ConfigCollection<Material> whitelist = new ConfigCollection<>(EnumSet.noneOf(Material.class), Material.class);
+    @Getter
     protected long minTime, maxTime;
+    @Getter
     protected boolean blockEnchants;
 
     public FishConfig(ZCore plugin, ZombieConfig config) {
@@ -26,23 +29,12 @@ public abstract class FishConfig extends ModuleConfig<FishModule> {
 
     public abstract boolean cancel(long time);
 
-    public long getMinTime() {
-        return minTime;
-    }
-
     public long getMaxTime() {
         return maxTime;
     }
 
-    //    public boolean restrict(Material mat) {
-//        return restricted.contains(mat);
-//    }
     public boolean allow(Material mat) {
         return whitelist.contains(mat);
-    }
-
-    public boolean blockEnchants() {
-        return blockEnchants;
     }
 
     @Override
