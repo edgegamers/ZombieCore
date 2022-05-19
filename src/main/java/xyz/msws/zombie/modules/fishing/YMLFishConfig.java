@@ -39,6 +39,7 @@ public class YMLFishConfig extends FishConfig {
         minTime = fish.getLong("MinTime", 20000);
         maxTime = fish.getLong("MaxTime", -1);
         restricted = new ConfigCollection<>(Serializer.getEnumSet(fish.getStringList("Restrict"), Material.class), Material.class);
+        blockEnchants = fish.getBoolean("BlockEnchants", true);
         this.method = x -> constant * Math.pow(x + offset, exp);
     }
 
@@ -48,6 +49,7 @@ public class YMLFishConfig extends FishConfig {
         fish.set("CancelChance.Constant", constant);
         fish.set("CancelChance.Offset", offset);
         fish.set("CancelChance.Exponent", exp);
+        fish.set("BlockEnchants", blockEnchants);
         fish.set("MinTime", minTime);
         fish.set("MaxTime", maxTime);
     }
