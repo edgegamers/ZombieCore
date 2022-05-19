@@ -13,7 +13,6 @@ public abstract class FishConfig extends ModuleConfig<FishModule> {
 
     protected Function<Double, Double> method;
     protected ConfigCollection<Material> whitelist = new ConfigCollection<>(EnumSet.noneOf(Material.class), Material.class);
-    //    protected ConfigCollection<Material> restricted = new ConfigCollection<>(EnumSet.noneOf(Material.class), Material.class);
     protected long minTime, maxTime;
     protected boolean blockEnchants;
 
