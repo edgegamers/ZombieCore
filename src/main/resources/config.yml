@@ -62,8 +62,8 @@ Features:
       Exponent: -1 # c
     BlockEnchants: true
     Whitelist:
-      - RAW_COD
-      - RAW_SALMON
+      - COD
+      - SALMON
       - TROPICAL_FISH
       - PUFFERFISH
       - LILY_PAD
