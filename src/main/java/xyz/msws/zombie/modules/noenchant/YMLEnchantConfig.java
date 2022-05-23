@@ -41,9 +41,10 @@ public class YMLEnchantConfig extends EnchantConfig {
         if (blockEnchants.contains("ALL")) {
             enchants.addAll(Arrays.asList(Enchantment.values()));
             whitelist = false;
+            blockEnchants.remove("ALL");
         }
 
-        for (String s : noEnchants.getStringList("BlockEnchants")) {
+        for (String s : blockEnchants) {
             try {
                 Enchantment ench = Enchantment.getByKey(NamespacedKey.minecraft(s));
                 if (whitelist) enchants.add(ench);

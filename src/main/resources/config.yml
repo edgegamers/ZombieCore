@@ -21,29 +21,38 @@ Features:
     EggThreshold: 64 # (-1 to disable)
   DaySpawns:
     CorruptionChances: # 10% Chance that a monster will spawn when a regular mob spawns
-      0: 0.3      # Start of day, 6 AM
-      1000: 0.25
-      2000: 0.2
-      3000: 0.1  # 9 AM
-      6000: 0.05     # Midday
-      9000: 0.1
-      11000: 0.2
-      12000: 0.25 # Sunset
-      13000: 0.3
-      14000: 0.35
-      15000: 0.4
-      16000: 0.45
-      18000: 0.5  # Midnight
-      21000: 0.4
-      23000: 0.35 # Sunrise
+      0: 0.50 # Start of day, 6 AM
+      1000: 0.30
+      2000: 0.30
+      3000: 0.20 # 9 AM
+      4000: 0.10
+      5000: 0.10
+      6000: 0.10 # Midday
+      7000: 0.10
+      8000: 0.10
+      9000: 0.20
+      10000: 0.30
+      11000: 0.30
+      12000: 0.40 # Sunset
+      13000: 0.45
+      14000: 0.50
+      15000: 0.55
+      16000: 0.55
+      17000: 0.60
+      18000: 0.65 # Midnight
+      19000: 0.60
+      20000: 0.55
+      21000: 0.50
+      22000: 0.45
+      23000: 0.40 # Sunrise
     LightLevels:
       SkyMin: 0
       SkyMax: 15
       BlockMin: 0
       BlockMax: 7
     RangeOffset: # The mobs can spawn up to 10 blocks away from the original mob spawn
-      Min: -10
-      Max: 10
+      Min: -4
+      Max: 8
     MinimumPlayerRangeSquared: 1024 # Mobs won't spawn within sqrt(1024) = 32 blocks of the player
     MobAmount: # These are WEIGHTs, currently configured to also be percentages
       1: 0.70    # 70% chance for 1 mob to spawn
@@ -52,18 +61,18 @@ Features:
       4: 0.015
       5: 0.005
       #6: 0.0001  # (Examples)
-    #10: 0.00001
+      #10: 0.00001
     MaxChunkMobs:
-      0: 4      # Start of day, 6 AM
-      6000: 3     # Midday
-      9000: 2
-      11000: 3
-      12500: 4
-      14000: 5
-      16000: 6
-      18000: 8  # Midnight
-      21000: 6
-      23000: 5 # Sunrise
+      # Day Cycle Image: https://static.wikia.nocookie.net/minecraft_gamepedia/images/b/bc/Day_Night_Clock_24h.png/revision/latest?cb=20130103232456
+      # 1 -> 8AM-4PM (8 hours / 6.67 minutes)
+      # 2 -> 4PM-10PM (6 hours / 5 minutes)
+      # 3 -> 10PM-2AM (4 hours / 3.33 minutes)
+      # 2 -> 2AM-8AM (6 hours / 5 minutes)
+      0: 1
+      2000: 1 # 8AM
+      10000: 2 # 4PM
+      16000: 3 # 10PM
+      20000: 2 # 2AM
   Fish:
     MinTime: 20000 # All hook events will be cancelled if they occur before this many milliseconds (-1 to disable)
     MaxTime: -1 # No hook events will be cancelled if they occur beyond this many milliseconds (-1 to disable)
@@ -95,7 +104,6 @@ Features:
       - 'ALL'
     BlockSlots: # EquipmentSlot
       - 'ALL'
-      - 'HEAD'
     BlockItems: # Material
       - 'ALL'
     BlockEnchants: # Enchantments
@@ -103,10 +111,42 @@ Features:
   BlockSpawns:
     Method: CANCEL # BlockMethods
     AllowNamed: true # If true, mobs that are name tagged will remain
-    Entities: # Entities
-    [ BAT, BEE, CAT, CHICKEN, COW, DONKEY, FOX, HORSE, MULE, OCELOT, PARROT, PIG, PIGLIN, POLAR_BEAR, RABBIT, SHEEP, SNOWMAN, SQUID, STRIDER, TURTLE, VILLAGER, WOLF ]
-    BlockReasons: # Values (https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/entity/CreatureSpawnEvent.SpawnReason.html)
-      - 'NATURAL'
+    BlockEntities: # Entities
+      - "SHEEP"
+      - "COW"
+      - "BEE"
+      - "PIG"
+      - "OCELOT"
+      - "CHICKEN"
+      - "BAT"
+      - "DONKEY"
+      - "HORSE"
+      - "FOX"
+      - "MUSHROOMCOW"
+      - "MULE"
+      - "POLAR_BEAR"
+      - "RABBIT"
+      - "VILLAGER"
+      - "SNOWMAN"
+      - "TURTLE"
+      - "PIGLIN"
+      - "STRIDER"
+      - "PARROT"
+      - "SQUID"
+      - "DOLPHIN"
+      - "WOLF"
+      - "CAT"
+      - "PANDA"
+      - "IRONGOLEM"
+      - "LLAMA"
+      - "COD"
+      - "PUFFERFISH"
+      - "SALMON"
+      - "TROPICAL_FISH"
+    BlockReasons: # SpawnReason
+      - "NATURAL"
+      - "EGG"
+      - "DISPENSE_EGG"
   Apocalypse: # True if the apocalypse should auto-start
     AutoStart:
       - 'ALL'
