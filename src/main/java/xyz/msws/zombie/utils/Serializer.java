@@ -44,8 +44,7 @@ public class Serializer {
      */
     public static <T> T deserialize(Map<String, Object> data, Class<T> clazz) {
         Constructor<T> struct = getConstructor(clazz);
-        if (struct == null)
-            throw new IllegalArgumentException(clazz.getName() + " does not have an empty constructor");
+        if (struct == null) throw new IllegalArgumentException(clazz.getName() + " does not have an empty constructor");
 
         T obj;
 
@@ -57,8 +56,7 @@ public class Serializer {
         }
 
         for (Field f : getFields(clazz)) {
-            if (!data.containsKey(f.getName()))
-                continue;
+            if (!data.containsKey(f.getName())) continue;
             Object v = cast(data.get(f.getName()), f.getType());
             if (v == null)
                 throw new ClassCastException(data.get(f.getName()).getClass() + " cannot be casted to " + f.getType());
@@ -78,28 +76,24 @@ public class Serializer {
      * @param obj   Source object to cast
      * @param clazz class type to cast to
      * @param <T>   type
-     * @return The given object casted
+     * @return The given object cast
      */
     public static <T> T cast(Object obj, Class<T> clazz) {
-        if (clazz.isAssignableFrom(obj.getClass()))
-            return clazz.cast(obj);
+        if (clazz.isAssignableFrom(obj.getClass())) return clazz.cast(obj);
         if (clazz.equals(UUID.class)) {
             return clazz.cast(UUID.fromString((String) obj));
         } else if (clazz.isArray()) {
-            if (obj instanceof Collection) {
-                Collection<?> col = (Collection<?>) obj;
+            if (obj instanceof Collection<?> col) {
                 return clazz.cast(col.toArray(new Object[0]));
             }
-        } else if (clazz.isPrimitive() && obj instanceof Number) {
-            Number n = (Number) obj;
+        } else if (clazz.isPrimitive() && obj instanceof Number n) {
             return (T) n;
         }
         throw new ClassCastException("Could not cast " + obj.getClass() + " to " + clazz);
     }
 
     private static List<Field> getFields(Class<?> clazz) {
-        if (fieldCache.containsKey(clazz))
-            return fieldCache.get(clazz);
+        if (fieldCache.containsKey(clazz)) return fieldCache.get(clazz);
         List<Field> result = Arrays.stream(clazz.getDeclaredFields()).filter(f -> !Modifier.isTransient(f.getModifiers())).collect(Collectors.toList());
         result.forEach(f -> f.setAccessible(true));
         fieldCache.put(clazz, result);
@@ -107,8 +101,7 @@ public class Serializer {
     }
 
     private static <T> Constructor<T> getConstructor(Class<T> clazz) {
-        if (constructorCache.containsKey(clazz))
-            return (Constructor<T>) constructorCache.get(clazz);
+        if (constructorCache.containsKey(clazz)) return (Constructor<T>) constructorCache.get(clazz);
         Constructor<T> result = null;
         try {
             result = clazz.getDeclaredConstructor();
@@ -121,37 +114,34 @@ public class Serializer {
 
     public static <E extends Enum<E>> EnumSet<E> getEnumSet(Collection<String> strings, Class<E> clazz) {
         EnumSet<E> list = EnumSet.noneOf(clazz);
+        boolean whitelist = true;
+        if (strings.contains("ALL")) {
+            list.addAll(Arrays.asList(clazz.getEnumConstants()));
+            whitelist = false;
+        }
         for (String s : strings) {
-            if (s.isEmpty())
-                continue;
-            if (s.equalsIgnoreCase("all")) {
-                list.addAll(Arrays.asList(clazz.getEnumConstants()));
-                break;
-            }
+            if (s.isEmpty()) continue;
             E type = getEnum(s, clazz);
             if (type == null) {
-                MSG.log("Invalid enum value specified: %s", s);
+                MSG.warn("Invalid enum specified: %s", s);
                 continue;
             }
-            list.add(type);
-
+            if (!whitelist)
+                list.remove(type);
+            else
+                list.add(type);
         }
         return list;
     }
 
     public static <E extends Enum<E>> E getEnum(String s, Class<E> clazz) {
-        for (E e : clazz.getEnumConstants()) {
-            if (MSG.normalize(s).equals(MSG.normalize(e.toString())))
-                return e;
-        }
-        for (E e : clazz.getEnumConstants()) {
-            if (MSG.normalize(s).startsWith(MSG.normalize(e.toString())))
-                return e;
-        }
-        for (E e : clazz.getEnumConstants()) {
-            if (MSG.normalize(s).contains(MSG.normalize(e.toString())))
-                return e;
-        }
+        s = MSG.normalize(s);
+        for (E e : clazz.getEnumConstants())
+            if (s.equals(MSG.normalize(e.toString()))) return e;
+        for (E e : clazz.getEnumConstants())
+            if (s.startsWith(MSG.normalize(e.toString()))) return e;
+        for (E e : clazz.getEnumConstants())
+            if (s.contains(MSG.normalize(e.toString()))) return e;
         return null;
     }
 }

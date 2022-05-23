@@ -1,7 +1,6 @@
 package xyz.msws.zombie.api;
 
 import org.bukkit.plugin.Plugin;
-import xyz.msws.zombie.commands.ZombieCoreCommand;
 import xyz.msws.zombie.data.EntityBuilder;
 import xyz.msws.zombie.data.ZombieConfig;
 import xyz.msws.zombie.data.items.ItemFactory;

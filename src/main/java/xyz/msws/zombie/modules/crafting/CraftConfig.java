@@ -1,5 +1,6 @@
 package xyz.msws.zombie.modules.crafting;
 
+import lombok.Getter;
 import org.bukkit.Material;
 import xyz.msws.zombie.api.ZCore;
 import xyz.msws.zombie.data.ConfigCollection;
@@ -11,6 +12,7 @@ import java.util.EnumSet;
 public abstract class CraftConfig extends ModuleConfig<CraftBlocker> {
 
     protected ConfigCollection<Material> block = new ConfigCollection<>(EnumSet.noneOf(Material.class), Material.class);
+    @Getter
     protected String result;
 
     public CraftConfig(ZCore plugin, ZombieConfig config) {
@@ -21,6 +23,7 @@ public abstract class CraftConfig extends ModuleConfig<CraftBlocker> {
         return block.contains(mat);
     }
 
+    @Deprecated
     public String getItemResult() {
         return result;
     }

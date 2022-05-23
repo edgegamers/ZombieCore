@@ -3,16 +3,14 @@ package xyz.msws.zombie.modules;
 import xyz.msws.zombie.api.ZCore;
 import xyz.msws.zombie.data.ZombieConfig;
 
-import java.util.Map;
-
 /**
  * Represents a config for a Module, similar to ParticleData
  *
  * @param <T> ModuleType that is supported
  */
 public abstract class ModuleConfig<T extends Module> {
-    protected ZombieConfig config;
-    protected ZCore plugin;
+    protected final ZombieConfig config;
+    protected final ZCore plugin;
 
     public ModuleConfig(ZCore plugin, ZombieConfig config) {
         this.plugin = plugin;

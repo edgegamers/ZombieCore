@@ -20,12 +20,9 @@ public class PassiveSpawn extends EventModule {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onSpawn(CreatureSpawnEvent event) {
-        if (!config.blockType(event.getEntityType()))
-            return;
-        if (!config.blockReason(event.getSpawnReason()))
-            return;
-        if (event.getEntity().getCustomName() != null && config.allowNames)
-            return;
+        if (!config.blockType(event.getEntityType())) return;
+        if (!config.blockReason(event.getSpawnReason())) return;
+        if (event.getEntity().getCustomName() != null && config.allowNames) return;
         switch (config.getMethod()) {
             case CANCEL -> event.setCancelled(true);
             case HP -> event.getEntity().setHealth(0);
@@ -37,14 +34,12 @@ public class PassiveSpawn extends EventModule {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onSpawn(ChunkLoadEvent event) {
         for (Entity ent : event.getChunk().getEntities()) {
-            if (!config.blockType(ent.getType()))
-                continue;
-            if (ent.getCustomName() != null && config.allowNames)
-                continue;
+            if (!config.blockType(ent.getType())) continue;
+            if (ent.getCustomName() != null && config.allowNames) continue;
             switch (config.getMethod()) {
                 case HP -> {
-                    if (ent instanceof LivingEntity) {
-                        ((LivingEntity) ent).setHealth(0);
+                    if (ent instanceof LivingEntity livingEntity) {
+                        livingEntity.setHealth(0);
                     } else {
                         ent.remove();
                     }

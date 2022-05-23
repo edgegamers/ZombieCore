@@ -8,13 +8,15 @@ import xyz.msws.zombie.api.ZCore;
 import xyz.msws.zombie.data.YMLZConfig;
 import xyz.msws.zombie.utils.MSG;
 
+import java.util.List;
+
 public class YMLApoConfig extends ApoConfig {
 
     private final YamlConfiguration config;
 
     public YMLApoConfig(ZCore plugin, YMLZConfig config) {
         super(plugin, config);
-        this.config = config.getYml();
+        this.config = config.getConfig();
     }
 
     @Override
@@ -24,13 +26,14 @@ public class YMLApoConfig extends ApoConfig {
             MSG.log("No apocalypse startup settings have been configured");
             return;
         }
+        List<String> worlds = apo.getStringList("AutoStart");
+        boolean white = !worlds.contains("ALL");
+        if (white) for (World w : Bukkit.getWorlds())
+            maps.add(w.getName());
         for (String s : apo.getStringList("AutoStart")) {
-            if (s.equalsIgnoreCase("ALL")) {
-                for (World w : Bukkit.getWorlds())
-                    maps.add(w.getName());
-                continue;
-            }
-            maps.add(s);
+            if (white) {
+                maps.add(s);
+            } else maps.remove(s);
         }
 
         startLoads = apo.getBoolean("StartLoads", true);
@@ -38,6 +41,7 @@ public class YMLApoConfig extends ApoConfig {
 
     @Override
     public void save() {
+        ConfigurationSection features = config.createSection("Features");
 
     }
 }

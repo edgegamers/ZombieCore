@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 /**
  * Adds support for adding item flags to all itemstacks.
  *
- * @author imodm
+ * @author MSWS
  */
 public class ItemFlagAttribute implements ItemAttribute {
 

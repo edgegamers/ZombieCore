@@ -16,8 +16,7 @@ public class NamedSpawn extends EventModule {
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onSpawn(CreatureSpawnEvent event) {
         LivingEntity entity = event.getEntity();
-        if (entity.getCustomName() == null)
-            return;
+        if (entity.getCustomName() == null) return;
         entity.setMetadata("ignoreZombie", new FixedMetadataValue(plugin, true));
     }
 

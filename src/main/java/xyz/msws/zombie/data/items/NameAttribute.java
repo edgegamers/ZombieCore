@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Adds support for specifying the display name for an itemstack.
  *
- * @author imodm
+ * @author MSWS
  */
 public class NameAttribute implements ItemAttribute {
 

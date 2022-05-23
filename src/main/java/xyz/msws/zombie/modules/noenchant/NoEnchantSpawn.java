@@ -25,26 +25,22 @@ public class NoEnchantSpawn extends EventModule {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onSpawn(CreatureSpawnEvent event) {
         LivingEntity entity = event.getEntity();
-        if (!config.restrictType(entity.getType()))
-            return;
+        if (!config.restrictType(entity.getType())) return;
 
         EntityEquipment eq = entity.getEquipment();
-        if (eq == null)
-            return;
+        if (eq == null) return;
 
         for (EquipmentSlot slot : config.getSlots()) {
             ItemStack item = eq.getItem(slot);
-            if (item.getType().isAir())
-                continue;
+            if (item.getType().isAir()) continue;
             if (config.restrictMaterial(item.getType())) {
                 eq.setItem(slot, new ItemStack(Material.AIR));
                 continue;
             }
             Map<Enchantment, Integer> enchants = item.getEnchantments();
-            for (Enchantment e : enchants.keySet()) {
-                if (config.restrictEnchant(e))
-                    item.removeEnchantment(e);
-            }
+            for (Enchantment e : enchants.keySet())
+                if (config.restrictEnchant(e)) item.removeEnchantment(e);
+
             eq.setItem(slot, item);
         }
     }

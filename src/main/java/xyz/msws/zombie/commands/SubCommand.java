@@ -23,8 +23,7 @@ public abstract class SubCommand extends ZombieCommand {
     protected String[] shift(String[] array, int depth) {
         String[] nArgs = new String[array.length - depth];
         for (int i = 0; i < array.length; i++) {
-            if (i >= nArgs.length)
-                break;
+            if (i >= nArgs.length) break;
             nArgs[i] = array[i + depth];
         }
         return nArgs;

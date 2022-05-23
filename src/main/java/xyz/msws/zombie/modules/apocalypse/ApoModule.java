@@ -20,15 +20,13 @@ public class ApoModule extends EventModule {
 
     @Override
     public void enable() {
-        for (String name : config.getMaps()) {
+        for (String name : config.getMaps())
             ApocalypseAPI.getInstance().startApocalypse(name);
-        }
     }
 
     @EventHandler
     public void onLoad(WorldLoadEvent event) {
-        if (!config.doStartLoads())
-            return;
+        if (!config.startLoads()) return;
         ApocalypseAPI.getInstance().startApocalypse(event.getWorld().getName());
     }
 

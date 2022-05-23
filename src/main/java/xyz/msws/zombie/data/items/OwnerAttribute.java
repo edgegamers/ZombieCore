@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Adds support for specifying the owner of a playerhead.
  *
- * @author imodm
+ * @author MSWS
  */
 public class OwnerAttribute implements ItemAttribute {
 
@@ -33,9 +33,8 @@ public class OwnerAttribute implements ItemAttribute {
     @Override
     public String getModification(ItemStack item) {
         ItemMeta meta = item.getItemMeta();
-        if (!(meta instanceof SkullMeta))
+        if (!(meta instanceof SkullMeta skull))
             return null;
-        SkullMeta skull = (SkullMeta) meta;
         return "owner:" + skull.getOwningPlayer().getName();
     }
 
@@ -61,9 +60,8 @@ public class OwnerAttribute implements ItemAttribute {
     @Override
     public String humanReadable(ItemStack item) {
         ItemMeta meta = item.getItemMeta();
-        if (!(meta instanceof SkullMeta))
+        if (!(meta instanceof SkullMeta skull))
             return null;
-        SkullMeta skull = (SkullMeta) meta;
         if (skull.getOwningPlayer() == null)
             return null;
         return "owned by " + skull.getOwningPlayer().getName();

@@ -21,7 +21,7 @@ public class YMLFishConfig extends FishConfig {
     public YMLFishConfig(ZCore plugin, YMLZConfig config) {
         super(plugin, config);
 
-        this.config = config.getYml();
+        this.config = config.getConfig();
         this.random = new Random();
     }
 
@@ -38,7 +38,7 @@ public class YMLFishConfig extends FishConfig {
         exp = fish.getDouble("CancelChance.Exponent", -1);
         minTime = fish.getLong("MinTime", 20000);
         maxTime = fish.getLong("MaxTime", -1);
-        whitelist = new ConfigCollection<>(Serializer.getEnumSet(fish.getStringList("Whitelist"), Material.class), Material.class);
+        allowitems = new ConfigCollection<>(Serializer.getEnumSet(fish.getStringList("AllowItems"), Material.class), Material.class);
         blockEnchants = fish.getBoolean("BlockEnchants", true);
         this.method = x -> constant * Math.pow(x + offset, exp);
     }
@@ -66,10 +66,8 @@ public class YMLFishConfig extends FishConfig {
 
     @Override
     public boolean cancel(long time) {
-        if (maxTime != -1 && time > maxTime)
-            return false;
-        if (minTime != -1 && time < minTime)
-            return true;
+        if (maxTime != -1 && time > maxTime) return false;
+        if (minTime != -1 && time < minTime) return true;
         double t = time / 1000.0;
         return random.nextDouble() < method.apply(t);
     }

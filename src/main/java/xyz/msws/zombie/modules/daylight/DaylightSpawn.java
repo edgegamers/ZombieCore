@@ -25,33 +25,28 @@ public class DaylightSpawn extends EventModule {
 
     @EventHandler(priority = EventPriority.LOW) // Towny Compatability
     public void onSpawn(CreatureSpawnEvent event) {
-        if (event.getSpawnReason() != CreatureSpawnEvent.SpawnReason.NATURAL)
-            return;
-        if (!config.doCorrupt(event.getLocation().getWorld()))
-            return;
-        if (event.getLocation().getBlock().isLiquid())
-            return;
+        if (event.getLocation().getWorld() == null)
+            throw new NullPointerException("World is null");
+        if (event.getSpawnReason() != CreatureSpawnEvent.SpawnReason.NATURAL) return;
+        if (!config.doCorrupt(event.getLocation().getWorld())) return;
+        if (event.getLocation().getBlock().isLiquid()) return;
         int cm = config.getChunkMobs().getValue(event.getLocation().getWorld());
         int amo = 0;
         if (cm != -1) {
             Chunk chunk = event.getLocation().getChunk();
             for (Entity ent : chunk.getEntities()) {
-                if (!(ent instanceof Monster))
-                    continue;
+                if (!(ent instanceof Monster)) continue;
                 amo++;
             }
-            if (amo > cm)
-                return;
+            if (amo > cm) return;
         }
         Location origin = event.getLocation().clone().add(config.getRandomOffset());
         int toSpawn = Math.min(config.getRandomAmount(), cm - amo);
         int attempts = 0;
         for (int i = 0; i < toSpawn; i++) {
-            if (attempts++ > toSpawn * 2)
-                break;
+            if (attempts++ > toSpawn * 2) break;
             Location loc = origin.clone().add(config.getRandomOffset(-2, 2));
-            if (loc.getWorld() == null)
-                break;
+            if (loc.getWorld() == null) break;
             Block source = loc.getWorld().getHighestBlockAt(loc);
             Block block = loc.getWorld().getHighestBlockAt(loc).getRelative(BlockFace.UP);
             if (config.blockSpawn(source) || config.blockSpawn(block)) {
@@ -65,8 +60,7 @@ public class DaylightSpawn extends EventModule {
                     break;
                 }
             }
-            if (!spawn)
-                continue;
+            if (!spawn) continue;
             ApocalypseAPI.getInstance().spawnZombie(block.getLocation().add(.5, 0, .5));
         }
     }

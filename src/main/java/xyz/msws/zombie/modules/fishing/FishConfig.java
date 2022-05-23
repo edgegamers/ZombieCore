@@ -13,7 +13,7 @@ import java.util.function.Function;
 public abstract class FishConfig extends ModuleConfig<FishModule> {
 
     protected Function<Double, Double> method;
-    protected ConfigCollection<Material> whitelist = new ConfigCollection<>(EnumSet.noneOf(Material.class), Material.class);
+    protected ConfigCollection<Material> allowitems = new ConfigCollection<>(EnumSet.noneOf(Material.class), Material.class);
     @Getter
     protected long minTime, maxTime;
     @Getter
@@ -29,12 +29,8 @@ public abstract class FishConfig extends ModuleConfig<FishModule> {
 
     public abstract boolean cancel(long time);
 
-    public long getMaxTime() {
-        return maxTime;
-    }
-
     public boolean allow(Material mat) {
-        return whitelist.contains(mat);
+        return allowitems.contains(mat);
     }
 
     @Override

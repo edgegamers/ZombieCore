@@ -14,13 +14,14 @@ import xyz.msws.zombie.utils.MSG;
 import xyz.msws.zombie.utils.Serializer;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class YMLEnchantConfig extends EnchantConfig {
     private final YamlConfiguration config;
 
     public YMLEnchantConfig(ZCore plugin, YMLZConfig config) {
         super(plugin, config);
-        this.config = config.getYml();
+        this.config = config.getConfig();
     }
 
     @Override
@@ -31,20 +32,24 @@ public class YMLEnchantConfig extends EnchantConfig {
             return;
         }
 
-        types = new ConfigCollection<>(Serializer.getEnumSet(noEnchants.getStringList("Entities"), EntityType.class), EntityType.class);
-        slots = new ConfigCollection<>(Serializer.getEnumSet(noEnchants.getStringList("Slots"), EquipmentSlot.class), EquipmentSlot.class);
-        materials = new ConfigCollection<>(Serializer.getEnumSet(noEnchants.getStringList("Items"), Material.class), Material.class);
+        types = new ConfigCollection<>(Serializer.getEnumSet(noEnchants.getStringList("BlockEntities"), EntityType.class), EntityType.class);
+        slots = new ConfigCollection<>(Serializer.getEnumSet(noEnchants.getStringList("BlockSlots"), EquipmentSlot.class), EquipmentSlot.class);
+        materials = new ConfigCollection<>(Serializer.getEnumSet(noEnchants.getStringList("BlockItems"), Material.class), Material.class);
 
-        for (String s : noEnchants.getStringList("Enchants")) {
-            if (s.equalsIgnoreCase("all")) {
-                enchants.addAll(Arrays.asList(Enchantment.values()));
-                break;
-            }
+        List<String> blockEnchants = noEnchants.getStringList("BlockEnchants");
+        boolean whitelist = true;
+        if (blockEnchants.contains("ALL")) {
+            enchants.addAll(Arrays.asList(Enchantment.values()));
+            whitelist = false;
+        }
+
+        for (String s : noEnchants.getStringList("BlockEnchants")) {
             try {
                 Enchantment ench = Enchantment.getByKey(NamespacedKey.minecraft(s));
-                enchants.add(ench);
+                if (whitelist) enchants.add(ench);
+                else enchants.remove(ench);
             } catch (IllegalArgumentException e) {
-                MSG.log("Unknown enchantment: %s", s);
+                MSG.warn("Unknown enchantment: %s", s);
             }
         }
     }

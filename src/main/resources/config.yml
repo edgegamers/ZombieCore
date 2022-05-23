@@ -1,8 +1,19 @@
+# Note: For all ENUM lists, if 'ALL' is present then the list will be treated
+# as a blacklist (items listed in addition to will NOT be included).
+# If there is not 'ALL' in the list, then the list will be treated as a
+# whitelist (items listed WILL be included).
+
+# Values
+# BlockMethods: REMOVE, CANCEL, TP, HP
+# Enchantments: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/enchantments/Enchantment.html
+# Entities: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/EntityType.html
+# EquipmentSlot: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/inventory/EquipmentSlot.html
+# Material: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
+# SpawnReason: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/entity/CreatureSpawnEvent.SpawnReason.html
+
 Features:
   Breeding:
-    Entities:
-      - 'ALL'
-      - 'COW'
+    BlockEntities: [ 'ALL' ] # NO animals will be allowed to breed | EquipmentSlot
     BlockClicks: false  # If true, players will not be able to feed breedable animals
     BlockBreeding: true # If true, animals will not be able to breed
     BlockLove: true     # If true, animals will not enter love mode at all
@@ -61,7 +72,7 @@ Features:
       Offset: 80 # b
       Exponent: -1 # c
     BlockEnchants: true
-    Whitelist:
+    AllowItems: # Material
       - COD
       - SALMON
       - TROPICAL_FISH
@@ -80,27 +91,27 @@ Features:
       - BAMBOO
       - COCOA_BEANS
   NoEnchants: # Restricts what items mobs can spawn with
-    Entities:
+    BlockEntities: # Entities
       - 'ALL'
-    Slots:
+    BlockSlots: # EquipmentSlot
       - 'ALL'
       - 'HEAD'
-    Items:
+    BlockItems: # Material
       - 'ALL'
-      - 'DIAMOND_SWORD'
-    Enchants:
+    BlockEnchants: # Enchantments
       - 'ALL'
   BlockSpawns:
-    Method: CANCEL # REMOVE, CANCEL, TP, HP
+    Method: CANCEL # BlockMethods
     AllowNamed: true # If true, mobs that are name tagged will remain
-    Entities: [ BAT, BEE, CAT, CHICKEN, COW, DONKEY, FOX, HORSE, MULE, OCELOT, PARROT, PIG, PIGLIN, POLAR_BEAR, RABBIT, SHEEP, SNOWMAN, SQUID, STRIDER, TURTLE, VILLAGER, WOLF ]
-    BlockReasons:
+    Entities: # Entities
+    [ BAT, BEE, CAT, CHICKEN, COW, DONKEY, FOX, HORSE, MULE, OCELOT, PARROT, PIG, PIGLIN, POLAR_BEAR, RABBIT, SHEEP, SNOWMAN, SQUID, STRIDER, TURTLE, VILLAGER, WOLF ]
+    BlockReasons: # Values (https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/entity/CreatureSpawnEvent.SpawnReason.html)
       - 'NATURAL'
   Apocalypse: # True if the apocalypse should auto-start
     AutoStart:
       - 'ALL'
     StartLoads: true
   Crafting: # Blocks specific item crafting
-    Block:
+    Block: # Materials
       - 'ENCHANTING_TABLE'
     RestrictItem: 'graystainedglasspane name:&c&lDisabled! lore:&7This item is disabled!'

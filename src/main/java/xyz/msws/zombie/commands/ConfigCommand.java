@@ -15,11 +15,11 @@ import java.util.stream.Collectors;
 
 public class ConfigCommand extends SubCommand {
 
-    private Map<Class<ModuleConfig<?>>, Map<String, Field>> fields = new HashMap<>();
-    private Map<String, ModuleConfig<?>> names = new HashMap<>();
+    private final Map<Class<ModuleConfig<?>>, Map<String, Field>> fields = new HashMap<>();
+    private final Map<String, ModuleConfig<?>> names = new HashMap<>();
 
-    protected ConfigCommand(String name, ZCore plugin) {
-        super(name, plugin);
+    protected ConfigCommand(ZCore plugin) {
+        super("config", plugin);
 
         for (ModuleConfig<?> config : plugin.getZConfig().getConfigs())
             load(config);
@@ -110,9 +110,9 @@ public class ConfigCommand extends SubCommand {
                     return true;
                 }
                 String keyString = jArgs[0], valueString = jArgs[1];
-                value = cast(valueString, cm.getType());
+                value = cast(valueString, cm.type());
                 if (value == null) {
-                    MSG.tell(sender, Lang.COMMAND_CONFIG_ERROR, field.getName(), valueString, "Unable to cast to " + cm.getType().getSimpleName());
+                    MSG.tell(sender, Lang.COMMAND_CONFIG_ERROR, field.getName(), valueString, "Unable to cast to " + cm.type().getSimpleName());
                     return true;
                 }
                 switch (keyString.toLowerCase()) {
@@ -192,7 +192,7 @@ public class ConfigCommand extends SubCommand {
                 }
             }
         }
-        return (T) value;
+        return type.cast(value);
     }
 
     @Override

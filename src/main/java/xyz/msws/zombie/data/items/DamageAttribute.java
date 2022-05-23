@@ -13,20 +13,18 @@ import java.util.List;
 /**
  * Adds support for specifying damage on {@link Damageable} items.
  *
- * @author imodm
+ * @author MSWS
  */
 public class DamageAttribute implements ItemAttribute {
 
     @SuppressWarnings("deprecation")
     @Override
     public ItemStack modify(String line, ItemStack item) {
-        if (!line.startsWith("damage:"))
-            return item;
+        if (!line.startsWith("damage:")) return item;
         ItemMeta meta = item.getItemMeta();
         try {
             Class.forName("org.bukkit.inventory.meta.Damageable");
-            if (!(meta instanceof Damageable))
-                return item;
+            if (!(meta instanceof Damageable)) return item;
             try {
                 ((Damageable) meta).setDamage(Integer.parseInt(line.substring("damage:".length())));
             } catch (NumberFormatException e) {
@@ -45,30 +43,15 @@ public class DamageAttribute implements ItemAttribute {
         }
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public String getModification(ItemStack item) {
-        if (item == null || item.getType() == Material.AIR)
-            return null;
-        ItemMeta meta = item.getItemMeta();
-        int durability = 0;
-        try {
-            Class.forName("org.bukkit.inventory.meta.Damageable");
-            if (!(meta instanceof Damageable))
-                return null;
-            durability = ((Damageable) meta).getDamage();
-        } catch (ClassNotFoundException e) {
-            // 1.8 Compatibility
-            durability = ((Number) item.getDurability()).intValue();
-        }
-
+        int durability = getDurability(item);
         return durability == 0 ? null : "damage:" + durability;
     }
 
     @Override
     public List<String> tabComplete(String current, String[] args, CommandSender sender) {
-        if (!"damage:".startsWith(current.toLowerCase()))
-            return null;
+        if (!"damage:".startsWith(current.toLowerCase())) return null;
         return Collections.singletonList("damage:");
     }
 
@@ -77,24 +60,25 @@ public class DamageAttribute implements ItemAttribute {
         return "supergive.attribute.damage";
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public String humanReadable(ItemStack item) {
-        if (item == null || item.getType() == Material.AIR)
-            return null;
+        int durability = getDurability(item);
+        return durability == 0 ? null : "with " + durability + " damage";
+    }
+
+    public int getDurability(ItemStack item) {
+        if (item == null || item.getType() == Material.AIR) return -1;
         ItemMeta meta = item.getItemMeta();
         int durability;
         try {
             Class.forName("org.bukkit.inventory.meta.Damageable");
-            if (!(meta instanceof Damageable))
-                return null;
+            if (!(meta instanceof Damageable)) return -1;
             durability = ((Damageable) meta).getDamage();
         } catch (ClassNotFoundException e) {
             // 1.8 Compatibility
             durability = ((Number) item.getDurability()).intValue();
         }
-
-        return durability == 0 ? null : "with " + durability + " damage";
+        return durability;
     }
 
 }

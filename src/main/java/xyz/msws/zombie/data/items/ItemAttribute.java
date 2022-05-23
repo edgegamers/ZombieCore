@@ -6,14 +6,14 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 
 /**
- * @author imodm
+ * @author MSWS
  */
 public interface ItemAttribute {
     /**
      * Modifies the itemstack given the string.
      *
-     * @param line
-     * @param item
+     * @param line Query to modify
+     * @param item {@link ItemStack} to modify
      * @return the resulting itemstack
      */
     ItemStack modify(String line, ItemStack item);
@@ -22,7 +22,7 @@ public interface ItemAttribute {
      * Returns a corresponding string that would represent the current modification
      * of an itemstack.
      *
-     * @param item
+     * @param item {@link ItemStack} to modify
      * @return the list of modifications
      */
     String getModification(ItemStack item);
@@ -32,7 +32,7 @@ public interface ItemAttribute {
      * {@link ItemAttribute#getModification(ItemStack)} however should be more
      * user-friendly.
      *
-     * @param item
+     * @param item {@link ItemStack} to modify
      * @return a user-friendly version of the modifications
      */
     String humanReadable(ItemStack item);
@@ -47,9 +47,9 @@ public interface ItemAttribute {
     /**
      * Get tab completion possibilities from a string.
      *
-     * @param current
-     * @param args
-     * @param sender
+     * @param current Current word that needs completion
+     * @param args    Full query
+     * @param sender  {@link CommandSender} sender
      * @return the list of tab completion options
      */
     List<String> tabComplete(String current, String[] args, CommandSender sender);

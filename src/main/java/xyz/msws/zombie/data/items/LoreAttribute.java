@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Adds support for giving itemstacks lores.
  *
- * @author imodm
+ * @author MSWS
  */
 public class LoreAttribute implements ItemAttribute {
 

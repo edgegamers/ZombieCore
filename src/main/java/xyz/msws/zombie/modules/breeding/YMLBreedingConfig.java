@@ -17,7 +17,7 @@ public class YMLBreedingConfig extends BreedingConfig {
 
     public YMLBreedingConfig(ZCore plugin, YMLZConfig config) {
         super(plugin, config);
-        this.config = config.getYml();
+        this.config = config.getConfig();
     }
 
     @Override
@@ -32,24 +32,24 @@ public class YMLBreedingConfig extends BreedingConfig {
             return;
         }
 
-        blockBreeding = new ConfigCollection<>(Serializer.getEnumSet(features.getStringList("Breeding.Entities"), EntityType.class), EntityType.class);
-        clicks = breeding.getBoolean("BlockClicks", false);
-        breed = breeding.getBoolean("BlockBreeding", true);
+        blockTypes = new ConfigCollection<>(Serializer.getEnumSet(features.getStringList("Breeding.BlockEntities"), EntityType.class), EntityType.class);
+        blockClicks = breeding.getBoolean("BlockClicks", false);
+        blockBreeding = breeding.getBoolean("BlockBreeding", true);
         resetBreeding = breeding.getBoolean("ResetBreeding", true);
         hopeless = breeding.getInt("EggThreshold", 64);
-        love = breeding.getBoolean("BlockLove", true);
+        blockLove = breeding.getBoolean("BlockLove", true);
     }
 
     @Override
     public void save() {
         ConfigurationSection features = config.createSection("Features");
         List<String> types = new ArrayList<>();
-        blockBreeding.forEach(s -> types.add(s.toString()));
-        features.set("Breeding.Entities", types);
-        features.set("BlockClicks", clicks);
-        features.set("BlockBreeding", breed);
-        features.set("ResetBreeding", true);
-        features.set("EggThreshold", hopeless);
+        blockTypes.forEach(s -> types.add(s.toString()));
+        features.set("Breeding.BlockEntities", types);
+        features.set("Breeding.BlockClicks", blockClicks);
+        features.set("Breeding.BlockBreeding", blockBreeding);
+        features.set("Breeding.ResetBreeding", true);
+        features.set("Breeding.EggThreshold", hopeless);
         config.set("Features", features);
     }
 }

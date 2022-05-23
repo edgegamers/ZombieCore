@@ -1,5 +1,6 @@
 package xyz.msws.zombie.modules.passivespawn;
 
+import lombok.Getter;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import xyz.msws.zombie.api.ZCore;
@@ -13,6 +14,7 @@ public abstract class PassiveConfig extends ModuleConfig<PassiveSpawn> {
 
     protected ConfigCollection<EntityType> block = new ConfigCollection<>(EnumSet.noneOf(EntityType.class), EntityType.class);
     protected ConfigCollection<CreatureSpawnEvent.SpawnReason> reasons = new ConfigCollection<>(EnumSet.noneOf(CreatureSpawnEvent.SpawnReason.class), CreatureSpawnEvent.SpawnReason.class);
+    @Getter
     protected BlockMethod method;
     protected boolean allowNames;
 
@@ -27,10 +29,6 @@ public abstract class PassiveConfig extends ModuleConfig<PassiveSpawn> {
 
     public boolean blockType(EntityType type) {
         return block.contains(type);
-    }
-
-    public BlockMethod getMethod() {
-        return method;
     }
 
     public boolean blockReason(CreatureSpawnEvent.SpawnReason reason) {

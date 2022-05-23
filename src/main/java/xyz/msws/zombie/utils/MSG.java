@@ -20,7 +20,7 @@ public class MSG {
 
     public static final ChatColor DEFAULT = ChatColor.GRAY;
 
-    public static ChatColor FORMATTER = ChatColor.GRAY;
+    public static final ChatColor FORMATTER = ChatColor.GRAY;
     public static final ChatColor FORMAT_INFO = ChatColor.GREEN;
     public static ChatColor FORMAT_SEPARATOR = ChatColor.YELLOW;
 
@@ -53,8 +53,7 @@ public class MSG {
      * @param format  Objects to format message with
      */
     public static void tell(CommandSender sender, String message, Object... format) {
-        if (sender == null)
-            return;
+        if (sender == null) return;
         sender.sendMessage(ChatColor.translateAlternateColorCodes('&', String.format(message, format)));
     }
 
@@ -129,8 +128,7 @@ public class MSG {
     public static String getDuration(long ms) {
         TimeUnit unit = TimeUnit.DAYS;
         for (TimeUnit u : TimeUnit.values()) {
-            if (ms < u.toMillis(1))
-                break;
+            if (ms < u.toMillis(1)) break;
             unit = u;
         }
 
@@ -148,7 +146,7 @@ public class MSG {
     /**
      * Simplify a string for easy key usage
      *
-     * @param value
+     * @param value String to normalize
      * @return a-zA-Z regex compatible
      */
     public static String normalize(String value) {
@@ -165,8 +163,7 @@ public class MSG {
         String prevChar = " ";
         StringBuilder res = new StringBuilder();
         for (int i = 0; i < string.length(); i++) {
-            if (i > 0)
-                prevChar = string.charAt(i - 1) + "";
+            if (i > 0) prevChar = string.charAt(i - 1) + "";
             if (prevChar.matches("[a-zA-Z]")) {
                 res.append((string.charAt(i) + "").toLowerCase());
             } else {
@@ -176,10 +173,11 @@ public class MSG {
         return res.toString().replace("_", " ");
     }
 
-    public static void warn(String message) {
-        Bukkit.getLogger().log(Level.WARNING, message);
+    public static void warn(String message, Object... objects) {
+        Bukkit.getLogger().log(Level.WARNING, message.formatted(objects));
     }
 
+    @Deprecated
     public static String theme() {
         return "&e";
     }

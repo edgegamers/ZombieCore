@@ -18,16 +18,15 @@ import java.util.List;
  * Adds support for customizing banners with patterns. Format:
  * [patterntype]:[color]
  *
- * @author imodm
+ * @author MSWS
  */
 public class PatternAttribute implements ItemAttribute {
 
     @Override
     public ItemStack modify(String line, ItemStack item) {
         ItemMeta meta = item.getItemMeta();
-        if (!(meta instanceof BannerMeta))
+        if (!(meta instanceof BannerMeta banner))
             return item;
-        BannerMeta banner = (BannerMeta) meta;
         PatternType type;
         DyeColor color;
 
@@ -59,9 +58,8 @@ public class PatternAttribute implements ItemAttribute {
     @Override
     public String getModification(ItemStack item) {
         ItemMeta meta = item.getItemMeta();
-        if (!(meta instanceof BannerMeta))
+        if (!(meta instanceof BannerMeta banner))
             return null;
-        BannerMeta banner = (BannerMeta) meta;
         StringBuilder result = new StringBuilder();
         for (Pattern patt : banner.getPatterns()) {
             result.append(patt.getPattern().toString().toLowerCase()).append(":").append(patt.getColor().toString().toLowerCase())
@@ -105,9 +103,8 @@ public class PatternAttribute implements ItemAttribute {
     @Override
     public String humanReadable(ItemStack item) {
         ItemMeta meta = item.getItemMeta();
-        if (!(meta instanceof BannerMeta))
+        if (!(meta instanceof BannerMeta banner))
             return null;
-        BannerMeta banner = (BannerMeta) meta;
         StringBuilder result = new StringBuilder();
         try {
             for (Pattern patt : banner.getPatterns()) {

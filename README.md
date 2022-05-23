@@ -10,17 +10,17 @@ you are using either an updated version or the custom jar provided_.
 
 There are minimal permissions for ZC.
 
-|Permission|Description|
-|---|---|
-| **COMMANDS** | Command related permissions |
-|zombiecore.command.spawn|Grants access to spawn custom mobs|
-|zombiecore.command.delete|Grants access to delete saved mobs|
-|zombiecore.command.reload|Grants access to reload config/lang files|
-|zombiecore.command.reset|Grants access to reset config/lang files|
-|zombiecore.command.config|Grants access to set config values|
-| **BYPASSES** | Feature/Bypass related permissions|
-|zombiecore.bypass.breeding|Grants access to bypass breeding limits|
-|zombiecore.bypass.fishing|Grants access to bypass fishing limits|
+| Permission                 | Description                               |
+|----------------------------|-------------------------------------------|
+| **COMMANDS**               | Command related permissions               |
+| zombiecore.command.spawn   | Grants access to spawn custom mobs        |
+| zombiecore.command.delete  | Grants access to delete saved mobs        |
+| zombiecore.command.reload  | Grants access to reload config/lang files |
+| zombiecore.command.reset   | Grants access to reset config/lang files  |
+| zombiecore.command.config  | Grants access to set config values        |
+| **BYPASSES**               | Feature/Bypass related permissions        |
+| zombiecore.bypass.breeding | Grants access to bypass breeding limits   |
+| zombiecore.bypass.fishing  | Grants access to bypass fishing limits    |
 
 ## Features
 

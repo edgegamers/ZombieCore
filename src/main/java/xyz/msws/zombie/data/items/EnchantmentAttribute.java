@@ -14,7 +14,7 @@ import java.util.Map.Entry;
 /**
  * Adds support on adding enchantments to all itemstacks.
  *
- * @author imodm
+ * @author MSWS
  */
 public class EnchantmentAttribute implements ItemAttribute {
 

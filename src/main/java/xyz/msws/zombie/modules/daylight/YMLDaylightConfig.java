@@ -14,14 +14,13 @@ public class YMLDaylightConfig extends DaylightConfig {
 
     public YMLDaylightConfig(ZCore plugin, YMLZConfig config) {
         super(plugin, config);
-        this.config = config.getYml();
+        this.config = config.getConfig();
     }
 
     @Override
     public void load() {
         ConfigurationSection features = config.getConfigurationSection("Features");
-        if (features == null)
-            throw new NullPointerException("No features specified");
+        if (features == null) throw new NullPointerException("No features specified");
 
         ConfigurationSection spawns = features.getConfigurationSection("DaySpawns");
         if (spawns == null) {
@@ -41,8 +40,7 @@ public class YMLDaylightConfig extends DaylightConfig {
         this.maxSkyLevel = spawns.getInt("LightLevels.SkyMax", 15);
 
         ConfigurationSection amounts = spawns.getConfigurationSection("MobAmount");
-        if (amounts == null)
-            throw new IllegalArgumentException("MobAmounts is either null or improperly configured");
+        if (amounts == null) throw new IllegalArgumentException("MobAmounts is either null or improperly configured");
 
         for (Map.Entry<String, Object> entry : amounts.getValues(false).entrySet()) {
             try {

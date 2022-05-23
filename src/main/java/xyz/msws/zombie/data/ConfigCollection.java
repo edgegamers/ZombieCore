@@ -9,18 +9,7 @@ import java.util.Iterator;
  *
  * @param <E> The type contained
  */
-public class ConfigCollection<E> implements Collection<E> {
-    private final Collection<E> col;
-    private final Class<E> type;
-
-    public ConfigCollection(Collection<E> col, Class<E> type) {
-        this.col = col;
-        this.type = type;
-    }
-
-    public Class<E> getType() {
-        return type;
-    }
+public record ConfigCollection<E>(Collection<E> col, Class<E> type) implements Collection<E> {
 
     @Override
     public int size() {

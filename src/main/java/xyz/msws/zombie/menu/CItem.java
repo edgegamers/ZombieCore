@@ -84,11 +84,9 @@ public class CItem implements ConfigurationSerializable {
         CItem item = new CItem(Material.matchMaterial((String) data.get("Type")));
         item.amo((Integer) data.getOrDefault("Amount", 1));
         item.lore((List<String>) data.getOrDefault("Lore", new ArrayList<>()));
-        if (data.containsKey("Name"))
-            item.name((String) data.get("Name"));
-        if (data.containsKey("Flags"))
-            for (String s : (List<String>) data.get("Flags"))
-                item.flag(ItemFlag.valueOf(s));
+        if (data.containsKey("Name")) item.name((String) data.get("Name"));
+        if (data.containsKey("Flags")) for (String s : (List<String>) data.get("Flags"))
+            item.flag(ItemFlag.valueOf(s));
         return item;
     }
 

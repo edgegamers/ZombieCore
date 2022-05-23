@@ -8,8 +8,8 @@ import xyz.msws.zombie.utils.MSG;
 import java.io.File;
 
 public class ResetCommand extends SubCommand {
-    protected ResetCommand(String name, ZCore plugin) {
-        super(name, plugin);
+    protected ResetCommand(ZCore plugin) {
+        super("reset", plugin);
         setPermission("zombiecore.command.reset");
         setUsage("");
         setDescription("Resets ZombieCore's config and lang files");

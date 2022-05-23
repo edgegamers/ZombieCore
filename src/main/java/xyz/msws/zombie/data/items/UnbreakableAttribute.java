@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Adds support for making items unbreakable.
  *
- * @author imodm
+ * @author MSWS
  */
 public class UnbreakableAttribute implements ItemAttribute {
 
@@ -43,7 +43,7 @@ public class UnbreakableAttribute implements ItemAttribute {
                 }
                 setUnbreakable.invoke(so, val);
             } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
-                    | InvocationTargetException e1) {
+                     | InvocationTargetException e1) {
                 e1.printStackTrace();
             }
         }
@@ -75,7 +75,7 @@ public class UnbreakableAttribute implements ItemAttribute {
                     return null;
                 return ((Boolean) result) ? "unbreakable:true" : null;
             } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
-                    | InvocationTargetException e1) {
+                     | InvocationTargetException e1) {
                 e1.printStackTrace();
             }
         }
@@ -122,7 +122,7 @@ public class UnbreakableAttribute implements ItemAttribute {
                     return null;
                 return ((Boolean) result) ? "that is unbreakable" : null;
             } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
-                    | InvocationTargetException e1) {
+                     | InvocationTargetException e1) {
                 e1.printStackTrace();
             }
         }

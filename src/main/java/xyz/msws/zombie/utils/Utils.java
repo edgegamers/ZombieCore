@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 /**
  * Global utility class for commonly used methods
  *
- * @author imodm
+ * @author MSWS
  */
 public class Utils {
 
@@ -27,7 +27,6 @@ public class Utils {
                 return custom.bukkit();
             } catch (IllegalArgumentException ignored) {
             }
-
         }
         try {
             String rs = line.split("\\|")[0];
@@ -37,12 +36,10 @@ public class Utils {
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
             return null;
         }
-
     }
 
     public static PotionEffectType getPotionEffect(String type) {
-        String result = getOption(type, Arrays.stream(PotionEffectType.values()).filter(Objects::nonNull)
-                .map(PotionEffectType::getName).collect(Collectors.toList()));
+        String result = getOption(type, Arrays.stream(PotionEffectType.values()).filter(Objects::nonNull).map(PotionEffectType::getName).collect(Collectors.toList()));
         return result == null ? null : PotionEffectType.getByName(result);
     }
 
@@ -53,18 +50,13 @@ public class Utils {
 
     public static String getOption(String key, Collection<?> options) {
         List<String> values = options.stream().map(Object::toString).collect(Collectors.toList());
-        for (String s : values) {
-            if (MSG.normalize(s).equals(MSG.normalize(key)))
-                return s;
-        }
-        for (String s : values) {
-            if (MSG.normalize(s).startsWith(MSG.normalize(key)))
-                return s;
-        }
-        for (String s : values) {
-            if (MSG.normalize(s).contains(MSG.normalize(key)))
-                return s;
-        }
+        values = values.stream().map(MSG::normalize).toList();
+        key = MSG.normalize(key);
+        if (values.contains(key)) return key;
+        for (String s : values)
+            if (s.startsWith(key)) return s;
+        for (String s : values)
+            if (s.contains(key)) return s;
         return null;
     }
 
@@ -77,31 +69,20 @@ public class Utils {
         try {
             return Enchantment.getByKey(NamespacedKey.minecraft(ench.toUpperCase()));
         } catch (IllegalArgumentException e) {
-            for (Enchantment en : Enchantment.values()) {
-                if (MSG.normalize(en.getKey().getKey()).equalsIgnoreCase(MSG.normalize(ench)))
-                    return en;
-            }
-            for (Enchantment en : Enchantment.values()) {
-                if (MSG.normalize(en.getKey().getKey()).startsWith(MSG.normalize(ench)))
-                    return en;
-            }
-            for (Enchantment en : Enchantment.values()) {
-                if (MSG.normalize(en.getKey().getKey()).contains(MSG.normalize(ench)))
-                    return en;
-            }
+            ench = MSG.normalize(ench);
+            for (Enchantment en : Enchantment.values())
+                if (MSG.normalize(en.getKey().getKey()).equalsIgnoreCase(ench)) return en;
+            for (Enchantment en : Enchantment.values())
+                if (MSG.normalize(en.getKey().getKey()).startsWith(ench)) return en;
+            for (Enchantment en : Enchantment.values())
+                if (MSG.normalize(en.getKey().getKey()).contains(ench)) return en;
         } catch (NoClassDefFoundError e) {
-            for (Enchantment en : Enchantment.values()) {
-                if (MSG.normalize(en.getName()).equalsIgnoreCase(MSG.normalize(ench)))
-                    return en;
-            }
-            for (Enchantment en : Enchantment.values()) {
-                if (MSG.normalize(en.getName()).startsWith(MSG.normalize(ench)))
-                    return en;
-            }
-            for (Enchantment en : Enchantment.values()) {
-                if (MSG.normalize(en.getName()).contains(MSG.normalize(ench)))
-                    return en;
-            }
+            for (Enchantment en : Enchantment.values())
+                if (MSG.normalize(en.getName()).equalsIgnoreCase(ench)) return en;
+            for (Enchantment en : Enchantment.values())
+                if (MSG.normalize(en.getName()).startsWith(ench)) return en;
+            for (Enchantment en : Enchantment.values())
+                if (MSG.normalize(en.getName()).contains(ench)) return en;
         }
         return null;
     }

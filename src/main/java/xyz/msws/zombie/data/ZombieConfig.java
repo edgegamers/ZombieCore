@@ -10,9 +10,9 @@ import java.util.List;
  * Represents a {@link ZombieConfig}
  */
 public abstract class ZombieConfig {
-    protected ZCore plugin;
+    protected final ZCore plugin;
 
-    protected List<ModuleConfig<?>> configs = new ArrayList<>();
+    protected final List<ModuleConfig<?>> configs = new ArrayList<>();
 
     public ZombieConfig(ZCore plugin) {
         this.plugin = plugin;
@@ -46,10 +46,8 @@ public abstract class ZombieConfig {
      * @return The requested config class, or null if none exists
      */
     public <T extends ModuleConfig<?>> T getConfig(Class<T> type) {
-        for (ModuleConfig<?> config : configs) {
-            if (type.isAssignableFrom(config.getClass()))
-                return (T) config;
-        }
+        for (ModuleConfig<?> config : configs)
+            if (type.isAssignableFrom(config.getClass())) return type.cast(config);
         return null;
     }
 

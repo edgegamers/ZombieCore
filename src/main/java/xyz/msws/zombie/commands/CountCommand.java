@@ -12,11 +12,10 @@ import xyz.msws.zombie.data.Lang;
 import xyz.msws.zombie.utils.MSG;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class CountCommand extends SubCommand {
-    protected CountCommand(String name, ZCore plugin) {
-        super(name, plugin);
+    protected CountCommand(ZCore plugin) {
+        super("count", plugin);
         setUsage("");
         setDescription("Counts nearby entities");
     }
@@ -64,9 +63,9 @@ public class CountCommand extends SubCommand {
         header = new StringBuilder(header.substring(0, header.length() - 2) + MSG.FORMATTER + ")");
         header.append(String.format(" &8[&7%d/&f%d total&8]", total, player.getWorld().getEntities().size()));
         joiner.add(header.toString());
-        for (Map.Entry<EntityType, Integer> entry : counts.entrySet().stream().sorted(Map.Entry.comparingByValue()).collect(Collectors.toList())) {
+        for (Map.Entry<EntityType, Integer> entry : counts.entrySet().stream().sorted(Map.Entry.comparingByValue()).toList()) {
             StringBuilder builder = new StringBuilder("&3" + String.format("%1.0f", (double) entry.getValue() / total * 100) + "%%&9> " + MSG.FORMAT_INFO + MSG.camelCase(entry.getKey().toString()) + ": " + MSG.NUMBER);
-            for (Map.Entry<Integer, Integer> mobs : results.get(entry.getKey()).entrySet().stream().sorted(Map.Entry.comparingByValue()).collect(Collectors.toList())) {
+            for (Map.Entry<Integer, Integer> mobs : results.get(entry.getKey()).entrySet().stream().sorted(Map.Entry.comparingByValue()).toList()) {
                 builder.append(mobs.getValue()).append(ChatColor.DARK_GRAY).append("/").append(MSG.NUMBER);
             }
             builder.delete(builder.length() - 3, builder.length());

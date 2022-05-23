@@ -1,5 +1,6 @@
 package xyz.msws.zombie.data;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import xyz.msws.zombie.utils.MSG;
 
@@ -29,8 +30,7 @@ public enum Lang {
     COMMAND_CONFIG_CLEAR("%prefix% Successfully cleared &a%s&."),
     COMMAND_CONFIG_LIST("%prefix% &a%s&7 values: &e%s"),
     COMMAND_GIVEBOOK("%prefix% Successfully gave &e%s&7 a guide book."),
-    COMMAND_DEBUG("%prefix% Corruption chance: &e%1.0f%%%%&7. Chunk Limit: &a%d&7."),
-    ;
+    COMMAND_DEBUG("%prefix% Corruption chance: &e%1.0f%%%%&7. Chunk Limit: &a%d&7.");
 
     private final String[] def;
     private String[] configured;
@@ -59,15 +59,12 @@ public enum Lang {
      */
     public static void load(YamlConfiguration config) {
         Map<String, String> places = new HashMap<>();
-        if (config.contains("Placeholders")) {
-            for (String s : config.getConfigurationSection("Placeholders").getKeys(false)) {
-                places.put(s, config.getString("Placeholders." + s));
-            }
-        }
+        ConfigurationSection placeholders = config.getConfigurationSection("Placeholders");
+        if (placeholders != null) for (String s : placeholders.getKeys(false))
+            places.put(s, config.getString("Placeholders." + s));
 
         for (String s : config.getKeys(false)) {
-            if (s.equals("Placeholders"))
-                continue;
+            if (s.equals("Placeholders")) continue;
             Lang l;
             try {
                 l = Lang.valueOf(s);

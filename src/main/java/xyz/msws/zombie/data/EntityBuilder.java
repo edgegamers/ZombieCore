@@ -137,7 +137,7 @@ public class EntityBuilder<T extends Entity> implements Cloneable {
             case "speed" -> getDefault(Attribute.GENERIC_MOVEMENT_SPEED);
             case "followrange", "sight", "perception", "range" -> getDefault(Attribute.GENERIC_FOLLOW_RANGE);
             case "kbres", "weight", "mass", "knockbackresistance" -> getDefault(Attribute.GENERIC_KNOCKBACK_RESISTANCE);
-            case "damage", "strength" -> getDefault(Attribute.GENERIC_ATTACK_SPEED);
+            case "damage", "strength" -> getDefault(Attribute.GENERIC_ATTACK_DAMAGE);
             case "kbstr", "fightspeed", "brute", "knockbackstrength" -> getDefault(Attribute.GENERIC_ATTACK_KNOCKBACK);
             case "reinforcement" -> getDefault(Attribute.ZOMBIE_SPAWN_REINFORCEMENTS);
             case "jumpstr", "jump", "jumpstrength" -> getDefault(Attribute.HORSE_JUMP_STRENGTH);
@@ -151,14 +151,14 @@ public class EntityBuilder<T extends Entity> implements Cloneable {
         return switch (attribute) {
             case GENERIC_MAX_HEALTH -> 20 + "";
             case GENERIC_FOLLOW_RANGE -> 32 + "";
-            case GENERIC_KNOCKBACK_RESISTANCE, GENERIC_ARMOR_TOUGHNESS, GENERIC_ATTACK_KNOCKBACK, GENERIC_ARMOR, GENERIC_LUCK -> 0 + "";
+            case GENERIC_KNOCKBACK_RESISTANCE, GENERIC_ARMOR_TOUGHNESS, GENERIC_ATTACK_KNOCKBACK, GENERIC_ARMOR, GENERIC_LUCK ->
+                    0 + "";
             case GENERIC_MOVEMENT_SPEED -> .2 + "";
             case GENERIC_ATTACK_DAMAGE -> 2 + "";
             case GENERIC_ATTACK_SPEED -> 4 + "";
             case HORSE_JUMP_STRENGTH -> 0.7 + "";
             case GENERIC_FLYING_SPEED -> 0.4 + "";
             case ZOMBIE_SPAWN_REINFORCEMENTS -> 0.0 + "";
-            default -> "";
         };
     }
 
@@ -384,10 +384,9 @@ public class EntityBuilder<T extends Entity> implements Cloneable {
             ent.setCustomNameVisible(true);
         }
 
-        if (!(ent instanceof LivingEntity))
+        if (!(ent instanceof LivingEntity living))
             return ent;
 
-        LivingEntity living = (LivingEntity) ent;
         for (Map.Entry<Attribute, AttributeModifier> entry : modifiers.entrySet()) {
             AttributeInstance attr = living.getAttribute(entry.getKey());
             if (attr == null) {

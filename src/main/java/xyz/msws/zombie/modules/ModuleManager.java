@@ -25,6 +25,13 @@ public class ModuleManager extends Module {
         }
     }
 
+    /**
+     * Adds a module to the manager. Does not enable or load it.
+     *
+     * @param module Module to add
+     * @param <T>    Type of module
+     * @return The module added
+     */
     public <T extends Module> T addModule(T module) {
         modules.add(module);
         return module;
@@ -44,10 +51,8 @@ public class ModuleManager extends Module {
      * @return The first module that matches the requested type, or null if none exists
      */
     public <T extends Module> T getModule(Class<T> clazz) {
-        for (Module mod : modules) {
-            if (clazz.isAssignableFrom(mod.getClass()))
-                return clazz.cast(mod);
-        }
+        for (Module mod : modules)
+            if (clazz.isAssignableFrom(mod.getClass())) return clazz.cast(mod);
         return null;
     }
 }

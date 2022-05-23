@@ -9,8 +9,8 @@ import xyz.msws.zombie.modules.book.BookModule;
 import xyz.msws.zombie.utils.MSG;
 
 public class GiveBookCommand extends SubCommand {
-    protected GiveBookCommand(String name, ZCore plugin) {
-        super(name, plugin);
+    protected GiveBookCommand(ZCore plugin) {
+        super("givebook", plugin);
         setPermission("zombiecore.command.givebook");
         setUsage(" <player>");
         setDescription("Gives the guide book");

@@ -42,50 +42,37 @@ public class AnimalBreeding extends EventModule {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onBreed(EntityBreedEvent event) {
-        if (!config.blockBreeding())
-            return;
-        if (config.allowBreeding(event.getEntityType()))
-            return;
-        if (event.getBreeder() != null && event.getBreeder().hasPermission("zombiecore.bypass.breeding"))
-            return;
+        if (!config.blockBreeding()) return;
+        if (config.allowBreeding(event.getEntityType())) return;
+        if (event.getBreeder() != null && event.getBreeder().hasPermission("zombiecore.bypass.breeding")) return;
         event.setCancelled(true);
         event.setExperience(0);
-        if (!config.resetBreeding())
-            return;
-        if (!(event.getMother() instanceof Animals) || !(event.getFather() instanceof Animals))
-            return;
-        Animals a = (Animals) event.getMother();
-        Animals b = (Animals) event.getFather();
+        if (!config.resetBreeding()) return;
+        if (!(event.getMother() instanceof Animals a) || !(event.getFather() instanceof Animals b)) return;
         a.setBreed(true);
         b.setBreed(true);
         a.setLoveModeTicks(0);
         b.setLoveModeTicks(0);
 
-        if (event.getBreeder() != null && config.getHopeless() != -1)
-            increment(event.getBreeder());
+        if (event.getBreeder() != null && config.getHopeless() != -1) increment(event.getBreeder());
     }
 
     @EventHandler
     public void onEnter(EntityEnterLoveModeEvent event) {
-        if (!config.blockLove())
-            return;
-        if (config.allowBreeding(event.getEntityType()))
-            return;
+        if (!config.blockLove()) return;
+        if (config.allowBreeding(event.getEntityType())) return;
         if (event.getHumanEntity() != null && event.getHumanEntity().hasPermission("zombiecore.bypass.breeding"))
             return;
         event.setCancelled(true);
         event.setTicksInLove(0);
-        if (event.getHumanEntity() == null)
-            return;
+        if (event.getHumanEntity() == null) return;
         increment(event.getHumanEntity());
     }
 
     private void increment(LivingEntity player) {
         attempts.put(player.getUniqueId(), attempts.getOrDefault(player.getUniqueId(), 0) + 1);
-        if (attempts.getOrDefault(player.getUniqueId(), 0) < config.getHopeless())
-            return;
-        if (sent.contains(player.getUniqueId()))
-            return;
+        if (attempts.getOrDefault(player.getUniqueId(), 0) < config.getHopeless()) return;
+        if (sent.contains(player.getUniqueId())) return;
         attempts.put(player.getUniqueId(), 0);
         sent.add(player.getUniqueId());
         for (Player p : Bukkit.getOnlinePlayers())
@@ -95,14 +82,10 @@ public class AnimalBreeding extends EventModule {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onFeed(PlayerInteractEntityEvent event) {
         Entity entity = event.getRightClicked();
-        if (!config.blockClicks())
-            return;
-        if (!(entity instanceof Breedable))
-            return;
-        if (config.allowBreeding(entity.getType()))
-            return;
-        if (event.getPlayer().hasPermission("zombiecore.bypass.breeding"))
-            return;
+        if (!config.blockClicks()) return;
+        if (!(entity instanceof Breedable)) return;
+        if (config.allowBreeding(entity.getType())) return;
+        if (event.getPlayer().hasPermission("zombiecore.bypass.breeding")) return;
         event.setCancelled(true);
     }
 }

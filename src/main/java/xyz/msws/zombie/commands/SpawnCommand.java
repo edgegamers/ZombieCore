@@ -34,11 +34,10 @@ public class SpawnCommand extends SubCommand implements Listener {
 
     @Override
     protected boolean exec(CommandSender sender, String label, String[] args) {
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player player)) {
             MSG.tell(sender, Lang.COMMAND_PLAYER_ONLY);
             return true;
         }
-        Player player = (Player) sender;
 
         if (args.length != 1) {
             MSG.tell(sender, Lang.COMMAND_MISSING_ARGUMENT, "Entity Type");
@@ -80,19 +79,14 @@ public class SpawnCommand extends SubCommand implements Listener {
     @Override
     public List<String> tab(CommandSender sender, String alias, String[] args) throws IllegalArgumentException {
         List<String> result = new ArrayList<>();
-        if (!(sender instanceof Player))
-            return result;
-        Player player = (Player) sender;
-
+        if (!(sender instanceof Player player)) return result;
 
         if (!builders.containsKey(player.getUniqueId())) {
             for (String name : plugin.getCustomMobs().keySet()) {
-                if (args.length == 0 || MSG.normalize(name).startsWith(MSG.normalize(args[0])))
-                    result.add(name);
+                if (args.length == 0 || MSG.normalize(name).startsWith(MSG.normalize(args[0]))) result.add(name);
             }
             for (EntityType type : EntityType.values()) {
-                if (!type.isSpawnable())
-                    continue;
+                if (!type.isSpawnable()) continue;
                 if (args.length == 0 || MSG.normalize(type.toString()).startsWith(MSG.normalize(args[0])))
                     result.add(MSG.normalize(type.toString()));
             }
@@ -115,8 +109,7 @@ public class SpawnCommand extends SubCommand implements Listener {
             }
 
             for (String attr : attributes) {
-                if (attr.toLowerCase().startsWith(args[0].toLowerCase()))
-                    result.add(attr);
+                if (attr.toLowerCase().startsWith(args[0].toLowerCase())) result.add(attr);
             }
         } else if (args.length >= 2) {
             if (args[0].matches("(?i)(head|chest|hand|off_hand|legs|feet)")) {
@@ -143,8 +136,7 @@ public class SpawnCommand extends SubCommand implements Listener {
                 if (args.length > 2) {
                     for (ItemAttribute attr : plugin.getItemBuilder().getAttributes()) {
                         List<String> add = attr.tabComplete(args[args.length - 1], args, sender);
-                        if (add == null || add.isEmpty())
-                            continue;
+                        if (add == null || add.isEmpty()) continue;
                         result.addAll(add);
                     }
                 }
@@ -161,8 +153,7 @@ public class SpawnCommand extends SubCommand implements Listener {
             } else {
                 EntityBuilder<?> builder = builders.get(player.getUniqueId());
                 String add = builder.getDefault(args[0]);
-                if (add != null)
-                    result.add(add);
+                if (add != null) result.add(add);
             }
             return result;
         }

@@ -14,8 +14,7 @@ public class TimeVariable<T> extends ConfigMap<Long, T> {
 
     public TimeVariable(ConfigurationSection section, Class<T> clazz) {
         super(new TreeMap<>(), Long.class, clazz);
-        if (section == null)
-            throw new NullPointerException("Section is null");
+        if (section == null) throw new NullPointerException("Section is null");
         for (Map.Entry<String, Object> entry : section.getValues(false).entrySet()) {
             put(Long.parseLong(entry.getKey()), clazz.cast(entry.getValue()));
         }
@@ -28,11 +27,9 @@ public class TimeVariable<T> extends ConfigMap<Long, T> {
 
     public T getValue(long time) {
         List<Map.Entry<Long, T>> entries = new ArrayList<>(entrySet());
-        if (time >= entries.get(entries.size() - 1).getKey())
-            return entries.get(entries.size() - 1).getValue();
+        if (time >= entries.get(entries.size() - 1).getKey()) return entries.get(entries.size() - 1).getValue();
         for (int i = 0; i < entries.size() - 1; i++) {
-            if (time >= entries.get(i).getKey() && time < entries.get(i + 1).getKey())
-                return entries.get(i).getValue();
+            if (time >= entries.get(i).getKey() && time < entries.get(i + 1).getKey()) return entries.get(i).getValue();
         }
 
         throw new NullPointerException("Could not get value for " + time + ". Ordered keys: " + entries.stream().map(s -> s.getKey().toString()).collect(Collectors.joining(", ")) + ".");

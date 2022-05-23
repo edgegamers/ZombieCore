@@ -51,8 +51,7 @@ public class AbstractMenu implements Listener {
      */
     public void setBackground(CItem item) {
         for (int i = 0; i < inv.getSize(); i++) {
-            if (items.containsKey(i))
-                continue;
+            if (items.containsKey(i)) continue;
             items.put(i, item);
         }
     }
@@ -72,14 +71,11 @@ public class AbstractMenu implements Listener {
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
-        if (!open.contains(event.getWhoClicked().getUniqueId()))
-            return;
+        if (!open.contains(event.getWhoClicked().getUniqueId())) return;
         event.setCancelled(true);
-        if (!items.containsKey(event.getRawSlot()))
-            return;
+        if (!items.containsKey(event.getRawSlot())) return;
         Callback<InventoryClickEvent> call = items.get(event.getRawSlot()).getAction();
-        if (call == null)
-            return;
+        if (call == null) return;
         call.execute(event);
     }
 

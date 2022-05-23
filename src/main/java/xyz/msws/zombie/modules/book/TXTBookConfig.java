@@ -2,7 +2,6 @@ package xyz.msws.zombie.modules.book;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -17,11 +16,8 @@ import java.io.IOException;
 
 public class TXTBookConfig extends BookConfig {
 
-    private final YamlConfiguration config;
-
     public TXTBookConfig(ZCore plugin, YMLZConfig config) {
         super(plugin, config);
-        this.config = config.getYml();
     }
 
     @Override

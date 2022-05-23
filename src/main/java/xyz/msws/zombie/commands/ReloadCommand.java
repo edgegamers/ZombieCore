@@ -9,8 +9,8 @@ import xyz.msws.zombie.utils.MSG;
 import java.io.File;
 
 public class ReloadCommand extends SubCommand {
-    protected ReloadCommand(String name, ZCore plugin) {
-        super(name, plugin);
+    protected ReloadCommand(ZCore plugin) {
+        super("reload", plugin);
         setPermission("zombiecore.command.reload");
         setUsage("");
         setDescription("Reload ZombieCore's config and lang files");

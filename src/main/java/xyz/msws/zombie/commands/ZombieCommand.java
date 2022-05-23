@@ -8,7 +8,7 @@ import xyz.msws.zombie.api.ZCore;
  */
 public abstract class ZombieCommand extends BukkitCommand {
 
-    protected ZCore plugin;
+    protected final ZCore plugin;
 
     protected ZombieCommand(String name, ZCore plugin) {
         super(name);

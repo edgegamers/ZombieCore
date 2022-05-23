@@ -15,7 +15,7 @@ import xyz.msws.zombie.modules.EventModule;
 
 public class BookModule extends EventModule {
 
-    protected BookConfig config;
+    protected final BookConfig config;
 
     public BookModule(ZCore plugin) {
         super(plugin);
@@ -25,18 +25,15 @@ public class BookModule extends EventModule {
     @EventHandler
     public void onDrop(PlayerDropItemEvent event) {
         ItemStack item = event.getItemDrop().getItemStack();
-        if (!config.isBook(item))
-            return;
+        if (!config.isBook(item)) return;
         event.getItemDrop().remove();
     }
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         ItemStack item = event.getCurrentItem(), cursor = event.getCursor();
-        if (item == null || cursor == null)
-            return;
+        if (item == null || cursor == null) return;
         HumanEntity player = event.getWhoClicked();
-
 
         if (event.getClick() == ClickType.LEFT || event.getClick() == ClickType.RIGHT) {
             if (event.getClickedInventory() != null && event.getClickedInventory().equals(player.getInventory()))
@@ -46,6 +43,7 @@ public class BookModule extends EventModule {
                 event.setResult(Event.Result.DENY);
             }
         }
+
         if (event.isShiftClick()) {
             if (player.getOpenInventory().getTopInventory().getType() == InventoryType.CRAFTING && player.getOpenInventory().getBottomInventory().getType() == InventoryType.PLAYER)
                 return;
@@ -71,23 +69,20 @@ public class BookModule extends EventModule {
     private void removeBook(Inventory inventory) {
         for (int i = 0; i < inventory.getSize(); i++) {
             ItemStack item = inventory.getItem(i);
-            if (!config.isBook(item))
-                continue;
+            if (!config.isBook(item)) continue;
             inventory.setItem(i, new ItemStack(Material.AIR));
         }
     }
 
     @EventHandler
     public void onSwap(InventoryMoveItemEvent event) {
-        if (!config.isBook(event.getItem()))
-            return;
+        if (!config.isBook(event.getItem())) return;
         event.setItem(new ItemStack(Material.AIR));
     }
 
     @EventHandler
     public void onDrag(InventoryDragEvent event) {
-        if (!config.isBook(event.getCursor()))
-            return;
+        if (!config.isBook(event.getCursor())) return;
         event.setCancelled(true);
         event.setResult(Event.Result.DENY);
     }
@@ -112,8 +107,7 @@ public class BookModule extends EventModule {
     public int getBookSlot(Inventory inv) {
         for (int i = 0; i < inv.getSize(); i++) {
             ItemStack item = inv.getItem(i);
-            if (config.isBook(item))
-                return i;
+            if (config.isBook(item)) return i;
         }
         return -1;
     }
@@ -126,8 +120,7 @@ public class BookModule extends EventModule {
         // Armor / Crafting / Non storage slots >= 36
         for (int i = 0; i < inv.getSize() && i < 36; i++) {
             ItemStack item = inv.getItem(i);
-            if (item == null || item.getType() == Material.AIR)
-                return i;
+            if (item == null || item.getType() == Material.AIR) return i;
         }
         return -1;
     }

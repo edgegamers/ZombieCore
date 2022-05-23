@@ -1,5 +1,7 @@
 package xyz.msws.zombie.modules.breeding;
 
+import lombok.Getter;
+import lombok.experimental.Accessors;
 import org.bukkit.entity.EntityType;
 import xyz.msws.zombie.api.ZCore;
 import xyz.msws.zombie.data.ConfigCollection;
@@ -10,8 +12,11 @@ import java.util.EnumSet;
 
 public abstract class BreedingConfig extends ModuleConfig<AnimalBreeding> {
 
-    protected ConfigCollection<EntityType> blockBreeding = new ConfigCollection<>(EnumSet.noneOf(EntityType.class), EntityType.class);
-    protected boolean clicks = true, breed = false, love = true, resetBreeding = true;
+    protected ConfigCollection<EntityType> blockTypes = new ConfigCollection<>(EnumSet.noneOf(EntityType.class), EntityType.class);
+    @Getter
+    @Accessors(fluent = true)
+    protected boolean blockClicks = true, blockBreeding = false, blockLove = true, resetBreeding = true;
+    @Getter
     protected int hopeless = 64;
 
     public BreedingConfig(ZCore plugin, ZombieConfig config) {
@@ -19,27 +24,7 @@ public abstract class BreedingConfig extends ModuleConfig<AnimalBreeding> {
     }
 
     public boolean allowBreeding(EntityType type) {
-        return !blockBreeding.contains(type);
-    }
-
-    public boolean blockClicks() {
-        return clicks;
-    }
-
-    public boolean blockBreeding() {
-        return breed;
-    }
-
-    public boolean resetBreeding() {
-        return resetBreeding;
-    }
-
-    public boolean blockLove() {
-        return love;
-    }
-
-    public int getHopeless() {
-        return hopeless;
+        return !blockTypes.contains(type);
     }
 
     @Override

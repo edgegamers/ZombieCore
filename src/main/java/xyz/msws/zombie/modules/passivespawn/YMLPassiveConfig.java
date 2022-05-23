@@ -15,14 +15,13 @@ public class YMLPassiveConfig extends PassiveConfig {
 
     public YMLPassiveConfig(ZCore plugin, YMLZConfig config) {
         super(plugin, config);
-        this.config = config.getYml();
+        this.config = config.getConfig();
     }
 
     @Override
     public void load() {
         ConfigurationSection features = config.getConfigurationSection("Features");
-        if (features == null)
-            throw new NullPointerException("No features specified");
+        if (features == null) throw new NullPointerException("No features specified");
 
         ConfigurationSection spawns = features.getConfigurationSection("BlockSpawns");
         if (spawns == null) {

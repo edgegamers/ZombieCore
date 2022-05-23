@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DeleteCommand extends SubCommand {
-    protected DeleteCommand(String name, ZCore plugin) {
-        super(name, plugin);
+    protected DeleteCommand(ZCore plugin) {
+        super("delete", plugin);
         setPermission("zombiecore.command.delete");
         setDescription("Deletes saved custom mobs");
         setUsage(" [Mob]");

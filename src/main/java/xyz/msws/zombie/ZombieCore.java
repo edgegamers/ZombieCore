@@ -1,5 +1,6 @@
 package xyz.msws.zombie;
 
+import lombok.Getter;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.msws.zombie.api.ZCore;
@@ -26,8 +27,11 @@ import java.util.Map;
 import java.util.Objects;
 
 public class ZombieCore extends JavaPlugin implements ZCore {
+    @Getter
     private ModuleManager manager;
-    private ZombieConfig config;
+
+    @Getter
+    private ZombieConfig zombieConfig;
     private Map<String, EntityBuilder<?>> mobs = new HashMap<>();
 
     @Override
@@ -39,11 +43,6 @@ public class ZombieCore extends JavaPlugin implements ZCore {
         refreshMobs();
     }
 
-    @Override
-    public void onLoad() {
-        super.onLoad();
-    }
-
     private void loadFiles() {
 
         File langYml = new File(getDataFolder(), "lang.yml"), book = new File(getDataFolder(), "book.txt");
@@ -52,8 +51,8 @@ public class ZombieCore extends JavaPlugin implements ZCore {
         if (!book.exists())
             saveResource("book.txt", true);
         Lang.load(YamlConfiguration.loadConfiguration(langYml));
-        config = new YMLZConfig(this, new File(getDataFolder(), "config.yml"));
-        config.load();
+        zombieConfig = new YMLZConfig(this, new File(getDataFolder(), "config.yml"));
+        zombieConfig.load();
     }
 
     private void loadModules() {
@@ -84,7 +83,7 @@ public class ZombieCore extends JavaPlugin implements ZCore {
 
     @Override
     public ZombieConfig getZConfig() {
-        return config;
+        return zombieConfig;
     }
 
     @Override

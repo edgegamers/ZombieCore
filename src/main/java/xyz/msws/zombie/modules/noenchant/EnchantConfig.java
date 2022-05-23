@@ -17,7 +17,7 @@ public abstract class EnchantConfig extends ModuleConfig<NoEnchantSpawn> {
     protected ConfigCollection<EntityType> types = new ConfigCollection<>(EnumSet.noneOf(EntityType.class), EntityType.class);
     protected ConfigCollection<EquipmentSlot> slots = new ConfigCollection<>(EnumSet.noneOf(EquipmentSlot.class), EquipmentSlot.class);
     protected ConfigCollection<Material> materials = new ConfigCollection<>(EnumSet.noneOf(Material.class), Material.class);
-    protected ConfigCollection<Enchantment> enchants = new ConfigCollection<>(new HashSet<>(), Enchantment.class);
+    protected final ConfigCollection<Enchantment> enchants = new ConfigCollection<>(new HashSet<>(), Enchantment.class);
 
     public EnchantConfig(ZCore plugin, ZombieConfig config) {
         super(plugin, config);

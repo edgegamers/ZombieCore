@@ -1,5 +1,6 @@
 package xyz.msws.zombie.data;
 
+import lombok.Getter;
 import org.bukkit.configuration.file.YamlConfiguration;
 import xyz.msws.zombie.api.ZCore;
 import xyz.msws.zombie.modules.ModuleConfig;
@@ -19,7 +20,9 @@ import java.io.IOException;
  * A YML Implementation of {@link ZombieConfig}
  */
 public class YMLZConfig extends ZombieConfig {
+    @Getter
     private final File file;
+    @Getter
     private YamlConfiguration config;
 
     public YMLZConfig(ZCore plugin, File file) {
@@ -29,8 +32,7 @@ public class YMLZConfig extends ZombieConfig {
 
     @Override
     public void load() {
-        if (!file.exists())
-            plugin.saveResource("config.yml", true);
+        if (!file.exists()) plugin.saveResource("config.yml", true);
         reload();
 
         configs.add(new YMLBreedingConfig(plugin, this));
@@ -65,13 +67,5 @@ public class YMLZConfig extends ZombieConfig {
     public void reset() {
         plugin.saveResource("config.yml", true);
         reload();
-    }
-
-    public YamlConfiguration getYml() {
-        return config;
-    }
-
-    public File getFile() {
-        return file;
     }
 }

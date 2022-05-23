@@ -1,5 +1,7 @@
 package xyz.msws.zombie.menu;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.plugin.Plugin;
 
@@ -14,6 +16,9 @@ import java.util.Map;
 public class PagedMenu extends AbstractMenu {
 
     protected final List<Map<Integer, CItem>> pages = new ArrayList<>();
+
+    @Getter
+    @Setter
     protected int page = 0;
 
     public PagedMenu(Plugin plugin) {
@@ -30,14 +35,6 @@ public class PagedMenu extends AbstractMenu {
 
     public void removePage(Map<Integer, CItem> page) {
         pages.remove(page);
-    }
-
-    public int getPage() {
-        return page;
-    }
-
-    public void setPage(int page) {
-        this.page = page;
     }
 
     /**

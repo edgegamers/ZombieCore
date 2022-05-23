@@ -19,25 +19,22 @@ public class ZombieCoreCommand extends BaseCommand {
         super(name, plugin);
 
         commands.put("spawn", (spawn = new SpawnCommand("spawn", plugin)));
-        commands.put("reset", new ResetCommand("reset", plugin));
-        commands.put("reload", new ReloadCommand("reload", plugin));
-        commands.put("delete", new DeleteCommand("delete", plugin));
-        commands.put("config", new ConfigCommand("config", plugin));
-        commands.put("givebook", new GiveBookCommand("givebook", plugin));
-        commands.put("count", new CountCommand("count", plugin));
+        commands.put("reset", new ResetCommand(plugin));
+        commands.put("reload", new ReloadCommand(plugin));
+        commands.put("delete", new DeleteCommand(plugin));
+        commands.put("config", new ConfigCommand(plugin));
+        commands.put("givebook", new GiveBookCommand(plugin));
+        commands.put("count", new CountCommand(plugin));
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length == 0)
-            return super.onCommand(sender, command, label, args);
+        if (args.length == 0) return super.onCommand(sender, command, label, args);
 
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
+        if (sender instanceof Player player) {
             EntityBuilder<?> builder = spawn.getBuilder(player.getUniqueId());
             if (builder != null) {
-                if (builder.accept(player, String.join(" ", args)))
-                    spawn.removeBuilder(player.getUniqueId());
+                if (builder.accept(player, String.join(" ", args))) spawn.removeBuilder(player.getUniqueId());
                 return true;
             }
         }
@@ -47,11 +44,8 @@ public class ZombieCoreCommand extends BaseCommand {
 
     @Override
     public List<String> tabComplete(CommandSender sender, String label, String[] args) throws IllegalArgumentException {
-        if (!(sender instanceof Player))
-            return super.tabComplete(sender, label, args);
-        Player player = (Player) sender;
-        if (spawn.getBuilder(player.getUniqueId()) != null)
-            return spawn.tab(sender, label, args);
+        if (!(sender instanceof Player player)) return super.tabComplete(sender, label, args);
+        if (spawn.getBuilder(player.getUniqueId()) != null) return spawn.tab(sender, label, args);
 
         return super.tabComplete(sender, label, args);
     }

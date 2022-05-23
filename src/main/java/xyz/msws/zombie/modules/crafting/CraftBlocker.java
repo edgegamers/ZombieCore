@@ -27,29 +27,23 @@ public class CraftBlocker extends EventModule {
     public void enable() {
         super.enable();
         ItemFactory factory = plugin.getItemBuilder();
-        restrict = factory.build(config.getItemResult(), Bukkit.getConsoleSender());
-        if (restrict == null)
-            restrict = new ItemStack(Material.AIR);
+        restrict = factory.build(config.getResult(), Bukkit.getConsoleSender());
+        if (restrict == null) restrict = new ItemStack(Material.AIR);
     }
 
     @EventHandler
     public void onCraft(PrepareItemCraftEvent event) {
-        if (event.getRecipe() == null)
-            return;
-        if (!config.blockRecipe(event.getRecipe().getResult().getType()))
-            return;
+        if (event.getRecipe() == null) return;
+        if (!config.blockRecipe(event.getRecipe().getResult().getType())) return;
         event.getInventory().setResult(restrict);
     }
 
     @EventHandler
     public void onCraft(InventoryClickEvent event) {
-        if (event.getSlotType() != InventoryType.SlotType.RESULT)
-            return;
+        if (event.getSlotType() != InventoryType.SlotType.RESULT) return;
         ItemStack item = event.getCurrentItem();
-        if (item == null)
-            return;
-        if (!item.equals(restrict))
-            return;
+        if (item == null) return;
+        if (!item.equals(restrict)) return;
         event.setCancelled(true);
     }
 

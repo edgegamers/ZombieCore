@@ -14,14 +14,13 @@ public class YMLCraftConfig extends CraftConfig {
 
     public YMLCraftConfig(ZCore plugin, YMLZConfig config) {
         super(plugin, config);
-        this.config = config.getYml();
+        this.config = config.getConfig();
     }
 
     @Override
     public void load() {
         ConfigurationSection features = config.getConfigurationSection("Features");
-        if (features == null)
-            throw new NullPointerException("No features specified");
+        if (features == null) throw new NullPointerException("No features specified");
 
         ConfigurationSection crafting = features.getConfigurationSection("Crafting");
         if (crafting == null) {

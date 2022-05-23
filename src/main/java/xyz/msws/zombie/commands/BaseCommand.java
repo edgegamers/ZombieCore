@@ -16,7 +16,7 @@ import java.util.Map;
  * Represents a {@link ZombieCommand} that supports sub-commands
  */
 public abstract class BaseCommand extends ZombieCommand implements CommandExecutor, TabCompleter {
-    protected Map<String, SubCommand> commands = new HashMap<>();
+    protected final Map<String, SubCommand> commands = new HashMap<>();
 
     protected BaseCommand(String name, ZCore plugin) {
         super(name, plugin);
