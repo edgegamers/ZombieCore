@@ -137,14 +137,12 @@ public class ConfigCommand extends SubCommand {
                     }
                 }
             }
-            MSG.log("Casting " + joiner.toString() + " to " + type);
-            MSG.log("result: " + cast(joiner.toString(), type));
             value = cast(joiner.toString(), type);
         } catch (NumberFormatException nf) {
             MSG.tell(sender, Lang.COMMAND_CONFIG_ERROR, field.getName(), joiner.toString(), "Must be a " + type.getSimpleName());
             return true;
         } catch (ClassCastException cc) {
-            MSG.tell(sender, Lang.COMMAND_CONFIG_ERROR, field.getName(), joiner.toString(), "Unable to cast " + value + " [" + joiner.toString() + "]" + " to " + type.getSimpleName());
+            MSG.tell(sender, Lang.COMMAND_CONFIG_ERROR, field.getName(), joiner.toString(), "Unable to cast " + value + " to " + type.getSimpleName());
             cc.printStackTrace();
             return true;
         } catch (IllegalAccessException e) {
@@ -188,7 +186,6 @@ public class ConfigCommand extends SubCommand {
                 unused.printStackTrace();
                 try {
                     value = type.getDeclaredMethod("fromString", String.class).invoke(null, obj.toString());
-                    MSG.log("value (fromString) assigned to %s", value + "");
                 } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException unused2) {
                     return null;
                 }

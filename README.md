@@ -72,26 +72,38 @@ spawns (ie Zombies/Skeletons will burn in daylight)
 
 ```yml
 DaySpawns:
-  # Chance (0-1) that a passive mob spawn will trigger a hostile mobs spawn
-  CorruptionChance: .1
-  # Weights will be totalled and a random number from 0 to that total will decide the mob type.
-  # Note that currently ZombieApocalypse overrides this mob type during an apocalypse.
-  MobWeights:
-    ZOMBIE: 0.2
-    SKELETON: 0.18
-  # To reproduce the feeling of vanilla spawns, the hostile mobs that spawn from passive mob spawns
-  # are offset by a random amount. These values change the min/max offset possible.
-  RangeOffset:
-    Min: -10
-    Max: 10
-  # To reproduce the feeling of vanilla spawns, hostile mobs may be spawned in batches or groups.
-  # Each group is relative to the original RangeOffset and is nearby to the origin.
-  MobAmount:
-    1: 0.70
-    2: 0.25
-    3: 0.03
-    4: 0.015
-    5: 0.005
+  CorruptionChances: # 10% Chance that a monster will spawn when a regular mob spawns
+     0: 0.50 # Start of day, 6 AM
+     1000: 0.30
+     [...]
+  LightLevels:
+     SkyMin: 0
+     SkyMax: 15
+     BlockMin: 0
+     BlockMax: 7
+  RangeOffset: # The mobs can spawn up to 10 blocks away from the original mob spawn
+     Min: -4
+     Max: 8
+  MinimumPlayerRangeSquared: 1024 # Mobs won't spawn within sqrt(1024) = 32 blocks of the player
+  MobAmount: # These are WEIGHTs, currently configured to also be percentages
+     1: 0.70    # 70% chance for 1 mob to spawn
+     2: 0.25    # 25% for 2, etc.
+     3: 0.03
+     4: 0.015
+     5: 0.005
+     #6: 0.0001  # (Examples)
+     #10: 0.00001
+  MaxChunkMobs:
+     # Day Cycle Image: https://static.wikia.nocookie.net/minecraft_gamepedia/images/b/bc/Day_Night_Clock_24h.png/revision/latest?cb=20130103232456
+     # 1 -> 8AM-4PM (8 hours / 6.67 minutes)
+     # 2 -> 4PM-10PM (6 hours / 5 minutes)
+     # 3 -> 10PM-2AM (4 hours / 3.33 minutes)
+     # 2 -> 2AM-8AM (6 hours / 5 minutes)
+     0: 1
+     2000: 1 # 8AM
+     10000: 2 # 4PM
+     16000: 3 # 10PM
+     20000: 2 # 2AM
 ```
 
 ### Nerfs Fishing
@@ -100,21 +112,16 @@ ZC slows fishing by cancelling / restricting how fast players can fish.
 
 ```yml
 Fish:
-  # If a player was going catch before these milliseconds (1000 ms = 1 second), always cancel it (-1 to disable)
-  MinTime: 20000
-  # If a player was going catch after these milliseconds (1000 ms = 1 second), NEVER cancel it (-1 to disable)
-  MaxTime: -1
-  Restrict: # Restrict which items can be fished
-    - ENCHANTED_BOOK
-    - NAME_TAG
-    - SADDLE
-    - NAUTILUS_SHELL
-    - BOW
-    # Function to represent exponential decay chance of cancelling event. 1 = 100% cancel, 0 = 0% cancel
+  MinTime: 20000 # All hook events will be cancelled if they occur before this many milliseconds (-1 to disable)
+  MaxTime: -1 # No hook events will be cancelled if they occur beyond this many milliseconds (-1 to disable)
   CancelChance: #  a(x+b)^c
-    Constant: 80  # a
-    Offset: 80   # b
-    Exponent: -1 # c
+     Constant: 80 # a
+     Offset: 80 # b
+     Exponent: -1 # c
+  BlockEnchants: true
+  AllowItems: # Material
+     - COD
+    [...]
 ```
 
 ### Disables Naturally Spawned Enchanted Items
@@ -123,36 +130,30 @@ ZC disables mobs naturally spawning with enchanted items.
 
 ```yml
 NoEnchants: # Restricts what items mobs can spawn with
-  # All entities that you want to restrict breedability should be listed here.
-  # Note that if ALL is present in this list all possible values are automatically filled in.
-  Entities:
-    - 'ALL'
-  # Restricts which slots enchantments cannot spawn in.
-  Slots:
-    - 'ALL'
-    - 'HEAD'
-  # Restrict which items enchantments cannot spawn with. 
-  Items:
-    - 'ALL'
-    - 'DIAMOND_SWORD'
-  # Restrict which specific enchantments cannot be spawned.
-  Enchants:
-    - 'ALL'
+  BlockEntities: # Entities
+     - 'ALL'
+  BlockSlots: # EquipmentSlot
+     - 'ALL'
+  BlockItems: # Material
+     - 'ALL'
+  BlockEnchants: # Enchantments
+     - 'ALL'
 ```
 
 ### Disables spawning of specific entities
 
 ```yml
-# Valid methods:
-# REMOVE - Removes the entity
-# CANCEL - Prevents the entity from spawning
-# TP - Teleports the entity under the world
-# HP - Sets the entity's HP to 0
-BlockSpawns:
-  Method: CANCEL # REMOVE, CANCEL, TP, HP
-  Entities: [ BAT, BEE, CAT, CHICKEN, COW, DONKEY, FOX, HORSE, MULE, OCELOT, PARROT, PIG, PIGLIN, POLAR_BEAR, RABBIT, SHEEP, SNOWMAN, SQUID, STRIDER, TURTLE, VILLAGER, WOLF ]
-  BlockReasons:
-    - 'NATURAL'
+  BlockSpawns:
+     Method: CANCEL # BlockMethods
+     AllowNamed: true # If true, mobs that are name tagged will remain
+     BlockEntities: # Entities
+        - "SHEEP"
+        - "COW"
+        [...]
+     BlockReasons: # SpawnReason
+        - "NATURAL"
+        - "EGG"
+        - "DISPENSE_EGG"
 ```
 
 ### Disables crafting of specific items

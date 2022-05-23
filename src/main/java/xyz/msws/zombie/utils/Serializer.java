@@ -119,7 +119,6 @@ public class Serializer {
             list.addAll(Arrays.asList(clazz.getEnumConstants()));
             whitelist = false;
             strings.remove("ALL");
-            MSG.log(clazz.getName() + " list had ALL, adding %d items (result: %d)", clazz.getEnumConstants().length, list.size());
         }
         for (String s : strings) {
             if (s.isEmpty()) continue;
