@@ -165,7 +165,7 @@ public class ConfigCommand extends SubCommand {
         return true;
     }
 
-    private <T> T cast(java.io.Serializable obj, Class<T> type) throws ClassCastException, NumberFormatException {
+    private <T> T cast(Object obj, Class<T> type) throws ClassCastException, NumberFormatException {
         Object value = null;
         if (type == String.class) {
             value = obj.toString();

@@ -6,10 +6,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -66,6 +63,10 @@ public class Utils {
 
     @SuppressWarnings("deprecation")
     public static Enchantment getEnchantment(String ench) {
+        List<String> enchNames = new ArrayList<>();
+        for(Enchantment en : Enchantment.values()){
+
+        }
         try {
             return Enchantment.getByKey(NamespacedKey.minecraft(ench.toUpperCase()));
         } catch (IllegalArgumentException e) {
